@@ -127,7 +127,7 @@ body {
 
 /* ---- Hero ---- */
 #hero {
-  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; display: flex; align-items: flex-start; justify-content: center;
   text-align: center; padding: 120px 0 80px;
   background: linear-gradient(180deg, var(--bg-subtle) 0%, var(--bg) 100%);
 }
@@ -152,6 +152,35 @@ body {
 .stat-num { display: block; font-size: 28px; font-weight: 900; color: var(--accent); }
 .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
 .stat-divider { width: 1px; height: 36px; background: var(--border); }
+
+/* ---- Hero Video ---- */
+.hero-video {
+  margin-top: 48px; max-width: 720px; margin-left: auto; margin-right: auto;
+  opacity: 1;
+}
+.video-container {
+  position: relative; width: 100%; padding-bottom: 56.25%;
+  border-radius: var(--radius-lg); overflow: hidden;
+  background: var(--bg-subtle); border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+.video-placeholder {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.3s;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+.video-placeholder:hover { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+.video-placeholder:hover .video-play-btn svg { transform: scale(1.1); }
+.video-play-btn { display: flex; align-items: center; justify-content: center; }
+.video-play-btn svg {
+  width: 68px; height: 48px; transition: transform 0.2s;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+}
+.video-caption {
+  margin-top: 16px; color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 600;
+}
+.video-iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
 /* ---- Section Headers ---- */
 section { padding: 90px 0; }
@@ -270,6 +299,8 @@ section { padding: 90px 0; }
   .cta-box { padding: 36px 20px; }
   .hero-stats { gap: 24px; }
   .stat-divider { display: none; }
+  .hero-video { margin-top: 36px; }
+  .video-play-btn svg { width: 56px; height: 40px; }
 }
 
 @media (max-width: 480px) {

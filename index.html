@@ -203,6 +203,21 @@
             <dd class="stat-label">بدلاً من 199 د.ت</dd>
           </div>
         </dl>
+
+        <div class="hero-video" aria-label="فيديو تعريفي">
+          <div class="video-container" id="hero-video-container">
+            <div class="video-placeholder" id="video-placeholder" role="button" tabindex="0" aria-label="تشغيل الفيديو التعريفي">
+              <div class="video-play-btn" aria-hidden="true">
+                <svg viewBox="0 0 68 48" aria-hidden="true">
+                  <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/>
+                  <path d="M45 24L27 14v20" fill="#fff"/>
+                </svg>
+              </div>
+              <p class="video-caption">▶ شاهد الفيديو التعريفي</p>
+            </div>
+            <iframe id="video-iframe" class="video-iframe" style="display:none" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" title="فيديو تعريفي عن أكاديمية وجهة"></iframe>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -374,6 +389,21 @@
     window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50)},{passive:true});
     const ro=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:.15});
     document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+    const VIDEO_ID = 'UF8uR6Z6KLc';
+    const vph = document.getElementById('video-placeholder');
+    const vif = document.getElementById('video-iframe');
+    if (vph && vif) {
+      function loadHeroVideo() {
+        if (vif.src) return;
+        vif.src = 'https://www.youtube.com/embed/' + VIDEO_ID + '?autoplay=1&rel=0&hl=ar';
+        vif.style.display = 'block';
+        vph.style.display = 'none';
+      }
+      vph.addEventListener('click', loadHeroVideo);
+      vph.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); loadHeroVideo(); }
+      });
+    }
     const mb=document.getElementById('mobile-menu-btn'),mm=document.getElementById('mobile-menu');
     mb.addEventListener('click',()=>{const o=mb.classList.toggle('open');mm.classList.toggle('open');mb.setAttribute('aria-expanded',o)});
     mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mb.classList.remove('open');mm.classList.remove('open');mb.setAttribute('aria-expanded','false')}));
