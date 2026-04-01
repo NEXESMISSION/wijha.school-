@@ -39,6 +39,11 @@
   ],
   "redirects": [
     {
+      "source": "/",
+      "destination": "/free-registration",
+      "statusCode": 308
+    },
+    {
       "source": "/register",
       "destination": "/free-registration",
       "statusCode": 301

@@ -4,11 +4,11 @@
 
 ```
 wijha.school/
-├── index.html                   # Main landing page (wijha.school)
-├── free-registration/index.html # Registration page (wijha.school/free-registration)
+├── index.html                   # Fallback redirect → /free-registration (Vercel also 308 / → /free-registration)
+├── free-registration/index.html # Primary public marketing + registration (canonical homepage)
 ├── css/
-│   ├── main.css                 # Main page styles
-│   └── landing.css              # Registration page styles
+│   ├── main.css                 # Legacy styles (unused while root redirects)
+│   └── landing.css              # Registration landing styles
 ├── js/
 │   ├── config.js                # Supabase credentials (shared)
 │   ├── tracking.js              # Smart analytics tracking library

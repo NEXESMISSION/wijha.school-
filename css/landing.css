@@ -214,6 +214,13 @@ body {
 }
 .compare-card.old .compare-icon { background: var(--accent-red-soft); }
 .compare-card.new .compare-icon { background: var(--accent-green-soft); }
+.compare-icon.compare-icon--old-price {
+  width: auto; min-width: 108px; height: auto; padding: 14px 18px;
+  border-radius: 14px; flex-direction: column; gap: 2px; font-size: inherit;
+}
+.compare-old-price { font-size: 26px; font-weight: 900; line-height: 1; color: var(--accent-red); }
+.compare-old-price del { text-decoration: line-through; text-decoration-thickness: 2px; }
+.compare-old-currency { font-size: 14px; font-weight: 800; color: var(--accent-red); opacity: 0.9; }
 .compare-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 14px; }
 .compare-card.old h3 { color: var(--accent-red); }
 .compare-card.new h3 { color: var(--accent-green); }
