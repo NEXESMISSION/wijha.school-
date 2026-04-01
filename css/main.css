@@ -158,6 +158,11 @@ body {
   margin-top: 48px; max-width: 720px; margin-left: auto; margin-right: auto;
   opacity: 1;
 }
+/* Video directly under the main title, above the TL;DR summary */
+.hero-video--above-summary {
+  margin-top: 28px;
+  margin-bottom: 28px;
+}
 .video-container {
   position: relative; width: 100%; padding-bottom: 56.25%;
   border-radius: var(--radius-lg); overflow: hidden;
