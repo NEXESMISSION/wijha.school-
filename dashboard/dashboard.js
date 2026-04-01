@@ -128,7 +128,14 @@ async function loadKPIs() {
 
   const [sessionsRes, regsRes] = await Promise.all([sessionsQ, regsQ]);
 
-  const visitors = sessionsRes.count || 0;
+  let visitors = sessionsRes.count || 0;
+  // Fallback: when session tracking is partially blocked, estimate visitors from page_view events.
+  if (visitors === 0) {
+    let pvQ = sb.from('events').select('session_id').eq('event_type', 'page_view');
+    if (since) pvQ = pvQ.gte('created_at', since);
+    const { data: pvData } = await pvQ;
+    visitors = new Set((pvData || []).map(e => e.session_id)).size;
+  }
   const registrations = regsRes.count || 0;
   const conversion = visitors > 0 ? ((registrations / visitors) * 100).toFixed(1) : 0;
 
@@ -408,25 +415,30 @@ async function loadGeoChart() {
 // ---- Experience Level Chart ----
 async function loadExperienceChart() {
   const since = getDateRange();
-  let q = sb.from('registrations').select('experience_level');
+  let q = sb.from('registrations').select('payment_method');
   if (since) q = q.gte('created_at', since);
   const { data } = await q;
 
-  const levels = {};
+  const methods = {};
   const labelMap = {
-    beginner: 'مبتدئ', basic: 'أساسيات', intermediate: 'متوسط', advanced: 'متقدم', '': 'لم يحدد', null: 'لم يحدد'
+    d17: 'D17',
+    flouci: 'Flouci',
+    bank_transfer: 'Bank Transfer',
+    cash: 'Cash',
+    '': 'غير محدد',
+    null: 'غير محدد',
   };
 
   (data || []).forEach(r => {
-    const l = r.experience_level || 'لم يحدد';
-    const label = labelMap[l] || l;
-    levels[label] = (levels[label] || 0) + 1;
+    const method = r.payment_method || 'غير محدد';
+    const label = labelMap[method] || method;
+    methods[label] = (methods[label] || 0) + 1;
   });
 
   renderChart('chart-experience', 'pie', {
-    labels: Object.keys(levels),
+    labels: Object.keys(methods),
     datasets: [{
-      data: Object.values(levels),
+      data: Object.values(methods),
       backgroundColor: COLOR_ARRAY,
       borderWidth: 0,
     }]
@@ -461,10 +473,7 @@ async function loadRegistrationsTable(page = 0) {
       <td>${page * PAGE_SIZE + i + 1}</td>
       <td><strong>${esc(r.full_name)}</strong></td>
       <td dir="ltr" style="font-family: 'JetBrains Mono', monospace; font-size:13px">${esc(r.phone)}</td>
-      <td dir="ltr" style="font-size:13px">${esc(r.email || '--')}</td>
-      <td>${esc(r.city || '--')}</td>
-      <td><span class="tag">${esc(r.experience_level || '--')}</span></td>
-      <td>${esc(r.referral_source || '--')}</td>
+      <td><span class="tag">${esc(r.payment_method || '--')}</span></td>
       <td>${esc(r.device_type || '--')}</td>
       <td style="font-size:12px">${esc(r.utm_source || '--')} / ${esc(r.utm_medium || '--')}</td>
       <td style="font-size:12px;font-family:'JetBrains Mono',monospace">${formatDateTime(r.created_at)}</td>
@@ -811,10 +820,9 @@ function exportCSV() {
   q.then(({ data }) => {
     if (!data?.length) return alert('لا توجد بيانات للتصدير');
 
-    const headers = ['الاسم', 'الهاتف', 'البريد', 'المدينة', 'الخبرة', 'المصدر', 'الجهاز', 'UTM Source', 'UTM Medium', 'UTM Campaign', 'التاريخ'];
+    const headers = ['الاسم', 'الهاتف', 'طريقة الدفع', 'الجهاز', 'UTM Source', 'UTM Medium', 'UTM Campaign', 'التاريخ'];
     const rows = data.map(r => [
-      r.full_name, r.phone, r.email || '', r.city || '',
-      r.experience_level || '', r.referral_source || '', r.device_type || '',
+      r.full_name, r.phone, r.payment_method || '', r.device_type || '',
       r.utm_source || '', r.utm_medium || '', r.utm_campaign || '',
       new Date(r.created_at).toLocaleString('ar')
     ]);
