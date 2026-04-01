@@ -79,6 +79,15 @@ ALTER TABLE sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE registrations ENABLE ROW LEVEL SECURITY;
 
+-- Idempotent: safe to re-run (policies already exist from a previous run)
+DROP POLICY IF EXISTS "anon_insert_sessions" ON sessions;
+DROP POLICY IF EXISTS "anon_update_sessions" ON sessions;
+DROP POLICY IF EXISTS "anon_insert_events" ON events;
+DROP POLICY IF EXISTS "anon_insert_registrations" ON registrations;
+DROP POLICY IF EXISTS "auth_read_sessions" ON sessions;
+DROP POLICY IF EXISTS "auth_read_events" ON events;
+DROP POLICY IF EXISTS "auth_read_registrations" ON registrations;
+
 -- Anon can INSERT sessions (new visitor)
 CREATE POLICY "anon_insert_sessions" ON sessions
   FOR INSERT TO anon WITH CHECK (true);
