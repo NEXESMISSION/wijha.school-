@@ -8,6 +8,7 @@ ALTER TABLE registrations
   ADD CONSTRAINT chk_name_length CHECK (length(full_name) >= 2 AND length(full_name) <= 200),
   ADD CONSTRAINT chk_phone_length CHECK (length(phone) >= 8 AND length(phone) <= 20),
   ADD CONSTRAINT chk_email_format CHECK (email IS NULL OR (length(email) <= 200 AND email ~* '^[^@\s]+@[^@\s]+\.[^@\s]+$')),
+  ADD CONSTRAINT chk_payment_method_enum CHECK (payment_method IS NULL OR payment_method IN ('d17', 'flouci', 'bank_transfer', 'cash')),
   ADD CONSTRAINT chk_city_length CHECK (city IS NULL OR length(city) <= 200),
   ADD CONSTRAINT chk_experience_enum CHECK (experience_level IS NULL OR experience_level IN ('beginner', 'basic', 'intermediate', 'advanced')),
   ADD CONSTRAINT chk_referral_enum CHECK (referral_source IS NULL OR referral_source IN ('facebook', 'instagram', 'youtube', 'tiktok', 'friend', 'google', 'other'));

@@ -6,6 +6,15 @@
 // ============================================
 
 const WijhaTracker = (() => {
+  // Use stateless anon client for landing tracking to avoid role switching to "authenticated"
+  const trackingClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+  });
+  let trackingEnabled = true;
   let sessionId = null;
   let sessionStartTime = Date.now();
   let scrollMilestones = { 25: false, 50: false, 75: false, 100: false };
@@ -124,17 +133,24 @@ const WijhaTracker = (() => {
     };
 
     try {
-      const { error } = await supabaseClient
+      const { error } = await trackingClient
         .from('sessions')
         .upsert(sessionData, { onConflict: 'session_id' });
-      if (error) console.warn('Session create error:', error.message);
+      if (error) {
+        console.warn('Session create error:', error.message);
+        trackingEnabled = false;
+        return false;
+      }
+      return true;
     } catch (e) {
       console.warn('Session tracking failed:', e);
+      trackingEnabled = false;
+      return false;
     }
   }
 
   async function trackEvent(eventType, eventData = {}) {
-    if (!sessionId) return;
+    if (!trackingEnabled || !sessionId) return;
     const payload = {
       session_id: sessionId,
       event_type: eventType,
@@ -146,9 +162,17 @@ const WijhaTracker = (() => {
     };
 
     try {
-      await supabaseClient.from('events').insert(payload);
+      const { error } = await trackingClient.from('events').insert(payload);
+      if (error) {
+        console.warn('Event tracking error:', error.message);
+        // Prevent repeated failing requests (e.g. RLS 403)
+        trackingEnabled = false;
+        return;
+      }
     } catch (e) {
       console.warn('Event tracking failed:', e);
+      trackingEnabled = false;
+      return;
     }
 
     engagementScore += getEventWeight(eventType);
@@ -258,11 +282,11 @@ const WijhaTracker = (() => {
 
   function setupHeartbeat() {
     heartbeatInterval = setInterval(() => {
-      if (isPageVisible) {
+      if (trackingEnabled && isPageVisible) {
         const timeOnPage = Math.round((Date.now() - sessionStartTime) / 1000);
         trackEvent('time_on_page', { seconds: timeOnPage, engagement_score: engagementScore });
 
-        supabaseClient
+        trackingClient
           .from('sessions')
           .update({ last_seen_at: new Date().toISOString(), total_events: engagementScore })
           .eq('session_id', sessionId)
@@ -298,6 +322,7 @@ const WijhaTracker = (() => {
 
   function setupExitTracking() {
     window.addEventListener('beforeunload', () => {
+      if (!trackingEnabled || !sessionId) return;
       const timeOnPage = Math.round((Date.now() - sessionStartTime) / 1000);
       if (isPageVisible) {
         totalActiveTime += Date.now() - lastActiveTimestamp;
@@ -358,7 +383,9 @@ const WijhaTracker = (() => {
   }
 
   async function init() {
-    await createSession();
+    const sessionReady = await createSession();
+    if (!sessionReady) return;
+
     trackEvent('page_view', {
       title: document.title,
       referrer: document.referrer,

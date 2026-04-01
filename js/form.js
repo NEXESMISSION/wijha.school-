@@ -4,6 +4,14 @@
 // ============================================
 
 const WijhaForm = (() => {
+  // Use stateless anon client for public form submissions.
+  const publicFormClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+  });
   let isSubmitting = false;
   let submitCount = 0;
   const MAX_SUBMITS = 3;
@@ -16,11 +24,6 @@ const WijhaForm = (() => {
   function validatePhone(phone) {
     const cleaned = phone.replace(/[\s\-\(\)]/g, '');
     return /^\+?[0-9]{8,15}$/.test(cleaned);
-  }
-
-  function validateEmail(email) {
-    if (!email) return true;
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
   function showError(fieldId, message) {
@@ -64,9 +67,9 @@ const WijhaForm = (() => {
       valid = false;
     }
 
-    const email = document.getElementById('email').value.trim();
-    if (email && !validateEmail(email)) {
-      showError('email', 'البريد الإلكتروني غير صحيح');
+    const paymentMethod = document.getElementById('payment_method').value.trim();
+    if (!paymentMethod) {
+      showError('payment_method', 'الرجاء اختيار طريقة الدفع');
       valid = false;
     }
 
@@ -107,10 +110,12 @@ const WijhaForm = (() => {
       session_id: WijhaTracker.getSessionId(),
       full_name: sanitize(document.getElementById('full_name').value),
       phone: sanitize(document.getElementById('phone').value),
-      email: sanitize(document.getElementById('email').value) || null,
-      city: sanitize(document.getElementById('city').value) || null,
-      experience_level: sanitize(document.getElementById('experience').value) || null,
-      referral_source: sanitize(document.getElementById('referral').value) || null,
+      email: null,
+      payment_method: sanitize(document.getElementById('payment_method').value),
+      // Form is intentionally simplified for higher conversion
+      city: null,
+      experience_level: null,
+      referral_source: null,
       device_type: WijhaTracker.getDeviceType(),
       browser: WijhaTracker.getBrowser(),
       os: WijhaTracker.getOS(),
@@ -119,7 +124,7 @@ const WijhaForm = (() => {
     };
 
     try {
-      const { error } = await supabaseClient.from('registrations').insert(formData);
+      const { error } = await publicFormClient.from('registrations').insert(formData);
 
       if (error) throw error;
 

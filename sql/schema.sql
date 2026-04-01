@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS registrations (
   full_name TEXT NOT NULL CHECK (length(full_name) >= 2 AND length(full_name) <= 200),
   phone TEXT NOT NULL CHECK (length(phone) >= 8 AND length(phone) <= 20),
   email TEXT CHECK (email IS NULL OR (length(email) <= 200 AND email ~* '^[^@\s]+@[^@\s]+\.[^@\s]+$')),
+  payment_method TEXT NOT NULL CHECK (payment_method IN ('d17', 'flouci', 'bank_transfer', 'cash')),
   city TEXT CHECK (city IS NULL OR length(city) <= 200),
   experience_level TEXT CHECK (experience_level IS NULL OR experience_level IN ('beginner', 'basic', 'intermediate', 'advanced')),
   referral_source TEXT CHECK (referral_source IS NULL OR referral_source IN ('facebook', 'instagram', 'youtube', 'tiktok', 'friend', 'google', 'other')),
