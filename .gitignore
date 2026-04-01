@@ -31,3 +31,6 @@ npm-debug.log*
 dist/
 build/
 .cache/
+
+# Screenshots (local testing)
+screenshots/
