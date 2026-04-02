@@ -726,22 +726,32 @@ async function loadRageClicks() {
 // ---- Realtime ----
 async function loadRealtimeStats() {
   const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-  const { count: active } = await sb.from('sessions')
+  const { count: activeSessions } = await sb.from('sessions')
     .select('session_id', { count: 'exact', head: true })
     .gte('last_seen_at', fiveMinAgo);
 
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
 
-  const [todayVisitors, todayRegs] = await Promise.all([
+  const [todayVisitorsSessions, todayRegs, activeEventsRes, todayPageViewsRes] = await Promise.all([
     sb.from('sessions').select('session_id', { count: 'exact', head: true })
       .gte('started_at', todayStart.toISOString()),
     sb.from('registrations').select('id', { count: 'exact', head: true })
       .gte('created_at', todayStart.toISOString()),
+    sb.from('events').select('session_id')
+      .gte('created_at', fiveMinAgo),
+    sb.from('events').select('session_id')
+      .eq('event_type', 'page_view')
+      .gte('created_at', todayStart.toISOString()),
   ]);
 
+  const activeEvents = new Set((activeEventsRes.data || []).map(e => e.session_id).filter(Boolean)).size;
+  const todayVisitorsFromEvents = new Set((todayPageViewsRes.data || []).map(e => e.session_id).filter(Boolean)).size;
+  const active = Math.max(activeSessions || 0, activeEvents);
+  const todayVisitors = Math.max(todayVisitorsSessions.count || 0, todayVisitorsFromEvents);
+
   document.getElementById('rt-active').textContent = active || 0;
-  document.getElementById('rt-today-visitors').textContent = todayVisitors.count || 0;
+  document.getElementById('rt-today-visitors').textContent = todayVisitors || 0;
   document.getElementById('rt-today-registrations').textContent = todayRegs.count || 0;
 
   // Recent events
