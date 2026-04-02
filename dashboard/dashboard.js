@@ -93,18 +93,12 @@ async function loadAllData() {
       loadTimelineChart(),
       loadSourcesChart(),
       loadDevicesChart(),
-      loadScrollChart(),
-      loadHourlyChart(),
-      loadGeoChart(),
-      loadExperienceChart(),
-      loadRegistrationsTable(),
+      loadPaymentMethodsChart(),
+      loadFunnel(),
       loadUTMTable(),
       loadReferrerTable(),
-      loadBrowsersChart(),
-      loadOSChart(),
-      loadFunnel(),
-      loadFieldInteractions(),
-      loadRageClicks(),
+      loadTopPagesTable(),
+      loadRegistrationsTable(),
       loadRealtimeStats(),
     ]);
   } catch (err) {
@@ -141,6 +135,28 @@ async function loadKPIs() {
   document.getElementById('kpi-registrations').textContent = formatNumber(registrations);
   document.getElementById('kpi-conversion').textContent = conversion + '%';
 
+  let formEvQ = sb.from('events').select('event_type, session_id').in('event_type', [
+    'form_start', 'form_submit_success', 'form_submit_attempt', 'form_validation_error',
+  ]);
+  if (since) formEvQ = formEvQ.gte('created_at', since);
+  const { data: formEvs } = await formEvQ;
+
+  const formStarts = new Set();
+  const formSuccessSessions = new Set();
+  let attemptCount = 0;
+  let validationErrorCount = 0;
+  (formEvs || []).forEach((e) => {
+    if (e.event_type === 'form_start' && e.session_id) formStarts.add(e.session_id);
+    if (e.event_type === 'form_submit_success' && e.session_id) formSuccessSessions.add(e.session_id);
+    if (e.event_type === 'form_submit_attempt') attemptCount += 1;
+    if (e.event_type === 'form_validation_error') validationErrorCount += 1;
+  });
+
+  document.getElementById('kpi-form-starts').textContent = formatNumber(formStarts.size);
+  document.getElementById('kpi-form-success-events').textContent = formatNumber(formSuccessSessions.size);
+  document.getElementById('kpi-form-attempts-errors').textContent =
+    `${formatNumber(attemptCount)} / ${formatNumber(validationErrorCount)}`;
+
   // Avg time on page
   let timeQ = sb.from('events')
     .select('event_data')
@@ -156,23 +172,31 @@ async function loadKPIs() {
     document.getElementById('kpi-avg-time').textContent = '--';
   }
 
-  // Bounce rate (visitors with no scroll_25 event)
-  let allSessionsQ = sb.from('sessions').select('session_id');
-  if (since) allSessionsQ = allSessionsQ.gte('started_at', since);
-  const { data: allSessions } = await allSessionsQ;
-
+  // Bounce: among page_view sessions, share with no scroll_25 (fallback to sessions rows if no page_view data)
   let scrollQ = sb.from('events').select('session_id').eq('event_type', 'scroll_25');
   if (since) scrollQ = scrollQ.gte('created_at', since);
   const { data: scrolled } = await scrollQ;
+  const scrolledSet = new Set((scrolled || []).map(e => e.session_id).filter(Boolean));
 
-  const scrolledSet = new Set(scrolled?.map(e => e.session_id) || []);
-  const bounced = (allSessions || []).filter(s => !scrolledSet.has(s.session_id)).length;
-  const bounceRate = allSessions?.length > 0 ? ((bounced / allSessions.length) * 100).toFixed(1) : 0;
+  const pageViewSet = new Set((pvData || []).map(e => e.session_id).filter(Boolean));
+  let bounceRate = '0';
+  if (pageViewSet.size > 0) {
+    const bouncedPv = [...pageViewSet].filter(sid => !scrolledSet.has(sid)).length;
+    bounceRate = ((bouncedPv / pageViewSet.size) * 100).toFixed(1);
+  } else {
+    let allSessionsQ = sb.from('sessions').select('session_id');
+    if (since) allSessionsQ = allSessionsQ.gte('started_at', since);
+    const { data: allSessions } = await allSessionsQ;
+    const bounced = (allSessions || []).filter(s => !scrolledSet.has(s.session_id)).length;
+    bounceRate = allSessions?.length > 0 ? ((bounced / allSessions.length) * 100).toFixed(1) : '0';
+  }
   document.getElementById('kpi-bounce').textContent = bounceRate + '%';
 
   // Change indicators (compare with previous period)
   const range = document.getElementById('date-range').value;
   if (range !== 'all') {
+    document.getElementById('kpi-visitors-change').style.display = '';
+    document.getElementById('kpi-registrations-change').style.display = '';
     const days = parseInt(range);
     const prevStart = new Date();
     prevStart.setDate(prevStart.getDate() - days * 2);
@@ -190,6 +214,11 @@ async function loadKPIs() {
 
     setChange('kpi-visitors-change', visitors, prevSessions.count || 0);
     setChange('kpi-registrations-change', registrations, prevRegs.count || 0);
+  } else {
+    const vc = document.getElementById('kpi-visitors-change');
+    const rc = document.getElementById('kpi-registrations-change');
+    if (vc) { vc.textContent = '--'; vc.className = 'kpi-change'; }
+    if (rc) { rc.textContent = '--'; rc.className = 'kpi-change'; }
   }
 }
 
@@ -266,13 +295,14 @@ async function loadSourcesChart() {
     sources[src] = (sources[src] || 0) + 1;
   });
 
-  const sorted = Object.entries(sources).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  let sorted = Object.entries(sources).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  if (!sorted.length) sorted = [['لا بيانات جلسات', 1]];
 
   renderChart('chart-sources', 'doughnut', {
     labels: sorted.map(([k]) => k),
     datasets: [{
       data: sorted.map(([, v]) => v),
-      backgroundColor: COLOR_ARRAY,
+      backgroundColor: sorted.length === 1 && sorted[0][0] === 'لا بيانات جلسات' ? ['#e2e8f0'] : COLOR_ARRAY,
       borderWidth: 0,
     }]
   }, {
@@ -295,12 +325,14 @@ async function loadDevicesChart() {
   });
 
   const labels = { mobile: 'موبايل', desktop: 'كمبيوتر', tablet: 'تابلت', unknown: 'غير معروف' };
+  const devicesEmpty = !Object.keys(devices).length;
+  if (devicesEmpty) devices.unknown = 1;
 
   renderChart('chart-devices', 'doughnut', {
     labels: Object.keys(devices).map(k => labels[k] || k),
     datasets: [{
       data: Object.values(devices),
-      backgroundColor: [COLORS.blue, COLORS.purple, COLORS.orange, COLORS.teal],
+      backgroundColor: devicesEmpty ? ['#e2e8f0'] : [COLORS.blue, COLORS.purple, COLORS.orange, COLORS.teal],
       borderWidth: 0,
     }]
   }, {
@@ -309,109 +341,8 @@ async function loadDevicesChart() {
   });
 }
 
-// ---- Scroll Depth Chart ----
-async function loadScrollChart() {
-  const since = getDateRange();
-  const milestones = ['scroll_25', 'scroll_50', 'scroll_75', 'scroll_100'];
-  const counts = [];
-
-  for (const m of milestones) {
-    let q = sb.from('events').select('session_id', { count: 'exact', head: true }).eq('event_type', m);
-    if (since) q = q.gte('created_at', since);
-    const { count } = await q;
-    counts.push(count || 0);
-  }
-
-  renderChart('chart-scroll', 'bar', {
-    labels: ['25%', '50%', '75%', '100%'],
-    datasets: [{
-      label: 'عدد الزوار',
-      data: counts,
-      backgroundColor: [
-        'rgba(59, 130, 246, 0.7)',
-        'rgba(167, 139, 250, 0.7)',
-        'rgba(251, 191, 36, 0.7)',
-        'rgba(74, 222, 128, 0.7)',
-      ],
-      borderRadius: 8,
-      barThickness: 50,
-    }]
-  }, {
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { color: 'rgba(59,130,246,0.06)' }, beginAtZero: true },
-    },
-    plugins: { legend: { display: false } },
-  });
-}
-
-// ---- Hourly Traffic ----
-async function loadHourlyChart() {
-  const since = getDateRange();
-  let q = sb.from('sessions').select('started_at');
-  if (since) q = q.gte('started_at', since);
-  const { data } = await q;
-
-  const hourly = new Array(24).fill(0);
-  (data || []).forEach(s => {
-    const h = new Date(s.started_at).getHours();
-    hourly[h]++;
-  });
-
-  renderChart('chart-hourly', 'bar', {
-    labels: hourly.map((_, i) => `${i}:00`),
-    datasets: [{
-      label: 'الزوار',
-      data: hourly,
-      backgroundColor: 'rgba(59, 130, 246, 0.5)',
-      borderColor: COLORS.blue,
-      borderWidth: 1,
-      borderRadius: 4,
-    }]
-  }, {
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { color: 'rgba(59,130,246,0.06)' }, beginAtZero: true },
-    },
-    plugins: { legend: { display: false } },
-  });
-}
-
-// ---- Geographic Chart ----
-async function loadGeoChart() {
-  const since = getDateRange();
-  let q = sb.from('sessions').select('country');
-  if (since) q = q.gte('started_at', since);
-  const { data } = await q;
-
-  const countries = {};
-  (data || []).forEach(s => {
-    const c = s.country || 'Unknown';
-    countries[c] = (countries[c] || 0) + 1;
-  });
-
-  const sorted = Object.entries(countries).sort((a, b) => b[1] - a[1]).slice(0, 10);
-
-  renderChart('chart-geo', 'bar', {
-    labels: sorted.map(([k]) => k),
-    datasets: [{
-      label: 'الزوار',
-      data: sorted.map(([, v]) => v),
-      backgroundColor: COLOR_ARRAY,
-      borderRadius: 6,
-    }]
-  }, {
-    indexAxis: 'y',
-    scales: {
-      x: { grid: { color: 'rgba(59,130,246,0.06)' }, beginAtZero: true },
-      y: { grid: { display: false } },
-    },
-    plugins: { legend: { display: false } },
-  });
-}
-
-// ---- Experience Level Chart ----
-async function loadExperienceChart() {
+// ---- Payment methods (registrations) ----
+async function loadPaymentMethodsChart() {
   const since = getDateRange();
   let q = sb.from('registrations').select('payment_method');
   if (since) q = q.gte('created_at', since);
@@ -421,8 +352,8 @@ async function loadExperienceChart() {
   const labelMap = {
     d17: 'D17',
     flouci: 'Flouci',
-    bank_transfer: 'Bank Transfer',
-    cash: 'Cash',
+    bank_transfer: 'تحويل بنكي',
+    cash: 'نقدي',
     '': 'غير محدد',
     null: 'غير محدد',
   };
@@ -433,14 +364,18 @@ async function loadExperienceChart() {
     methods[label] = (methods[label] || 0) + 1;
   });
 
-  renderChart('chart-experience', 'pie', {
-    labels: Object.keys(methods),
+  const labels = Object.keys(methods);
+  const values = Object.values(methods);
+  const empty = !labels.length;
+  renderChart('chart-payment', 'doughnut', {
+    labels: empty ? ['لا توجد تسجيلات في الفترة'] : labels,
     datasets: [{
-      data: Object.values(methods),
-      backgroundColor: COLOR_ARRAY,
+      data: empty ? [1] : values,
+      backgroundColor: empty ? ['#e2e8f0'] : COLOR_ARRAY,
       borderWidth: 0,
     }]
   }, {
+    cutout: '58%',
     plugins: { legend: { position: 'bottom' } },
   });
 }
@@ -565,40 +500,35 @@ async function loadReferrerTable() {
   });
 }
 
-// ---- Browsers Chart ----
-async function loadBrowsersChart() {
+// ---- Top pages (page_view URLs) ----
+async function loadTopPagesTable() {
   const since = getDateRange();
-  let q = sb.from('sessions').select('browser');
-  if (since) q = q.gte('started_at', since);
+  let q = sb.from('events').select('page_url').eq('event_type', 'page_view');
+  if (since) q = q.gte('created_at', since);
   const { data } = await q;
 
-  const browsers = {};
-  (data || []).forEach(s => {
-    browsers[s.browser || 'Other'] = (browsers[s.browser || 'Other'] || 0) + 1;
+  const counts = {};
+  (data || []).forEach((e) => {
+    const u = (e.page_url || '').trim() || '(بدون رابط)';
+    counts[u] = (counts[u] || 0) + 1;
   });
 
-  renderChart('chart-browsers', 'doughnut', {
-    labels: Object.keys(browsers),
-    datasets: [{ data: Object.values(browsers), backgroundColor: COLOR_ARRAY, borderWidth: 0 }]
-  }, { cutout: '60%', plugins: { legend: { position: 'bottom' } } });
-}
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  const tbody = document.getElementById('top-pages-body');
+  if (!tbody) return;
+  tbody.innerHTML = '';
 
-// ---- OS Chart ----
-async function loadOSChart() {
-  const since = getDateRange();
-  let q = sb.from('sessions').select('os');
-  if (since) q = q.gte('started_at', since);
-  const { data } = await q;
+  if (!sorted.length) {
+    tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;color:var(--text-muted);padding:24px">لا توجد بيانات</td></tr>';
+    return;
+  }
 
-  const osMap = {};
-  (data || []).forEach(s => {
-    osMap[s.os || 'Other'] = (osMap[s.os || 'Other'] || 0) + 1;
+  sorted.forEach(([url, n]) => {
+    const tr = document.createElement('tr');
+    const short = url.length > 72 ? url.slice(0, 70) + '…' : url;
+    tr.innerHTML = `<td dir="ltr" style="font-size:12px;max-width:280px;overflow:hidden;text-overflow:ellipsis">${esc(short)}</td><td>${n}</td>`;
+    tbody.appendChild(tr);
   });
-
-  renderChart('chart-os', 'doughnut', {
-    labels: Object.keys(osMap),
-    datasets: [{ data: Object.values(osMap), backgroundColor: COLOR_ARRAY, borderWidth: 0 }]
-  }, { cutout: '60%', plugins: { legend: { position: 'bottom' } } });
 }
 
 // ---- Funnel ----
@@ -606,7 +536,7 @@ async function loadFunnel() {
   const since = getDateRange();
   const steps = [
     { type: 'page_view', label: 'زيارة الصفحة' },
-    { type: 'scroll_50', label: 'تمرير 50%' },
+    { type: 'scroll_25', label: 'تمرير 25٪+' },
     { type: 'form_impression', label: 'رؤية النموذج' },
     { type: 'form_start', label: 'بدء التعبئة' },
     { type: 'form_submit_success', label: 'إتمام التسجيل' },
@@ -653,74 +583,6 @@ async function loadFunnel() {
   });
 }
 
-// ---- Field Interactions ----
-async function loadFieldInteractions() {
-  const since = getDateRange();
-  let q = sb.from('events')
-    .select('event_data')
-    .eq('event_type', 'field_focus');
-  if (since) q = q.gte('created_at', since);
-  const { data } = await q;
-
-  const fields = {};
-  const fieldLabels = {
-    full_name: 'الاسم', phone: 'الهاتف', email: 'البريد',
-    city: 'المدينة', experience: 'الخبرة', referral: 'المصدر'
-  };
-
-  (data || []).forEach(e => {
-    const f = e.event_data?.field;
-    if (f) fields[f] = (fields[f] || 0) + 1;
-  });
-
-  renderChart('chart-field-interactions', 'bar', {
-    labels: Object.keys(fields).map(k => fieldLabels[k] || k),
-    datasets: [{
-      label: 'عدد التفاعلات',
-      data: Object.values(fields),
-      backgroundColor: COLOR_ARRAY,
-      borderRadius: 6,
-    }]
-  }, {
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { color: 'rgba(59,130,246,0.06)' }, beginAtZero: true },
-    },
-    plugins: { legend: { display: false } },
-  });
-}
-
-// ---- Rage Clicks ----
-async function loadRageClicks() {
-  const since = getDateRange();
-  let q = sb.from('events')
-    .select('created_at')
-    .eq('event_type', 'rage_click');
-  if (since) q = q.gte('created_at', since);
-  const { data } = await q;
-
-  const byDay = groupByDay(data || [], 'created_at');
-  const days = Object.keys(byDay).sort();
-
-  renderChart('chart-rage-clicks', 'bar', {
-    labels: days.map(d => formatDate(d)),
-    datasets: [{
-      label: 'نقرات غاضبة',
-      data: days.map(d => byDay[d] || 0),
-      backgroundColor: 'rgba(248, 113, 113, 0.6)',
-      borderColor: COLORS.red,
-      borderWidth: 1,
-      borderRadius: 4,
-    }]
-  }, {
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { color: 'rgba(59,130,246,0.06)' }, beginAtZero: true },
-    },
-    plugins: { legend: { display: false } },
-  });
-}
-
 // ---- Realtime ----
 async function loadRealtimeStats() {
   const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
@@ -751,13 +613,19 @@ async function loadRealtimeStats() {
   const { data: recentEvents } = await sb.from('events')
     .select('*')
     .order('created_at', { ascending: false })
-    .limit(50);
+    .limit(120);
 
   const feed = document.getElementById('events-feed');
   feed.innerHTML = '';
 
-  if (!recentEvents?.length) {
-    feed.innerHTML = '<div class="event-placeholder">لا توجد أحداث بعد</div>';
+  const feedTypes = new Set([
+    'page_view', 'form_impression', 'form_start', 'form_submit_attempt', 'form_submit_success',
+    'form_validation_error', 'form_submit_error', 'cta_click',
+  ]);
+  const filtered = (recentEvents || []).filter((e) => feedTypes.has(e.event_type)).slice(0, 40);
+
+  if (!filtered.length) {
+    feed.innerHTML = '<div class="event-placeholder">لا توجد أحداث مهمة حديثة (أو البيانات قديمة)</div>';
     return;
   }
 
@@ -772,6 +640,7 @@ async function loadRealtimeStats() {
     form_submit_success: '✅ تسجيل ناجح',
     form_submit_attempt: '🔄 محاولة إرسال',
     form_validation_error: '⚠️ خطأ تحقق',
+    form_submit_error: '❌ فشل إرسال',
     cta_click: '🖱 نقر CTA',
     page_leave: '🚪 مغادرة',
     rage_click: '😤 نقرات غاضبة',
@@ -786,10 +655,11 @@ async function loadRealtimeStats() {
   const dotClass = {
     page_view: 'view', scroll_25: 'scroll', scroll_50: 'scroll', scroll_75: 'scroll', scroll_100: 'scroll',
     form_impression: 'form', form_start: 'form', form_submit_success: 'submit',
+    form_validation_error: 'leave', form_submit_error: 'leave',
     cta_click: 'click', page_leave: 'leave', rage_click: 'leave',
   };
 
-  recentEvents.forEach(e => {
+  filtered.forEach(e => {
     const div = document.createElement('div');
     div.className = 'event-item';
     div.innerHTML = `
@@ -938,37 +808,14 @@ function esc(str) {
   return d.innerHTML;
 }
 
-// ---- Navigation ----
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', (e) => {
-    e.preventDefault();
-    const section = item.dataset.section;
-
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    item.classList.add('active');
-
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.getElementById(`section-${section}`).classList.add('active');
-
-    const titles = {
-      overview: ['نظرة عامة', 'إحصائيات شاملة لأداء صفحة التسجيل'],
-      registrations: ['التسجيلات', 'قائمة جميع التسجيلات مع التفاصيل'],
-      traffic: ['حركة المرور', 'تحليل مصادر الزيارات والمُحيلين'],
-      funnel: ['القمع التحويلي', 'تتبع رحلة الزائر من الدخول إلى التسجيل'],
-      realtime: ['الوقت الفعلي', 'مراقبة النشاط المباشر على الموقع'],
-    };
-
-    document.getElementById('page-title').textContent = titles[section]?.[0] || '';
-    document.getElementById('page-subtitle').textContent = titles[section]?.[1] || '';
-  });
-});
-
 // ---- Event Listeners ----
 document.getElementById('login-form').addEventListener('submit', handleLogin);
 document.getElementById('logout-btn').addEventListener('click', handleLogout);
 document.getElementById('refresh-btn').addEventListener('click', loadAllData);
 document.getElementById('date-range').addEventListener('change', loadAllData);
 document.getElementById('export-csv').addEventListener('click', exportCSV);
+const exportTop = document.getElementById('export-csv-top');
+if (exportTop) exportTop.addEventListener('click', exportCSV);
 document.getElementById('prev-page').addEventListener('click', () => loadRegistrationsTable(currentPage - 1));
 document.getElementById('next-page').addEventListener('click', () => loadRegistrationsTable(currentPage + 1));
 

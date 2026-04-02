@@ -44,6 +44,9 @@ body {
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   padding: 14px 0; transition: all 0.25s ease;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
 .navbar.scrolled {
@@ -56,6 +59,7 @@ body {
 .nav-content {
   display: flex; align-items: center; justify-content: space-between;
   max-width: 1120px; margin: 0 auto; padding: 0 24px;
+  min-height: 44px;
 }
 
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
@@ -245,7 +249,7 @@ section { padding: 52px 0; }
 .form-group input,
 .form-group select {
   width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border-strong);
-  background: #fff; color: var(--text); outline: none; font-size: 15px; font-family: inherit;
+  background: #fff; color: var(--text); outline: none; font-size: 16px; font-family: inherit;
   transition: all 0.2s ease;
 }
 .form-group input::placeholder { color: #94a3b8; }
@@ -357,7 +361,7 @@ section { padding: 52px 0; }
   .form-title { font-size: 24px; }
   .form-subtitle { font-size: 13px; margin-bottom: 18px; }
   .form-group { margin-bottom: 12px; }
-  .form-group input, .form-group select { font-size: 14px; padding: 11px 12px; }
+  .form-group input, .form-group select { font-size: 16px; padding: 11px 12px; }
   .submit-btn { padding: 13px; font-size: 16px; }
   .post-click-clarity { font-size: 11px; }
   .nav-cta { padding: 8px 14px; font-size: 13px; }

@@ -30,18 +30,44 @@ const WijhaTracker = (() => {
   let mouseIdleTimer = null;
   let lastMouseMove = Date.now();
   let consecutiveEventFailures = 0;
+  let inMemorySessionId = null;
 
   function generateId() {
     return 'wxs_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 9);
   }
 
   function getSessionId() {
-    let sid = sessionStorage.getItem('wijha_session_id');
-    if (!sid) {
-      sid = generateId();
-      sessionStorage.setItem('wijha_session_id', sid);
+    try {
+      let sid = sessionStorage.getItem('wijha_session_id');
+      if (!sid) {
+        sid = generateId();
+        sessionStorage.setItem('wijha_session_id', sid);
+      }
+      return sid;
+    } catch (_) {
+      // Some mobile/privacy browsers can block sessionStorage access.
+      if (!inMemorySessionId) inMemorySessionId = generateId();
+      return inMemorySessionId;
     }
-    return sid;
+  }
+
+  async function insertEventViaRest(payload) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/events`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      });
+      return res.ok;
+    } catch (_) {
+      return false;
+    }
   }
 
   function getUTMParams() {
@@ -166,6 +192,12 @@ const WijhaTracker = (() => {
       const { error } = await trackingClient.from('events').insert(payload);
       if (error) {
         console.warn('Event tracking error:', error.message);
+        const fallbackOk = await insertEventViaRest(payload);
+        if (fallbackOk) {
+          consecutiveEventFailures = 0;
+          engagementScore += getEventWeight(eventType);
+          return;
+        }
         consecutiveEventFailures += 1;
         // Stop only after repeated failures to avoid killing tracking on transient/network errors.
         if (consecutiveEventFailures >= 5) {
@@ -176,6 +208,12 @@ const WijhaTracker = (() => {
       consecutiveEventFailures = 0;
     } catch (e) {
       console.warn('Event tracking failed:', e);
+      const fallbackOk = await insertEventViaRest(payload);
+      if (fallbackOk) {
+        consecutiveEventFailures = 0;
+        engagementScore += getEventWeight(eventType);
+        return;
+      }
       consecutiveEventFailures += 1;
       if (consecutiveEventFailures >= 5) {
         trackingEnabled = false;
