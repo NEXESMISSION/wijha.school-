@@ -29,6 +29,7 @@ const WijhaTracker = (() => {
   let fieldInteractions = {};
   let mouseIdleTimer = null;
   let lastMouseMove = Date.now();
+  let consecutiveEventFailures = 0;
 
   function generateId() {
     return 'wxs_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 9);
@@ -138,14 +139,14 @@ const WijhaTracker = (() => {
         .upsert(sessionData, { onConflict: 'session_id' });
       if (error) {
         console.warn('Session create error:', error.message);
-        trackingEnabled = false;
-        return false;
+        // Keep event tracking alive even if sessions table write is blocked.
+        return true;
       }
       return true;
     } catch (e) {
       console.warn('Session tracking failed:', e);
-      trackingEnabled = false;
-      return false;
+      // Keep event tracking alive even if sessions table write fails.
+      return true;
     }
   }
 
@@ -165,13 +166,20 @@ const WijhaTracker = (() => {
       const { error } = await trackingClient.from('events').insert(payload);
       if (error) {
         console.warn('Event tracking error:', error.message);
-        // Prevent repeated failing requests (e.g. RLS 403)
-        trackingEnabled = false;
+        consecutiveEventFailures += 1;
+        // Stop only after repeated failures to avoid killing tracking on transient/network errors.
+        if (consecutiveEventFailures >= 5) {
+          trackingEnabled = false;
+        }
         return;
       }
+      consecutiveEventFailures = 0;
     } catch (e) {
       console.warn('Event tracking failed:', e);
-      trackingEnabled = false;
+      consecutiveEventFailures += 1;
+      if (consecutiveEventFailures >= 5) {
+        trackingEnabled = false;
+      }
       return;
     }
 
@@ -284,6 +292,7 @@ const WijhaTracker = (() => {
     heartbeatInterval = setInterval(() => {
       if (trackingEnabled && isPageVisible) {
         const timeOnPage = Math.round((Date.now() - sessionStartTime) / 1000);
+        trackEvent('heartbeat', { seconds: timeOnPage, engagement_score: engagementScore });
         trackEvent('time_on_page', { seconds: timeOnPage, engagement_score: engagementScore });
 
         trackingClient
@@ -383,8 +392,7 @@ const WijhaTracker = (() => {
   }
 
   async function init() {
-    const sessionReady = await createSession();
-    if (!sessionReady) return;
+    await createSession();
 
     trackEvent('page_view', {
       title: document.title,

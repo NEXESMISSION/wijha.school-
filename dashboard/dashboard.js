@@ -128,14 +128,12 @@ async function loadKPIs() {
 
   const [sessionsRes, regsRes] = await Promise.all([sessionsQ, regsQ]);
 
-  let visitors = sessionsRes.count || 0;
-  // Fallback: when session tracking is partially blocked, estimate visitors from page_view events.
-  if (visitors === 0) {
-    let pvQ = sb.from('events').select('session_id').eq('event_type', 'page_view');
-    if (since) pvQ = pvQ.gte('created_at', since);
-    const { data: pvData } = await pvQ;
-    visitors = new Set((pvData || []).map(e => e.session_id)).size;
-  }
+  let pvQ = sb.from('events').select('session_id').eq('event_type', 'page_view');
+  if (since) pvQ = pvQ.gte('created_at', since);
+  const { data: pvData } = await pvQ;
+  const visitorsFromEvents = new Set((pvData || []).map(e => e.session_id).filter(Boolean)).size;
+  const visitorsFromSessions = sessionsRes.count || 0;
+  const visitors = Math.max(visitorsFromSessions, visitorsFromEvents);
   const registrations = regsRes.count || 0;
   const conversion = visitors > 0 ? ((registrations / visitors) * 100).toFixed(1) : 0;
 
@@ -210,15 +208,15 @@ function setChange(elId, current, previous) {
 // ---- Timeline Chart ----
 async function loadTimelineChart() {
   const since = getDateRange();
-  let q = sb.from('sessions').select('started_at');
-  if (since) q = q.gte('started_at', since);
-  const { data: sessions } = await q;
+  let q = sb.from('events').select('session_id, created_at').eq('event_type', 'page_view');
+  if (since) q = q.gte('created_at', since);
+  const { data: pageViews } = await q;
 
   let rq = sb.from('registrations').select('created_at');
   if (since) rq = rq.gte('created_at', since);
   const { data: regs } = await rq;
 
-  const sessionsByDay = groupByDay(sessions || [], 'started_at');
+  const sessionsByDay = groupUniqueSessionsByDay(pageViews || [], 'created_at');
   const regsByDay = groupByDay(regs || [], 'created_at');
 
   const allDays = [...new Set([...Object.keys(sessionsByDay), ...Object.keys(regsByDay)])].sort();
@@ -726,31 +724,26 @@ async function loadRageClicks() {
 // ---- Realtime ----
 async function loadRealtimeStats() {
   const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-  const { count: activeSessions } = await sb.from('sessions')
-    .select('session_id', { count: 'exact', head: true })
-    .gte('last_seen_at', fiveMinAgo);
+  const { data: activeEventsRes } = await sb.from('events')
+    .select('session_id')
+    .gte('created_at', fiveMinAgo);
 
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
 
-  const [todayVisitorsSessions, todayRegs, activeEventsRes, todayPageViewsRes] = await Promise.all([
-    sb.from('sessions').select('session_id', { count: 'exact', head: true })
-      .gte('started_at', todayStart.toISOString()),
-    sb.from('registrations').select('id', { count: 'exact', head: true })
-      .gte('created_at', todayStart.toISOString()),
-    sb.from('events').select('session_id')
-      .gte('created_at', fiveMinAgo),
+  const [todayPageViewsRes, todayRegs] = await Promise.all([
     sb.from('events').select('session_id')
       .eq('event_type', 'page_view')
       .gte('created_at', todayStart.toISOString()),
+    sb.from('registrations').select('id', { count: 'exact', head: true })
+      .gte('created_at', todayStart.toISOString()),
   ]);
 
-  const activeEvents = new Set((activeEventsRes.data || []).map(e => e.session_id).filter(Boolean)).size;
-  const todayVisitorsFromEvents = new Set((todayPageViewsRes.data || []).map(e => e.session_id).filter(Boolean)).size;
-  const active = Math.max(activeSessions || 0, activeEvents);
-  const todayVisitors = Math.max(todayVisitorsSessions.count || 0, todayVisitorsFromEvents);
+  // activeEventsRes is the rows array from { data: activeEventsRes }.
+  const activeEvents = new Set((activeEventsRes || []).map(e => e.session_id).filter(Boolean)).size;
+  const todayVisitors = new Set((todayPageViewsRes.data || []).map(e => e.session_id).filter(Boolean)).size;
 
-  document.getElementById('rt-active').textContent = active || 0;
+  document.getElementById('rt-active').textContent = activeEvents || 0;
   document.getElementById('rt-today-visitors').textContent = todayVisitors || 0;
   document.getElementById('rt-today-registrations').textContent = todayRegs.count || 0;
 
@@ -784,8 +777,10 @@ async function loadRealtimeStats() {
     rage_click: '😤 نقرات غاضبة',
     field_focus: '📝 تعبئة حقل',
     time_on_page: '⏱ وقت الصفحة',
+    heartbeat: '💓 نشاط (نبض)',
     page_hidden: '👻 إخفاء التبويب',
     page_visible: '👀 عودة للتبويب',
+    section_visible: '👁 قسم ظهر',
   };
 
   const dotClass = {
@@ -818,7 +813,7 @@ function setupRealtime() {
     })
     .subscribe();
 
-  setInterval(loadRealtimeStats, 30000);
+  setInterval(loadRealtimeStats, 10000);
 }
 
 // ---- CSV Export ----
@@ -909,6 +904,22 @@ function groupByDay(items, field) {
   return groups;
 }
 
+function groupUniqueSessionsByDay(items, field) {
+  const groups = {};
+  items.forEach(item => {
+    const day = item[field]?.slice(0, 10);
+    const sid = item.session_id;
+    if (!day || !sid) return;
+    if (!groups[day]) groups[day] = new Set();
+    groups[day].add(sid);
+  });
+  const counts = {};
+  Object.entries(groups).forEach(([day, set]) => {
+    counts[day] = set.size;
+  });
+  return counts;
+}
+
 function categorizeReferrer(ref) {
   if (!ref) return 'مباشر';
   ref = ref.toLowerCase();
@@ -960,6 +971,13 @@ document.getElementById('date-range').addEventListener('change', loadAllData);
 document.getElementById('export-csv').addEventListener('click', exportCSV);
 document.getElementById('prev-page').addEventListener('click', () => loadRegistrationsTable(currentPage - 1));
 document.getElementById('next-page').addEventListener('click', () => loadRegistrationsTable(currentPage + 1));
+
+// Refresh realtime when returning to the tab (avoids stale "مباشر" until next poll).
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && document.getElementById('dashboard').style.display !== 'none') {
+    loadRealtimeStats();
+  }
+});
 
 // ---- Init ----
 checkAuth();
