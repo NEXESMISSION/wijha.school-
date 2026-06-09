@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WIJHA Academy — Crée ton Application Web avec l'IA</title>
+  <meta name="description" content="Formation avancée : construis une vraie application web avec l'IA — base de données, comptes, paiements. Pré-inscription 350 DT (prix réel 700 DT)." />
+  <meta name="theme-color" content="#2563eb" />
+  <link rel="icon" href="logo.png" type="image/png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="WIJHA Academy" />
+  <meta property="og:title" content="Crée ton Application Web avec l'IA — WIJHA Academy" />
+  <meta property="og:description" content="Une vraie app avec l'IA : base de données, comptes & paiements. Pré-inscription 350 DT." />
+  <meta property="og:image" content="img/og-cover.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="course.css" />
+  <script>if('scrollRestoration' in history)history.scrollRestoration='manual';addEventListener('load',function(){if(!location.hash)window.scrollTo(0,0);});</script>
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="cnav">
+    <div class="wrap cnav__inner">
+      <a class="cnav__back" href="index.html" aria-label="Retour à l'accueil">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="brand" href="index.html">
+        <img class="brand__mark" src="logo.png" alt="WIJHA Academy" />
+        <span><span class="brand__name">WIJHA</span><span class="brand__sub" style="display:block">Academy</span></span>
+      </a>
+      <a class="btn btn--pop" href="#reserver">Je me pré-inscris</a>
+    </div>
+  </header>
+
+  <!-- LE PARCOURS (roadmap : étapes + outils, en images) -->
+  <section class="csec csec--tint" style="padding-top: clamp(54px, 9vh, 96px)">
+    <div class="wrap">
+      <div class="csec__head">
+        <div class="csec__badge"><span class="chero__level">🚧 Niveau 2 · En préparation</span></div>
+        <span class="kicker">Le parcours</span>
+        <h2>Ce que tu construis, <span class="pop-text">étape par étape</span></h2>
+        <p>Sur 4 sessions live (8h au total, 1 par jour) : d'une idée à une app qui encaisse — et les outils que tu vas utiliser.</p>
+      </div>
+      <div class="csteps">
+        <article class="cstep">
+          <div class="cstep__media"><span class="cstep__n">1</span>
+            <div class="cstep__shots cstep__shots--1">
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Plan du produit</figcaption></figure>
+            </div>
+          </div>
+          <div class="cstep__body">
+            <span class="cstep__tool">Plan · IA</span>
+            <h3>Cadrer le produit</h3>
+            <p>Avant de coder, on transforme ton idée en plan clair : ce que l'app fait, pour qui, et la première version à livrer (le MVP).</p>
+            <ul class="cstep__points">
+              <li>Définir le problème & les utilisateurs</li>
+              <li>Lister les fonctionnalités (et couper le superflu)</li>
+              <li>Cadrer le MVP avec l'IA</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cstep">
+          <div class="cstep__media"><span class="cstep__n">2</span>
+            <div class="cstep__shots cstep__shots--2">
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Sur ordinateur</figcaption></figure>
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Sur mobile</figcaption></figure>
+            </div>
+          </div>
+          <div class="cstep__body">
+            <span class="cstep__tool">UI · IA</span>
+            <h3>Design & maquette</h3>
+            <p>On dessine les écrans avant de les construire : à quoi ressemble l'app, page par page, sur ordi et sur mobile.</p>
+            <ul class="cstep__points">
+              <li>Maquetter les écrans clés</li>
+              <li>Couleurs, typo & composants</li>
+              <li>Pensé mobile + ordinateur</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cstep">
+          <div class="cstep__media"><span class="cstep__n">3</span>
+            <div class="cstep__shots cstep__shots--2">
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Interface</figcaption></figure>
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Composants</figcaption></figure>
+            </div>
+          </div>
+          <div class="cstep__body">
+            <span class="cstep__tool">React · Next.js</span>
+            <h3>Construire le front</h3>
+            <p>L'interface réelle, construite avec l'IA : pages, navigation, boutons et formulaires — moderne et rapide.</p>
+            <ul class="cstep__points">
+              <li>Générer l'interface avec l'IA</li>
+              <li>Composants réutilisables</li>
+              <li>Navigation entre les pages</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cstep">
+          <div class="cstep__media"><span class="cstep__n">4</span>
+            <div class="cstep__shots cstep__shots--2">
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Tables</figcaption></figure>
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Données en direct</figcaption></figure>
+            </div>
+          </div>
+          <div class="cstep__body">
+            <span class="cstep__tool">Supabase</span>
+            <h3>Base de données</h3>
+            <p>Ton app se souvient de tout : on crée les tables et on connecte l'app pour stocker et lire les données.</p>
+            <ul class="cstep__points">
+              <li>Concevoir les tables</li>
+              <li>Stocker, lire & mettre à jour</li>
+              <li>Relier l'app à la base</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cstep">
+          <div class="cstep__media"><span class="cstep__n">5</span>
+            <div class="cstep__shots cstep__shots--2">
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Inscription</figcaption></figure>
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Connexion</figcaption></figure>
+            </div>
+          </div>
+          <div class="cstep__body">
+            <span class="cstep__tool">Auth · Sécurité</span>
+            <h3>Comptes & connexion</h3>
+            <p>Tes utilisateurs ont des comptes : inscription, connexion, et chacun ne voit que ce qui le concerne.</p>
+            <ul class="cstep__points">
+              <li>Inscription & connexion</li>
+              <li>Mot de passe ou Google</li>
+              <li>Sécuriser l'accès aux données</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cstep">
+          <div class="cstep__media"><span class="cstep__n">6</span>
+            <div class="cstep__shots cstep__shots--2">
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Logique</figcaption></figure>
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Intégrations</figcaption></figure>
+            </div>
+          </div>
+          <div class="cstep__body">
+            <span class="cstep__tool">Backend · IA</span>
+            <h3>Logique & APIs</h3>
+            <p>Là où l'app devient vraiment utile : la logique métier, les automatisations, et les connexions à des services externes.</p>
+            <ul class="cstep__points">
+              <li>Écrire la logique avec l'IA</li>
+              <li>Connecter des APIs externes</li>
+              <li>Automatiser les tâches</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cstep">
+          <div class="cstep__media"><span class="cstep__n">7</span>
+            <div class="cstep__shots cstep__shots--2">
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Page de paiement</figcaption></figure>
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Abonnements</figcaption></figure>
+            </div>
+          </div>
+          <div class="cstep__body">
+            <span class="cstep__tool">Dodo Payments</span>
+            <h3>Paiements & abonnements</h3>
+            <p>Fais payer tes utilisateurs : paiement unique ou abonnement, encaissé en ligne — même depuis la Tunisie.</p>
+            <ul class="cstep__points">
+              <li>Intégrer le paiement</li>
+              <li>Abonnement ou achat unique</li>
+              <li>Gérer les accès payants</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cstep">
+          <div class="cstep__media"><span class="cstep__n">8</span>
+            <div class="cstep__shots cstep__shots--2">
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Panneau admin</figcaption></figure>
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Analytics</figcaption></figure>
+            </div>
+          </div>
+          <div class="cstep__body">
+            <span class="cstep__tool">Dashboard · Analytics</span>
+            <h3>Admin & analytics</h3>
+            <p>Un panneau d'administration pour gérer ton app (utilisateurs, contenu, ventes) et des analytics pour voir ce qui marche : qui vient, d'où, et ce qu'ils font.</p>
+            <ul class="cstep__points">
+              <li>Tableau de bord pour tout gérer</li>
+              <li>Suivre utilisateurs, ventes &amp; usage</li>
+              <li>Décider grâce aux données</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cstep">
+          <div class="cstep__media"><span class="cstep__n">9</span>
+            <div class="cstep__shots cstep__shots--2">
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Installation</figcaption></figure>
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Notification push</figcaption></figure>
+            </div>
+          </div>
+          <div class="cstep__body">
+            <span class="cstep__tool">PWA · Notifications</span>
+            <h3>App installable (PWA)</h3>
+            <p>Transforme ton site en vraie app : installable sur le téléphone (icône sur l'écran d'accueil), qui marche même hors-ligne et envoie des notifications.</p>
+            <ul class="cstep__points">
+              <li>Installer l'app sur l'écran d'accueil</li>
+              <li>Fonctionne même hors-ligne</li>
+              <li>Notifications push pour faire revenir tes users</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cstep">
+          <div class="cstep__media"><span class="cstep__n">10</span>
+            <div class="cstep__shots cstep__shots--2">
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Code OTP</figcaption></figure>
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>SMS reçu</figcaption></figure>
+            </div>
+          </div>
+          <div class="cstep__body">
+            <span class="cstep__tool">SMS · OTP</span>
+            <h3>Intégration SMS</h3>
+            <p>Envoie des SMS depuis ton app : codes de vérification (OTP) à l'inscription, rappels et alertes — pour fiabiliser tes comptes et engager tes utilisateurs.</p>
+            <ul class="cstep__points">
+              <li>Code de vérification (OTP) par SMS</li>
+              <li>Rappels & alertes automatiques</li>
+              <li>Connexion à une passerelle SMS</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cstep">
+          <div class="cstep__media"><span class="cstep__n">11</span>
+            <div class="cstep__shots cstep__shots--2">
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Déploiement</figcaption></figure>
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Ton domaine</figcaption></figure>
+            </div>
+          </div>
+          <div class="cstep__body">
+            <span class="cstep__tool">Vercel · Cloudflare</span>
+            <h3>Déploiement & domaine</h3>
+            <p>Ton app en ligne pour le monde entier : rapide, sécurisée, avec ton propre nom de domaine.</p>
+            <ul class="cstep__points">
+              <li>Mettre en production</li>
+              <li>Domaine + HTTPS sécurisé</li>
+              <li>Vitesse & fiabilité</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cstep">
+          <div class="cstep__media"><span class="cstep__n">12</span>
+            <div class="cstep__shots cstep__shots--2">
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Google / Bing</figcaption></figure>
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Recherche IA</figcaption></figure>
+            </div>
+          </div>
+          <div class="cstep__body">
+            <span class="cstep__tool">SEO · GEO · IA</span>
+            <h3>Être trouvé (SEO &amp; GEO)</h3>
+            <p>Sois trouvé partout : référencement sur Google &amp; Bing (SEO), ET optimisation pour les moteurs de recherche IA — ChatGPT, Perplexity, Gemini — pour que l'IA recommande ton app (GEO).</p>
+            <ul class="cstep__points">
+              <li>Référencement Google &amp; Bing (SEO)</li>
+              <li>Optimisation pour les IA (GEO)</li>
+              <li>Être recommandé par ChatGPT &amp; Perplexity</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="cstep">
+          <div class="cstep__media"><span class="cstep__n">13</span>
+            <div class="cstep__shots cstep__shots--2">
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>App live</figcaption></figure>
+              <figure class="shot"><span class="shot__img"><img src="placeholder.svg" alt="" /></span><figcaption>Analytics</figcaption></figure>
+            </div>
+          </div>
+          <div class="cstep__body">
+            <span class="cstep__tool">SaaS · Analytics</span>
+            <h3>Lancer & faire grandir</h3>
+            <p>De l'app au business : tes premiers utilisateurs, mesurer ce qui marche, récolter les retours et améliorer.</p>
+            <ul class="cstep__points">
+              <li>Décrocher tes premiers utilisateurs</li>
+              <li>Suivre l'usage (analytics)</li>
+              <li>Itérer & faire grandir</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRÉ-INSCRIPTION (form) -->
+  <section class="csec" id="reserver">
+    <div class="wrap">
+      <div class="csec__head">
+        <span class="kicker">Pré-inscription</span>
+        <h2>Pré-inscris-toi — <span class="pop-text">Application Web</span></h2>
+        <p>👉 Niveau avancé, recommandé après la formation Site Web. Formation en préparation : réserve le tarif de lancement — on te prévient à l'ouverture, sans paiement maintenant.</p>
+      </div>
+      <div class="reserve">
+        <div class="reserve__summary">
+          <div class="glow2"></div>
+          <span class="pricing__kick">🚧 Tarif pré-inscription · bloqué</span>
+          <div class="pricing__price">350 <small>DT</small> <s class="pricing__old">700 DT</s></div>
+          <ul class="reserve__rows">
+            <li><span>📅 Lancement</span><b>Bientôt</b></li>
+            <li><span>⏱️ Durée</span><b>8h · 4 sessions</b></li>
+            <li><span>🗓️ Rythme</span><b>1 session live / jour</b></li>
+            <li><span>🎫 Ton tarif</span><b>350 DT à vie</b></li>
+          </ul>
+          <ul class="reserve__meta">
+            <li>Prix réel après lancement : 700 DT</li>
+            <li>Une app qui prend des paiements</li>
+            <li>Certificat WIJHA (niveau avancé)</li>
+          </ul>
+          <p class="reserve__re">Pré-inscription gratuite · aucun paiement maintenant · on te recontacte au lancement.</p>
+        </div>
+        <form class="reserve__form" data-formation="Application Web — PRÉ-INSCRIPTION (tarif 350 DT, prix réel 700 DT)">
+          <div class="pay-methods">
+            <span class="pay-methods__label">💳 Paiement accepté</span>
+            <div class="pay-methods__logos">
+              <span class="pay-logo"><img src="img/pay-visa.svg" alt="Visa" /></span>
+              <span class="pay-logo"><img src="img/pay-mastercard.svg" alt="Mastercard" /></span>
+              <span class="pay-logo"><img src="img/pay-d17.svg" alt="D17" /></span>
+              <span class="pay-logo"><img src="img/pay-flouci.svg" alt="Flouci" /></span>
+              <span class="pay-logo"><img src="img/pay-btl.svg" alt="Banque BTL" /></span>
+              <span class="pay-logo"><img src="img/pay-bte.svg" alt="Banque BTE" /></span>
+            </div>
+          </div>
+          <h3>Réserve ton tarif de lancement</h3>
+          <p class="reserve__sub">On te prévient dès l'ouverture des inscriptions, avec ton prix bloqué.</p>
+          <div class="field"><label for="w-nom">Nom complet</label><input id="w-nom" name="nom" type="text" placeholder="Ton nom" required></div>
+          <div class="field"><label for="w-email">Email</label><input id="w-email" name="email" type="email" placeholder="toi@email.com" required></div>
+          <div class="field"><label for="w-tel">Numéro WhatsApp</label><input id="w-tel" name="tel" type="tel" placeholder="+216 ..." required></div>
+          <div class="field">
+            <label for="w-recu">Reçu / justificatif <span class="opt">(optionnel)</span></label>
+            <label class="filebox">
+              <input id="w-recu" name="recu" type="file" accept="image/*" />
+              <span class="filebox__ph" data-default="📎 Ajoute une capture (optionnel)">📎 Ajoute une capture (optionnel)</span>
+            </label>
+            <span class="field__hint">Pré-inscription gratuite — ce champ n'est utile que si tu as déjà un justificatif à joindre.</span>
+          </div>
+          <div class="hp" aria-hidden="true"><label>Ne pas remplir<input name="company" type="text" tabindex="-1" autocomplete="off"></label></div>
+          <div class="reserve__after">
+            <span class="reserve__after-t">Après ta pré-inscription</span>
+            <div class="reserve__after-row"><b>1.</b> On t'ajoute à la liste — aucun paiement maintenant</div>
+            <div class="reserve__after-row"><b>2.</b> On te prévient à l'ouverture, avec ton tarif bloqué (350 DT)</div>
+            <div class="reserve__after-row"><b>3.</b> Tu choisis ta session quand tu es prêt</div>
+          </div>
+          <button type="submit" class="btn btn--pop">Je me pré-inscris →</button>
+          <span class="reserve__note">🔒 Tes infos restent privées · aucun paiement maintenant.</span>
+          <span class="reserve__consent">En t'inscrivant, tu acceptes notre <a href="confidentialite.html">politique de confidentialité</a> et nos <a href="conditions.html">conditions</a>.</span>
+          <div class="reserve__ok"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="cfoot">
+    <div class="wrap">
+      <a class="brand" href="index.html">
+        <img class="brand__mark" src="logo.png" alt="WIJHA Academy" />
+        <span><span class="brand__name">WIJHA</span><span class="brand__sub" style="display:block">Academy</span></span>
+      </a>
+      <p>Learn Today, Lead Tomorrow.</p>
+      <div class="cfoot__social">
+        <a href="https://www.instagram.com/wijha.academy/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.facebook.com/profile.php?id=61583639767223" target="_blank" rel="noopener">Facebook</a>
+      </div>
+      <a class="cback" href="static-web-apps.html">← Débuter par Site Web</a>
+      <br>
+      <a class="cback" href="index.html#tracks" style="opacity:.7">← Retour aux formations</a>
+      <div class="cfoot__legal"><a href="confidentialite.html">Confidentialité</a> · <a href="conditions.html">Conditions</a></div>
+    </div>
+  </footer>
+
+  <script src="reserve.js"></script>
+  <script src="analytics.js" defer></script>
+</body>
+</html>

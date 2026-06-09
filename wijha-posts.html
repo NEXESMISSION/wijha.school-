@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WIJHA — Instagram Posts (1080×1350)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0b0d12; font-family:'Cairo',sans-serif; color:#fff; padding:30px 16px 80px; }
+  .page-head { text-align:center; margin-bottom:24px; }
+  .page-head h1 { font-size:26px; font-weight:900; letter-spacing:1px; }
+  .page-head p { color:#8a93a6; font-size:14px; margin-top:8px; }
+  .toolbar { text-align:center; margin:14px 0 40px; }
+  .toolbar button { background:#2563eb; color:#fff; border:none; padding:12px 22px; border-radius:10px;
+    font-family:'Cairo'; font-weight:800; font-size:15px; cursor:pointer; transition:.2s; }
+  .toolbar button:hover { background:#1d4ed8; transform:translateY(-2px); }
+
+  /* row = post preview + description side by side */
+  .row { display:flex; gap:26px; max-width:1000px; margin:0 auto 60px; align-items:flex-start;
+         flex-wrap:wrap; justify-content:center; }
+  .col-img { flex:0 0 auto; }
+  .scaler { width:432px; height:540px; overflow:hidden; border-radius:18px; box-shadow:0 20px 60px rgba(0,0,0,.6); }
+  .post { width:1080px; height:1350px; transform:scale(0.4); transform-origin:top right; position:relative;
+          overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; padding:90px 80px; }
+  .dl-btn { display:block; width:432px; margin:14px 0 0; background:#16a34a; color:#fff; border:none; padding:13px;
+            border-radius:10px; font-family:'Cairo'; font-weight:800; font-size:15px; cursor:pointer; transition:.2s; }
+  .dl-btn:hover { background:#15803d; transform:translateY(-2px); }
+
+  /* description panel */
+  .desc { flex:1 1 380px; min-width:320px; background:#11151c; border:1px solid #1f2632; border-radius:16px;
+          padding:24px 26px; text-align:right; }
+  .desc .tag { display:inline-block; background:#2563eb; color:#fff; font-size:12px; font-weight:800;
+               padding:5px 12px; border-radius:20px; margin-bottom:14px; }
+  .desc h3 { font-size:19px; font-weight:900; margin-bottom:6px; }
+  .desc .who { color:#8a93a6; font-size:13px; margin-bottom:16px; }
+  .desc .lbl { color:#5eead4; font-size:13px; font-weight:800; margin:16px 0 6px; }
+  .desc .cap { font-size:15px; line-height:2; color:#dbe2ee; white-space:pre-line; }
+  .desc .hash { color:#60a5fa; font-size:13px; line-height:1.9; margin-top:6px; word-spacing:3px; }
+  /* image-idea block (the visual to add to each post) */
+  .desc .imgidea { background:rgba(94,234,212,.08); border:1px solid rgba(94,234,212,.28);
+                   border-radius:12px; padding:12px 14px; margin:6px 0 18px; }
+  .desc .imgidea .lbl { margin:0 0 6px; color:#5eead4; }
+  .desc .imgidea p { font-size:14.5px; line-height:1.75; color:#dbe2ee; }
+  .desc .imgidea .why { color:#9aa4b5; font-size:12.5px; margin-top:5px; }
+
+  /* free-image sources + pro tips banner */
+  .imgtips { max-width:1000px; margin:0 auto 46px; background:#11151c; border:1px solid #1f2632;
+             border-radius:16px; padding:20px 24px; text-align:right; line-height:1.9; }
+  .imgtips h2 { font-size:18px; font-weight:900; margin-bottom:10px; color:#5eead4; }
+  .imgtips a { color:#60a5fa; text-decoration:none; }
+  .imgtips a:hover { text-decoration:underline; }
+  .imgtips ul { list-style:none; margin:6px 0 0; }
+  .imgtips li { font-size:14px; color:#dbe2ee; margin:4px 0; }
+  .imgtips .sub2 { color:#8a93a6; font-size:13px; margin:14px 0 4px; font-weight:800; }
+
+  /* shared post pieces */
+  .badge { display:inline-block; align-self:flex-start; font-weight:800; font-size:34px; padding:16px 34px;
+           border-radius:50px; letter-spacing:.5px; }
+  .mid { display:flex; flex-direction:column; gap:34px; }
+  .headline { font-family:'Tajawal'; font-weight:900; line-height:1.22; }
+  .sub { font-size:40px; font-weight:700; opacity:.95; line-height:1.55; }
+  .points { display:flex; flex-direction:column; gap:20px; }
+  .pt { font-size:40px; font-weight:800; display:flex; align-items:center; gap:18px; }
+  .pt b { font-size:46px; }
+  .cta { display:flex; align-items:center; justify-content:space-between; font-size:44px; font-weight:900;
+         padding-top:36px; border-top:3px solid rgba(255,255,255,.18); }
+  .logo { font-family:'Tajawal'; font-weight:900; letter-spacing:3px; }
+  .en { font-family:'Cairo'; font-weight:900; }
+
+  /* ===== THEMES ===== */
+  #p1 { background:radial-gradient(circle at 50% 0%, #155e75, #07111a 72%); }
+  #p1 .badge{background:#06b6d4;color:#04212b;} #p1 .headline{font-size:92px;} #p1 .headline .hi{color:#22d3ee;} #p1 .sub{color:#a5f3fc;} #p1 .pt b{color:#22d3ee;}
+
+  #p2 { background:radial-gradient(circle at 80% 0%, #1e3a8a, #0b1220 70%); }
+  #p2 .badge{background:#2563eb;color:#fff;} #p2 .headline{font-size:96px;} #p2 .headline .hi{color:#38bdf8;} #p2 .sub{color:#9fd0ff;} #p2 .pt b{color:#38bdf8;}
+
+  #p3 { background:radial-gradient(circle at 20% 100%, #6d28d9, #120a1f 70%); }
+  #p3 .badge{background:#a855f7;color:#fff;} #p3 .headline{font-size:100px;} #p3 .headline .hi{color:#f0abfc;} #p3 .sub{color:#e9d5ff;} #p3 .pt b{color:#f0abfc;}
+
+  #p4 { background:linear-gradient(160deg,#052e1b,#0b0d12 75%); }
+  #p4 .badge{background:#22c55e;color:#04210f;} #p4 .price{font-size:130px;font-weight:900;color:#ef4444;text-decoration:line-through;font-family:'Cairo';line-height:1;} #p4 .headline{font-size:90px;} #p4 .headline .hi{color:#4ade80;} #p4 .sub{color:#a7f3d0;} #p4 .pt b{color:#4ade80;}
+
+  #p5 { background:radial-gradient(circle at 100% 0%, #b45309, #1a0f02 72%); }
+  #p5 .badge{background:#f59e0b;color:#1a0f02;} #p5 .headline{font-size:94px;} #p5 .headline .hi{color:#fcd34d;} #p5 .sub{color:#fde68a;} #p5 .pt b{color:#fcd34d;}
+
+  #p6 { background:#07090d; }
+  #p6::before{content:"";position:absolute;top:-200px;left:-200px;width:700px;height:700px;background:radial-gradient(circle,#0ea5e9,transparent 70%);opacity:.35;filter:blur(40px);}
+  #p6 .badge{background:#0ea5e9;color:#04121c;position:relative;} #p6 .mid{position:relative;} #p6 .headline{font-size:100px;} #p6 .headline .hi{color:#22d3ee;} #p6 .sub{color:#7dd3fc;} #p6 .cta{position:relative;} #p6 .pt b{color:#22d3ee;}
+
+  #p7 { background:radial-gradient(circle at 0% 0%, #0f766e, #1a0820 75%); }
+  #p7 .badge{background:#f472b6;color:#1a0820;} #p7 .headline{font-size:98px;} #p7 .headline .hi{color:#5eead4;} #p7 .sub{color:#fbcfe8;} #p7 .pt b{color:#5eead4;}
+
+  #p8 { background:linear-gradient(160deg,#7f1d1d,#0d0606 78%); }
+  #p8 .badge{background:#fbbf24;color:#3b0a0a;} #p8 .headline{font-size:92px;} #p8 .headline .hi{color:#fbbf24;} #p8 .sub{color:#fecaca;} #p8 .pt b{color:#fbbf24;}
+
+  #p9 { background:radial-gradient(circle at 100% 100%, #4338ca, #07060f 72%); }
+  #p9 .badge{background:#818cf8;color:#0c0a23;} #p9 .headline{font-size:96px;} #p9 .headline .hi{color:#a5b4fc;} #p9 .sub{color:#c7d2fe;} #p9 .pt b{color:#a5b4fc;}
+
+  /* ===== SPECIAL : LIVE SESSION ===== */
+  .special { border:3px solid #fbbf24; border-radius:24px; padding:18px; background:rgba(251,191,36,.05);
+             box-shadow:0 0 40px rgba(251,191,36,.15); }
+  .special .scaler { box-shadow:0 20px 60px rgba(0,0,0,.7); }
+  #p10 { background:radial-gradient(circle at 50% -10%, #1f2937, #040507 70%); }
+  #p10 .badge { background:#dc2626; color:#fff; animation:none; }
+  #p10 .headline { font-size:90px; }
+  #p10 .headline .hi { color:#fbbf24; }
+  #p10 .pt { font-size:42px; }
+  #p10 .pt b { color:#fbbf24; font-size:46px; }
+  #p10 .price-tag { font-size:64px; font-weight:900; color:#22c55e; }
+  #p10 .price-tag s { color:#ef4444; font-size:46px; font-weight:700; }
+  .seats { background:#dc2626; color:#fff; font-size:44px; font-weight:900; padding:26px 30px;
+           border-radius:18px; text-align:center; letter-spacing:.5px; }
+
+  /* info bar injected into every post */
+  .info { display:flex; flex-wrap:wrap; gap:14px; margin-top:10px; }
+  .info span { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22);
+               padding:14px 24px; border-radius:40px; font-size:30px; font-weight:800; }
+  .info .hot { background:#dc2626; border-color:#dc2626; color:#fff; }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>WIJHA — 9 POSTS INSTAGRAM</h1>
+  <p>Format 1080×1350 (4:5) • Design + Caption à côté • زر التحميل تحت كل بوست</p>
+</div>
+<div class="toolbar"><button onclick="downloadAll()">⬇️ تحميل الكل (Download all)</button></div>
+
+<!-- ========== IMAGE GUIDE : où trouver les visuels + astuces ========== -->
+<div class="imgtips">
+  <h2>🖼️ Quelle image ajouter à chaque post — guide</h2>
+  <p style="font-size:14px;color:#dbe2ee;">Chaque post ci-dessous a maintenant une <b style="color:#5eead4;">idée d'image</b> à ajouter pour le rendre plus intéressant (visible dans le panneau de droite de chaque post).</p>
+  <div class="sub2">🆓 Où les trouver (gratuit, sans copyright) :</div>
+  <ul>
+    <li>📷 <a href="https://unsplash.com" target="_blank">unsplash.com</a> &amp; <a href="https://pexels.com" target="_blank">pexels.com</a> — vraies photos (cherche : <i>"laptop website", "coding", "student laptop", "kid laptop"</i>)</li>
+    <li>🤖 <a href="https://freepik.com" target="_blank">freepik.com</a> — graphismes tech &amp; illustrations de robots / IA</li>
+    <li>💻 <a href="https://mockuuups.studio" target="_blank">mockuuups.studio</a> ou <a href="https://shots.so" target="_blank">shots.so</a> — mets le screenshot de ton site dans un mockup laptop/téléphone (effet pro instantané)</li>
+  </ul>
+  <div class="sub2">🔥 Astuces pour les rendre plus accrocheurs :</div>
+  <ul>
+    <li>1️⃣ Un <b>vrai visage humain</b> arrête le scroll mieux que n'importe quel graphique — une personne qui regarde l'écran.</li>
+    <li>2️⃣ Les <b>mockups</b> (ton site dans un cadre de laptop) = effet « professionnel » immédiat.</li>
+    <li>3️⃣ Garde l'image <b>sombre / atténuée</b> derrière le texte pour que les mots restent lisibles (overlay).</li>
+    <li>4️⃣ Pour les <b>Reels</b> : un screen-record de toi qui dis à l'IA « build me a website » → ça vend la formation à lui seul.</li>
+  </ul>
+</div>
+
+<!-- ========== SPECIAL : LIVE SESSION ========== -->
+<div class="row special">
+  <div class="col-img">
+    <div class="scaler"><div class="post" id="p10">
+      <span class="badge">🔴 SESSION LIVE</span>
+      <div class="mid">
+        <div class="headline">FORMATION<br><span class="hi en">VIBE CODING</span><br>SITE WEB 🌐</div>
+        <div class="points">
+          <div class="pt"><b>📅</b> 25 ماي • من 4 لـ 6 مساءً</div>
+          <div class="pt"><b>⏱️</b> ساعتين Live (مباشر)</div>
+          <div class="pt"><b>💻</b> على Google Meet</div>
+          <div class="pt price-tag"><b>💰</b> 60 دينار برك</div>
+        </div>
+        <div class="seats">🎟️ 20 بلاصة برك — احجز توا !</div>
+      </div>
+      <div class="cta"><span class="logo">WIJHA</span><span>لينك في البايو 👆</span></div>
+    </div></div>
+    <button class="dl-btn" onclick="dl('p10','wijha-post-LIVE')">⬇️ Download PNG</button>
+  </div>
+  <div class="desc">
+    <span class="tag" style="background:#dc2626;">⭐ POST SPÉCIAL · LIVE</span>
+    <h3>Formation Vibe Coding — Site Web (Live)</h3>
+    <div class="who">🎯 Le post principal — l'annonce de la session + réservation</div>
+    <div class="imgidea">
+      <div class="lbl">🖼️ IMAGE À AJOUTER</div>
+      <p>Un laptop affichant un appel Google Meet / un site web propre à l'écran.</p>
+      <p class="why">✨ Pourquoi : rend le « live » réel et concret.</p>
+    </div>
+    <div class="lbl">📝 CAPTION</div>
+    <div class="cap">🔴 SESSION LIVE — Formation Vibe Coding (Site Web)
+
+تعلّم كيفاش تعمل موقع ويب كامل بالذكاء الاصطناعي 🤖 في session مباشرة معانا، خطوة بخطوة.
+
+📅 التاريخ : 25 ماي
+🕓 الوقت : من 4 لـ 6 مساءً (ساعتين)
+💻 المكان : Live على Google Meet
+💰 الثمن : 60 دينار برك
+
+⚠️ 20 بلاصة برك ! الأماكن محدودة و بش يعمرو بسرعة.
+احجز بلاصتك توا قبل ما يكمل العدد 🔥
+
+👉 Lien dans la bio. Réserve ta place maintenant !</div>
+    <div class="lbl">🏷️ HASHTAGS</div>
+    <div class="hash">#WIJHA #vibecoding #AI #siteweb #live #formation #tunisie #ذكاء_اصطناعي #تعلم</div>
+  </div>
+</div>
+
+<!-- ========== POST 1 : INTRO ========== -->
+<div class="row">
+  <div class="col-img">
+    <div class="scaler"><div class="post" id="p1">
+      <span class="badge">🎓 FORMATION 100% EN LIGNE</span>
+      <div class="mid">
+        <div class="headline">تعلّم تعمل <span class="hi en">SITES WEB</span><br>بالذكاء الاصطناعي</div>
+        <div class="points">
+          <div class="pt"><b>🔴</b> Session مباشرة (Live) خطوة بخطوة</div>
+          <div class="pt"><b>✅</b> من الصفر حتى موقع حقيقي</div>
+          <div class="pt"><b>✅</b> بدون برمجة • بدون خبرة</div>
+          <div class="pt"><b>✅</b> مرافقة + شهادة في الآخر</div>
+        </div>
+      </div>
+      <div class="cta"><span class="logo">WIJHA</span><span>لينك في البايو 👆</span></div>
+    </div></div>
+    <button class="dl-btn" onclick="dl('p1','wijha-post-1')">⬇️ Download PNG</button>
+  </div>
+  <div class="desc">
+    <span class="tag">POST 1 · INTRO</span>
+    <h3>C'est quoi la formation WIJHA ?</h3>
+    <div class="who">🎯 Pour : tout le monde — le post qui explique l'offre</div>
+    <div class="imgidea">
+      <div class="lbl">🖼️ IMAGE À AJOUTER</div>
+      <p>Un site web terminé affiché sur un laptop + un mockup téléphone.</p>
+      <p class="why">✨ Pourquoi : montre le résultat final.</p>
+    </div>
+    <div class="lbl">📝 CAPTION</div>
+    <div class="cap">فما حاجة وحدة بدّلت الـ web : الذكاء الاصطناعي 🤖
+توا تنجم تعمل موقع ويب احترافي… حتى لو عمرك ما برمجت.
+
+Dans la session LIVE WIJHA tu apprends, en direct, étape par étape :
+✅ كيفاش تستعمل الـ AI باش تبني موقع كامل
+✅ من الصفر حتى موقع حقيقي تنجم تستعملو ولا تبيعو
+✅ بدون كود • بدون خبرة سابقة
+✅ مرافقة مباشرة + شهادة 📜
+
+🔴 Session LIVE 100% en ligne — تتعلّم مباشرة معانا على Google Meet.
+👉 Lien dans la bio. احجز بلاصتك.</div>
+    <div class="lbl">🏷️ HASHTAGS</div>
+    <div class="hash">#WIJHA #AI #siteweb #ذكاء_اصطناعي #vibecoding #formation #tunisie #تعلم</div>
+  </div>
+</div>
+
+<!-- ========== POST 2 : OUTCOME ========== -->
+<div class="row">
+  <div class="col-img">
+    <div class="scaler"><div class="post" id="p2">
+      <span class="badge">🚀 النتيجة</span>
+      <div class="mid">
+        <div class="headline">تعلّم كيفاش تعمل<br><span class="hi en">SITE WEB</span> بالـ AI</div>
+        <div class="sub">في أيام… مش سنين ⏳</div>
+        <div class="points">
+          <div class="pt"><b>✅</b> من الصفر</div>
+          <div class="pt"><b>✅</b> بدون برمجة</div>
+          <div class="pt"><b>✅</b> موقع حقيقي في يدك</div>
+        </div>
+      </div>
+      <div class="cta"><span class="logo">WIJHA</span><span>لينك في البايو 👆</span></div>
+    </div></div>
+    <button class="dl-btn" onclick="dl('p2','wijha-post-2')">⬇️ Download PNG</button>
+  </div>
+  <div class="desc">
+    <span class="tag">POST 2 · OUTCOME</span>
+    <h3>Le résultat direct</h3>
+    <div class="who">🎯 Pour : ceux qui veulent un site mais pensent que c'est impossible</div>
+    <div class="imgidea">
+      <div class="lbl">🖼️ IMAGE À AJOUTER</div>
+      <p>Une main sur le clavier + un site web en train de se construire à l'écran.</p>
+      <p class="why">✨ Pourquoi : « tu peux le faire toi-même ».</p>
+    </div>
+    <div class="lbl">📝 CAPTION</div>
+    <div class="cap">تحب تعمل موقع ويب وانت ما تعرفش تبرمجي ؟ 🤯
+Avec l'IA c'est devenu possible — sans une seule ligne de code.
+
+Fi WIJHA n3almouk step by step kifech ta3mel موقع احترافي من الصفر :
+✅ بدون خبرة
+✅ بدون برمجة
+✅ في أيام مش سنين
+👉 Lien dans la bio. ابدا اليوم 🚀</div>
+    <div class="lbl">🏷️ HASHTAGS</div>
+    <div class="hash">#WIJHA #AI #siteweb #تعلم #tunisie #vibecoding #formation</div>
+  </div>
+</div>
+
+<!-- ========== POST 3 : FOMO ========== -->
+<div class="row">
+  <div class="col-img">
+    <div class="scaler"><div class="post" id="p3">
+      <span class="badge">⚡ مهارة المستقبل</span>
+      <div class="mid">
+        <div class="headline"><span class="hi en">VIBE CODING</span><br>البرمجة بالذكاء الاصطناعي</div>
+        <div class="sub">تحكي مع الـ AI و هو يبنيلك الموقع 🤖</div>
+        <div class="points">
+          <div class="pt"><b>🔥</b> الترند الجديد</div>
+          <div class="pt"><b>💼</b> مهارة مطلوبة في السوق</div>
+          <div class="pt"><b>🌍</b> تخدم بيها من الدار</div>
+        </div>
+      </div>
+      <div class="cta"><span class="logo">WIJHA</span><span>لينك في البايو 👆</span></div>
+    </div></div>
+    <button class="dl-btn" onclick="dl('p3','wijha-post-3')">⬇️ Download PNG</button>
+  </div>
+  <div class="desc">
+    <span class="tag">POST 3 · FOMO</span>
+    <h3>La compétence du futur</h3>
+    <div class="who">🎯 Pour : les ambitieux qui veulent prendre l'avance</div>
+    <div class="imgidea">
+      <div class="lbl">🖼️ IMAGE À AJOUTER</div>
+      <p>Un robot / IA lumineux, ou un screenshot d'une conversation avec l'IA.</p>
+      <p class="why">✨ Pourquoi : futuriste et tendance.</p>
+    </div>
+    <div class="lbl">📝 CAPTION</div>
+    <div class="cap">الـ "Vibe Coding" ولّى مهارة المستقبل 🚀
+Ma3adech lazem tkoun مبرمج باش تعمل موقع — twalli t7ki برك مع الـ AI و houwa yebnilek el code.
+
+السوق بش يتبدّل… تحب تكون الأول ولا الأخير ? 😉
+👉 Lien dans la bio.</div>
+    <div class="lbl">🏷️ HASHTAGS</div>
+    <div class="hash">#WIJHA #vibecoding #AI #المستقبل #ذكاء_اصطناعي #tunisie #tech</div>
+  </div>
+</div>
+
+<!-- ========== POST 4 : MONEY ========== -->
+<div class="row">
+  <div class="col-img">
+    <div class="scaler"><div class="post" id="p4">
+      <span class="badge">💸 ليش تخلّص أكثر ؟</span>
+      <div class="mid">
+        <div class="price">2000 DT</div>
+        <div class="headline">بطّل تخلّص على<br>موقع ويب</div>
+        <div class="sub">اعملو <span class="hi">وحدك</span> بالذكاء الاصطناعي</div>
+        <div class="points">
+          <div class="pt"><b>✅</b> توفّر فلوسك</div>
+          <div class="pt"><b>✅</b> تنجم تبيع مواقع للناس</div>
+        </div>
+      </div>
+      <div class="cta"><span class="logo">WIJHA</span><span>لينك في البايو 👆</span></div>
+    </div></div>
+    <button class="dl-btn" onclick="dl('p4','wijha-post-4')">⬇️ Download PNG</button>
+  </div>
+  <div class="desc">
+    <span class="tag">POST 4 · MONEY</span>
+    <h3>Problème → solution (le + vendeur)</h3>
+    <div class="who">🎯 Pour : ceux qui paient des développeurs cher</div>
+    <div class="imgidea">
+      <div class="lbl">🖼️ IMAGE À AJOUTER</div>
+      <p>Des billets / « 2000DT » déchirés, ou un portefeuille.</p>
+      <p class="why">✨ Pourquoi : touche l'émotion de l'argent.</p>
+    </div>
+    <div class="lbl">📝 CAPTION</div>
+    <div class="cap">علاش تخلّص 2000DT باش 7addek ya3mellek موقع، وانت تنجم تعملو وحدك ؟ 🤔
+Avec l'IA, ta3mel موقعك بنفسك — même si jamais ما برمجتش.
+
+Fi WIJHA :
+🔹 تتعلم من الصفر
+🔹 خطوة بخطوة
+🔹 و تخرج بموقع تنجم تبيعو
+👉 Lien dans la bio.</div>
+    <div class="lbl">🏷️ HASHTAGS</div>
+    <div class="hash">#WIJHA #siteweb #AI #freelance #ذكاء_اصطناعي #tunisie #business</div>
+  </div>
+</div>
+
+<!-- ========== POST 5 : FEAR REMOVAL ========== -->
+<div class="row">
+  <div class="col-img">
+    <div class="scaler"><div class="post" id="p5">
+      <span class="badge">🔥 بلا حجج</span>
+      <div class="mid">
+        <div class="headline">ما تعرفش<br>تبرمجي ؟</div>
+        <div class="sub">مالا الـ <span class="hi en">AI</span> بش يعملها عليك<br>تحكي بالعربي و خلاص</div>
+        <div class="points">
+          <div class="pt"><b>✅</b> للمبتدئين تماماً</div>
+          <div class="pt"><b>✅</b> شرح بالعربي</div>
+          <div class="pt"><b>✅</b> خطوة بخطوة</div>
+        </div>
+      </div>
+      <div class="cta"><span class="logo">WIJHA</span><span>لينك في البايو 👆</span></div>
+    </div></div>
+    <button class="dl-btn" onclick="dl('p5','wijha-post-5')">⬇️ Download PNG</button>
+  </div>
+  <div class="desc">
+    <span class="tag">POST 5 · NO FEAR</span>
+    <h3>Enlève la peur (débutants)</h3>
+    <div class="who">🎯 Pour : ceux qui ont peur de « coder »</div>
+    <div class="imgidea">
+      <div class="lbl">🖼️ IMAGE À AJOUTER</div>
+      <p>Un débutant détendu qui sourit devant son laptop.</p>
+      <p class="why">✨ Pourquoi : « c'est facile, sans stress ».</p>
+    </div>
+    <div class="lbl">📝 CAPTION</div>
+    <div class="cap">ما تعرفش تبرمجي ؟ ما يهمّ 🙌
+الـ AI ولّى يكتب الكود عليك — انت تحكي بالعربي برك و هو ينفّذ.
+
+Fi WIJHA, الـ session مباشرة و مناسبة للمبتدئين :
+✅ من الصفر
+✅ شرح بسيط بالعربي
+✅ خطوة بخطوة حتى توصل
+👉 Lien dans la bio.</div>
+    <div class="lbl">🏷️ HASHTAGS</div>
+    <div class="hash">#WIJHA #AI #débutant #تعلم #siteweb #tunisie #ذكاء_اصطناعي</div>
+  </div>
+</div>
+
+<!-- ========== POST 6 : CURIOSITY ========== -->
+<div class="row">
+  <div class="col-img">
+    <div class="scaler"><div class="post" id="p6">
+      <span class="badge">👀 شوف هالحاجة</span>
+      <div class="mid">
+        <div class="headline">الـ <span class="hi en">AI</span> ولّى<br>يكتبلك الكود…<br>وانت تتفرّج</div>
+        <div class="sub">الحاجة اللي كانت تاخذ 6 أشهر<br>ولّات في يومين ⚡</div>
+        <div class="points">
+          <div class="pt"><b>⚡</b> أسرع 10 مرات</div>
+          <div class="pt"><b>🤖</b> بمساعدة الذكاء الاصطناعي</div>
+        </div>
+      </div>
+      <div class="cta"><span class="logo">WIJHA</span><span>لينك في البايو 👆</span></div>
+    </div></div>
+    <button class="dl-btn" onclick="dl('p6','wijha-post-6')">⬇️ Download PNG</button>
+  </div>
+  <div class="desc">
+    <span class="tag">POST 6 · CURIOSITY</span>
+    <h3>Le scroll-stopper</h3>
+    <div class="who">🎯 Pour : attraper l'attention dans le feed</div>
+    <div class="imgidea">
+      <div class="lbl">🖼️ IMAGE À AJOUTER</div>
+      <p>Gros plan sur l'IA qui écrit le code toute seule.</p>
+      <p class="why">✨ Pourquoi : mystère / effet « wow ».</p>
+    </div>
+    <div class="lbl">📝 CAPTION</div>
+    <div class="cap">تخيّل تقول للـ AI « اعملي موقع » و houwa ya3mlou 😳
+الحاجة اللي كانت تاخذ أشهر ولّات في يومين.
+
+Hadhi هي قوة الـ Vibe Coding — w fi WIJHA n3almouhalek من الصفر.
+👉 Lien dans la bio. Save 📌</div>
+    <div class="lbl">🏷️ HASHTAGS</div>
+    <div class="hash">#WIJHA #AI #vibecoding #tech #ذكاء_اصطناعي #tunisie #siteweb</div>
+  </div>
+</div>
+
+<!-- ========== POST 7 : PARENTS ========== -->
+<div class="row">
+  <div class="col-img">
+    <div class="scaler"><div class="post" id="p7">
+      <span class="badge">👨‍👩‍👧 لولادك</span>
+      <div class="mid">
+        <div class="headline">علّم ولدك<br>مهارة المستقبل</div>
+        <div class="sub">بدل ما يلعب طول النهار…<br>يتعلّم يعمل مواقع بالـ <span class="hi en">AI</span></div>
+        <div class="points">
+          <div class="pt"><b>🎯</b> مهارة تنفعو طول عمرو</div>
+          <div class="pt"><b>💡</b> يطوّر إبداعو</div>
+          <div class="pt"><b>💰</b> يبني بيها مستقبلو</div>
+        </div>
+      </div>
+      <div class="cta"><span class="logo">WIJHA</span><span>لينك في البايو 👆</span></div>
+    </div></div>
+    <button class="dl-btn" onclick="dl('p7','wijha-post-7')">⬇️ Download PNG</button>
+  </div>
+  <div class="desc">
+    <span class="tag">POST 7 · PARENTS</span>
+    <h3>Pour les parents</h3>
+    <div class="who">🎯 Pour : les parents qui pensent au futur de leurs enfants</div>
+    <div class="imgidea">
+      <div class="lbl">🖼️ IMAGE À AJOUTER</div>
+      <p>Un enfant qui utilise un laptop avec plaisir.</p>
+      <p class="why">✨ Pourquoi : émotionnel pour les parents.</p>
+    </div>
+    <div class="lbl">📝 CAPTION</div>
+    <div class="cap">ولدك يقدّ ساعات فالتيليفون ؟ 📱
+Aw9aten نحوّلوها l حاجة tnaf3ou : يتعلّم يعمل مواقع بالذكاء الاصطناعي 🤖
+
+Fi WIJHA, session مباشرة بسيطة تنجم تحضرها معاه :
+🎯 مهارة المستقبل
+💡 يطوّر إبداعو
+💰 يبني بيها مستقبلو
+👉 Lien dans la bio.</div>
+    <div class="lbl">🏷️ HASHTAGS</div>
+    <div class="hash">#WIJHA #أولياء #تعليم #AI #المستقبل #tunisie #ذكاء_اصطناعي</div>
+  </div>
+</div>
+
+<!-- ========== POST 8 : GRADUATES ========== -->
+<div class="row">
+  <div class="col-img">
+    <div class="scaler"><div class="post" id="p8">
+      <span class="badge">🎓 تخرّجت ؟</span>
+      <div class="mid">
+        <div class="headline">شهادة في يدك…<br>و ما عندكش <span class="hi">مهارة</span> ؟</div>
+        <div class="sub">تعلّم مهارة المستقبل<br>و ابدا تخدم بيها من اليوم</div>
+        <div class="points">
+          <div class="pt"><b>💼</b> مهارة مطلوبة</div>
+          <div class="pt"><b>🌍</b> تخدم freelance</div>
+          <div class="pt"><b>💰</b> دخل من الدار</div>
+        </div>
+      </div>
+      <div class="cta"><span class="logo">WIJHA</span><span>لينك في البايو 👆</span></div>
+    </div></div>
+    <button class="dl-btn" onclick="dl('p8','wijha-post-8')">⬇️ Download PNG</button>
+  </div>
+  <div class="desc">
+    <span class="tag">POST 8 · DIPLÔMÉS</span>
+    <h3>Diplômés / sans compétence</h3>
+    <div class="who">🎯 Pour : les jeunes diplômés au chômage</div>
+    <div class="imgidea">
+      <div class="lbl">🖼️ IMAGE À AJOUTER</div>
+      <p>Un jeune avec une toque de diplômé tenant un laptop.</p>
+      <p class="why">✨ Pourquoi : cible directe.</p>
+    </div>
+    <div class="lbl">📝 CAPTION</div>
+    <div class="cap">عندك شهادة… أما السوق يطلب مهارة 🎓
+La vérité : الشهادة و7adha ma3adech تكفي.
+
+تعلّم مهارة المستقبل — تعمل مواقع بالـ AI — w ابدا تخدم بيها :
+💼 مطلوبة في السوق
+🌍 freelance من أي بلاصة
+💰 دخل بإيديك
+👉 Lien dans la bio.</div>
+    <div class="lbl">🏷️ HASHTAGS</div>
+    <div class="hash">#WIJHA #diplômé #freelance #AI #خريجين #tunisie #ذكاء_اصطناعي</div>
+  </div>
+</div>
+
+<!-- ========== POST 9 : ANY AGE ========== -->
+<div class="row">
+  <div class="col-img">
+    <div class="scaler"><div class="post" id="p9">
+      <span class="badge">✨ ابدا من جديد</span>
+      <div class="mid">
+        <div class="headline">عمرك ما يهمّ…<br><span class="hi">المهارة</span> هي اللي تهمّ</div>
+        <div class="sub">تعلّم تعمل مواقع بالذكاء الاصطناعي<br>مهما كان عمرك ولا مستواك</div>
+        <div class="points">
+          <div class="pt"><b>✅</b> أي عمر</div>
+          <div class="pt"><b>✅</b> أي مستوى</div>
+        </div>
+      </div>
+      <div class="cta"><span class="logo">WIJHA</span><span>لينك في البايو 👆</span></div>
+    </div></div>
+    <button class="dl-btn" onclick="dl('p9','wijha-post-9')">⬇️ Download PNG</button>
+  </div>
+  <div class="desc">
+    <span class="tag">POST 9 · TOUT ÂGE</span>
+    <h3>Tout âge / recommencer</h3>
+    <div class="who">🎯 Pour : ceux qui pensent qu'il est « trop tard »</div>
+    <div class="imgidea">
+      <div class="lbl">🖼️ IMAGE À AJOUTER</div>
+      <p>Une personne âgée + un jeune, tous les deux sur un laptop.</p>
+      <p class="why">✨ Pourquoi : preuve « tout âge ».</p>
+    </div>
+    <div class="lbl">📝 CAPTION</div>
+    <div class="cap">تحسب رو7ek كبرت 3la التعلّم ؟ ❌
+الحقيقة : عمرك عمرو ما يوقّفك. المهارة هي اللي تبدّل حياتك.
+
+Fi WIJHA تتعلّم تعمل مواقع بالـ AI :
+✅ مهما كان عمرك
+✅ مهما كان مستواك
+ابدا من اليوم 💪
+👉 Lien dans la bio.</div>
+    <div class="lbl">🏷️ HASHTAGS</div>
+    <div class="hash">#WIJHA #تطوير_الذات #AI #تعلم #tunisie #ذكاء_اصطناعي #siteweb</div>
+  </div>
+</div>
+
+<script>
+  function capture(id){
+    const node = document.getElementById(id);
+    const prev = node.style.transform;
+    node.style.transform = 'none';
+    return html2canvas(node, {width:1080, height:1350, scale:1, backgroundColor:null, useCORS:true})
+      .then(canvas => { node.style.transform = prev; return canvas; });
+  }
+  function dl(id, name){
+    capture(id).then(canvas => {
+      const a = document.createElement('a');
+      a.download = name + '.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+    });
+  }
+  async function downloadAll(){
+    const ids = [['p10','wijha-post-LIVE'],['p1','wijha-post-1'],['p2','wijha-post-2'],['p3','wijha-post-3'],['p4','wijha-post-4'],['p5','wijha-post-5'],['p6','wijha-post-6'],['p7','wijha-post-7'],['p8','wijha-post-8'],['p9','wijha-post-9']];
+    for(const [id,name] of ids){ await new Promise(r=>setTimeout(r,400)); await dl(id,name); }
+  }
+
+  /* ---- inject event data into EVERY post + caption ---- */
+  const infoHTML = '<div class="info">'
+    + '<span>📅 25 ماي</span>'
+    + '<span>🕓 4-6 مساءً</span>'
+    + '<span>💻 Google Meet</span>'
+    + '<span>💰 60 DT</span>'
+    + '<span class="hot">🎟️ 20 بلاصة برك</span>'
+    + '</div>';
+  document.querySelectorAll('.post').forEach(p => {
+    if(p.id === 'p10') return;                 // the LIVE post already has the data
+    p.querySelector('.mid').insertAdjacentHTML('beforeend', infoHTML);
+  });
+  const capDetails = '\n\n———————————\n📅 25 ماي • من 4 لـ 6 مساءً (ساعتين)\n💻 Live على Google Meet • 💰 60 دينار\n🎟️ 20 بلاصة برك — احجز توا 🔥';
+  document.querySelectorAll('.cap').forEach((c, i) => {
+    if(i === 0) return;                        // skip the special LIVE caption (already detailed)
+    c.textContent += capDetails;
+  });
+</script>
+</body>
+</html>

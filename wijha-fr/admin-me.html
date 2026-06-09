@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>WIJHA · Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --pop: oklch(0.55 0.225 264); --pop-soft: oklch(0.95 0.04 264);
+      --paper:#fbfcfe; --paper-2:#f1f4f9; --card:#fff; --ink:#0f1729; --ink-2:#475069; --ink-3:#8a92a8;
+      --line:#e7ebf3; --serif:"Sora",sans-serif; --sans:"Plus Jakarta Sans",sans-serif; --mono:"JetBrains Mono",monospace;
+      --radius:18px; --shadow:0 20px 50px -28px rgba(15,23,41,.35); --ok:#16a34a; --warn:#d97706;
+    }
+    *{box-sizing:border-box;} html{-webkit-text-size-adjust:100%;}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;
+      -webkit-font-smoothing:antialiased;}
+    .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(16px,3vw,30px);}
+    a{color:var(--pop);text-decoration:none;}
+
+    /* topbar */
+    .top{position:sticky;top:0;z-index:20;background:color-mix(in oklab,var(--paper) 86%,transparent);
+      backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+    .top__in{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 0;}
+    .brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:800;letter-spacing:-.02em;}
+    .brand img{width:34px;height:34px;border-radius:9px;}
+    .brand small{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+      color:var(--pop);background:var(--pop-soft);padding:4px 9px;border-radius:7px;}
+    .top__back{display:none;align-items:center;justify-content:center;flex:none;width:40px;height:40px;border-radius:11px;
+      border:1px solid var(--line);background:var(--card);color:var(--ink);transition:.15s;}
+    .top__back:hover{border-color:var(--pop);color:var(--pop);background:var(--pop-soft);}
+    @media(max-width:600px){.top__back{display:inline-flex;} .brand small{display:none;}}
+    .top__sp{flex:1;}
+    .ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .ctrl input,.ctrl select{font:inherit;font-size:13px;padding:9px 12px;border:1px solid var(--line);
+      border-radius:10px;background:var(--card);color:var(--ink);}
+    .ctrl input{width:170px;}
+    .btn{font:inherit;font-size:13px;font-weight:700;cursor:pointer;border:1px solid var(--line);background:var(--card);
+      color:var(--ink);padding:9px 14px;border-radius:10px;transition:.15s;}
+    .btn:hover{border-color:var(--pop);}
+    .btn--pop{background:var(--pop);border-color:var(--pop);color:#fff;}
+    .btn--pop:hover{filter:brightness(1.07);}
+    .btn--ghost{background:transparent;}
+
+    main{padding:clamp(20px,4vh,34px) 0 80px;}
+    .mode{font-family:var(--mono);font-size:12px;color:var(--ink-2);margin:0 0 18px;display:flex;align-items:center;gap:8px;}
+    .mode .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px color-mix(in oklab,var(--ok) 20%,transparent);}
+
+    /* KPI */
+    .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:26px;}
+    @media(max-width:920px){.kpis{grid-template-columns:repeat(3,1fr);}}
+    @media(max-width:520px){.kpis{grid-template-columns:repeat(2,1fr);}}
+    .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 16px;}
+    .kpi .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);}
+    .kpi .v{font-family:var(--serif);font-weight:800;font-size:clamp(24px,3vw,32px);letter-spacing:-.03em;margin-top:7px;line-height:1;}
+    .kpi .s{font-size:12px;color:var(--ink-2);margin-top:6px;}
+
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    @media(max-width:900px){.grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:600px){.grid{grid-template-columns:1fr;}}
+    .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
+    .panel h3{font-family:var(--serif);font-weight:700;font-size:16px;margin:0 0 4px;letter-spacing:-.01em;}
+    .panel .sub{font-size:12px;color:var(--ink-3);margin:0 0 16px;}
+    .section-title{font-family:var(--serif);font-weight:700;font-size:18px;margin:34px 0 14px;letter-spacing:-.01em;}
+
+    /* bar list */
+    .bars{display:grid;gap:11px;}
+    .bar{display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center;}
+    .bar__lbl{font-size:13.5px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .bar__val{font-family:var(--mono);font-size:12px;color:var(--ink-2);}
+    .bar__track{grid-column:1/-1;height:8px;border-radius:6px;background:var(--paper-2);overflow:hidden;}
+    .bar__fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--pop),color-mix(in oklab,var(--pop) 65%,#7c3aed));transition:width .5s ease;}
+    .empty{font-size:13px;color:var(--ink-3);padding:8px 0;}
+
+    /* table */
+    .tbl-wrap{overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);}
+    table{border-collapse:collapse;width:100%;font-size:13px;min-width:760px;}
+    th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;}
+    th{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);position:sticky;top:0;background:var(--card);}
+    tbody tr:hover{background:var(--paper-2);}
+    td.mono{font-family:var(--mono);font-size:12px;color:var(--ink-2);}
+    .tag{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 9px;border-radius:7px;background:var(--pop-soft);color:var(--pop);}
+    .tag--new{background:#dcfce7;color:#15803d;}
+    .tag--ret{background:#fef3c7;color:#b45309;}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top__in">
+      <a class="top__back" href="index.html" aria-label="Retour à l'accueil">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="brand" href="index.html"><img src="logo.png" alt="" />WIJHA <small>Analytics</small></a>
+      <div class="top__sp"></div>
+      <div class="ctrl">
+        <select id="range" title="Période">
+          <option value="0">Tout</option>
+          <option value="1">Aujourd'hui</option>
+          <option value="7" selected>7 jours</option>
+          <option value="30">30 jours</option>
+        </select>
+        <input id="key" type="password" placeholder="Clé admin (serveur)" autocomplete="off" />
+        <button class="btn" id="load">Charger serveur</button>
+        <button class="btn btn--pop" id="refresh">↻ Actualiser</button>
+        <button class="btn btn--ghost" id="export" title="Exporter en JSON">Export</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p class="mode"><span class="dot"></span><span id="mode-txt">Mode démo — données de cet appareil (localStorage)</span></p>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="section-title">D'où viennent-ils & avec quoi</div>
+    <div class="grid">
+      <div class="panel"><h3>Sources</h3><p class="sub">Comment ils sont arrivés</p><div class="bars" id="b-source"></div></div>
+      <div class="panel"><h3>Appareils</h3><p class="sub">Mobile · ordi · tablette</p><div class="bars" id="b-device"></div></div>
+      <div class="panel"><h3>Pays</h3><p class="sub">Géolocalisation IP (serveur)</p><div class="bars" id="b-country"></div></div>
+      <div class="panel"><h3>Systèmes</h3><p class="sub">OS</p><div class="bars" id="b-os"></div></div>
+      <div class="panel"><h3>Navigateurs</h3><p class="sub">Browser</p><div class="bars" id="b-browser"></div></div>
+      <div class="panel"><h3>Pages</h3><p class="sub">Les plus vues</p><div class="bars" id="b-page"></div></div>
+    </div>
+
+    <div class="section-title">Sondage — « Aide-nous en 5 secondes »</div>
+    <div class="grid">
+      <div class="panel"><h3>Comment nous as-tu trouvés ?</h3><p class="sub" id="sv-n1"></p><div class="bars" id="sv-source"></div></div>
+      <div class="panel"><h3>Ce qui les intéresse</h3><p class="sub" id="sv-n2"></p><div class="bars" id="sv-interet"></div></div>
+      <div class="panel"><h3>Qui sont-ils ?</h3><p class="sub" id="sv-n3"></p><div class="bars" id="sv-profil"></div></div>
+    </div>
+
+    <div class="section-title">Visiteurs récents <span style="font-weight:400;color:var(--ink-3);font-size:13px;">(temps = durée active sur le site)</span></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>Quand</th><th>Visiteur</th><th>Type</th><th>Source</th><th>Appareil</th>
+          <th>OS · Navigateur</th><th>Pays</th><th>Pages</th><th>Temps actif</th><th>Langue</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+  (function(){
+    var LS = "wijha_events";
+    var serverEvents = null; // null => mode démo (localStorage)
+
+    function localEvents(){ try{ return JSON.parse(localStorage.getItem(LS)||"[]"); }catch(e){ return []; } }
+    function allEvents(){ return serverEvents || localEvents(); }
+
+    function fmtTime(sec){
+      sec = Math.round(sec||0);
+      if(sec < 60) return sec+"s";
+      var m = Math.floor(sec/60), s = sec%60;
+      if(m < 60) return m+"m "+(s<10?"0":"")+s+"s";
+      var h = Math.floor(m/60); return h+"h "+(m%60)+"m";
+    }
+    function ago(ts){
+      var d = (new Date() - new Date(ts))/1000;
+      if(d < 60) return "à l'instant";
+      if(d < 3600) return Math.floor(d/60)+" min";
+      if(d < 86400) return Math.floor(d/3600)+" h";
+      return Math.floor(d/86400)+" j";
+    }
+    function within(ts, days){
+      if(!days) return true;
+      var diff = (new Date() - new Date(ts))/86400000;
+      if(days===1){ var n=new Date(), t=new Date(ts); return n.toDateString()===t.toDateString(); }
+      return diff <= days;
+    }
+
+    function aggregate(events, days){
+      events = events.filter(function(e){ return within(e.ts, days); });
+      var sessions = {}, visitors = {}, pageviews = 0;
+      var survey = { source:{}, interet:{}, profil:{} }, surveyCount = 0;
+
+      events.forEach(function(e){
+        if(e.type === "pageview") pageviews++;
+        if(e.vid) visitors[e.vid] = true;
+        if(e.type === "survey" && e.survey){
+          surveyCount++;
+          ["source","interet","profil"].forEach(function(k){
+            var v = e.survey[k]; if(v){ survey[k][v] = (survey[k][v]||0)+1; }
+          });
+          return;
+        }
+        var sid = e.sid; if(!sid) return;
+        var s = sessions[sid] || (sessions[sid] = {
+          sid:sid, vid:e.vid, isNew:!!e.isNew, source:e.source||"Direct",
+          device:e.device||"—", os:e.os||"—", browser:e.browser||"—",
+          country:e.country||"—", lang:e.lang||"—", pages:{}, active:0,
+          first:e.ts, last:e.ts
+        });
+        if(e.page) s.pages[e.page] = true;
+        if(typeof e.active === "number" && e.active > s.active) s.active = e.active;
+        if(e.ts < s.first) s.first = e.ts;
+        if(e.ts > s.last) s.last = e.ts;
+        if(e.country && e.country!=="—") s.country = e.country;
+      });
+
+      var sl = Object.keys(sessions).map(function(k){ return sessions[k]; });
+      var durations = sl.map(function(s){ return s.active; });
+      var avg = durations.length ? durations.reduce(function(a,b){return a+b;},0)/durations.length : 0;
+      var newV = {}, retV = {};
+      sl.forEach(function(s){ (s.isNew?newV:retV)[s.vid]=true; });
+
+      function tally(key){ var m={}; sl.forEach(function(s){ var v=s[key]||"—"; m[v]=(m[v]||0)+1; }); return m; }
+      var pageTally = {}; sl.forEach(function(s){ Object.keys(s.pages).forEach(function(p){ pageTally[p]=(pageTally[p]||0)+1; }); });
+
+      return {
+        visitors:Object.keys(visitors).length, sessions:sl.length, pageviews:pageviews,
+        avg:avg, newCount:Object.keys(newV).length, retCount:Object.keys(retV).length,
+        surveyCount:surveyCount, survey:survey,
+        source:tally("source"), device:tally("device"), os:tally("os"),
+        browser:tally("browser"), country:tally("country"), page:pageTally,
+        sessions_list: sl.sort(function(a,b){ return new Date(b.last)-new Date(a.last); })
+      };
+    }
+
+    function renderBars(elId, map, fmt){
+      var el = document.getElementById(elId); el.innerHTML = "";
+      var arr = Object.keys(map).map(function(k){ return [k, map[k]]; })
+        .filter(function(x){ return x[0] && x[0]!=="—"; })
+        .sort(function(a,b){ return b[1]-a[1]; }).slice(0,8);
+      if(!arr.length){ el.innerHTML = '<p class="empty">Aucune donnée pour cette période.</p>'; return; }
+      var max = arr[0][1] || 1;
+      arr.forEach(function(x){
+        var pct = Math.max(6, Math.round(x[1]/max*100));
+        var d = document.createElement("div"); d.className = "bar";
+        d.innerHTML = '<span class="bar__lbl">'+esc(x[0])+'</span><span class="bar__val">'+(fmt?fmt(x[1]):x[1])+'</span>'+
+          '<div class="bar__track"><div class="bar__fill" style="width:'+pct+'%"></div></div>';
+        el.appendChild(d);
+      });
+    }
+    function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+    function kpi(k,v,s){ return '<div class="kpi"><div class="k">'+k+'</div><div class="v">'+v+'</div><div class="s">'+(s||"")+'</div></div>'; }
+
+    function render(){
+      var days = parseInt(document.getElementById("range").value,10);
+      var a = aggregate(allEvents(), days);
+
+      document.getElementById("kpis").innerHTML =
+        kpi("Visiteurs", a.visitors, a.newCount+" nouv. · "+a.retCount+" récur.") +
+        kpi("Sessions", a.sessions, "") +
+        kpi("Pages vues", a.pageviews, a.sessions?(a.pageviews/a.sessions).toFixed(1)+" / session":"") +
+        kpi("Temps moyen", fmtTime(a.avg), "actif / session") +
+        kpi("Sondages", a.surveyCount, "réponses") +
+        kpi("Engagés", a.avg>=30?"Oui":"—", a.avg>=30?">30s en moyenne":"courte visite");
+
+      renderBars("b-source", a.source);
+      renderBars("b-device", a.device);
+      renderBars("b-country", a.country);
+      renderBars("b-os", a.os);
+      renderBars("b-browser", a.browser);
+      renderBars("b-page", a.page);
+
+      renderBars("sv-source", a.survey.source);
+      renderBars("sv-interet", a.survey.interet);
+      renderBars("sv-profil", a.survey.profil);
+      var tot=function(m){ return Object.keys(m).reduce(function(s,k){return s+m[k];},0); };
+      document.getElementById("sv-n1").textContent = tot(a.survey.source)+" réponses";
+      document.getElementById("sv-n2").textContent = tot(a.survey.interet)+" réponses";
+      document.getElementById("sv-n3").textContent = tot(a.survey.profil)+" réponses";
+
+      var rows = document.getElementById("rows"); rows.innerHTML = "";
+      if(!a.sessions_list.length){
+        rows.innerHTML = '<tr><td colspan="10" class="empty" style="text-align:center;padding:26px;">Aucune visite encore. Ouvre le site, navigue, puis reviens ici.</td></tr>';
+      }
+      a.sessions_list.slice(0,60).forEach(function(s){
+        var tr = document.createElement("tr");
+        tr.innerHTML =
+          '<td class="mono">'+ago(s.last)+'</td>'+
+          '<td class="mono">'+esc((s.vid||"").slice(0,8))+'</td>'+
+          '<td>'+(s.isNew?'<span class="tag tag--new">Nouveau</span>':'<span class="tag tag--ret">Récurrent</span>')+'</td>'+
+          '<td><span class="tag">'+esc(s.source)+'</span></td>'+
+          '<td>'+esc(s.device)+'</td>'+
+          '<td>'+esc(s.os)+' · '+esc(s.browser)+'</td>'+
+          '<td>'+esc(s.country)+'</td>'+
+          '<td class="mono">'+Object.keys(s.pages).length+'</td>'+
+          '<td class="mono"><b style="color:var(--ink)">'+fmtTime(s.active)+'</b></td>'+
+          '<td class="mono">'+esc(s.lang)+'</td>';
+        rows.appendChild(tr);
+      });
+    }
+
+    /* ---- controls ---- */
+    document.getElementById("range").addEventListener("change", render);
+    document.getElementById("refresh").addEventListener("click", function(){ if(!serverEvents) render(); else loadServer(); });
+    document.getElementById("export").addEventListener("click", function(){
+      var blob = new Blob([JSON.stringify(allEvents(),null,2)], {type:"application/json"});
+      var u = URL.createObjectURL(blob), aEl = document.createElement("a");
+      aEl.href = u; aEl.download = "wijha-analytics.json"; aEl.click(); URL.revokeObjectURL(u);
+    });
+
+    function loadServer(){
+      var key = document.getElementById("key").value.trim();
+      if(!key){ alert("Entre la clé admin pour charger les données serveur."); return; }
+      document.getElementById("mode-txt").textContent = "Chargement depuis le serveur…";
+      fetch("/api/analytics", { headers: { "x-admin-key": key } })
+        .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function(d){
+          serverEvents = Array.isArray(d) ? d : (d.events||[]);
+          document.getElementById("mode-txt").textContent = "Mode serveur — "+serverEvents.length+" événements (tous les visiteurs)";
+          render();
+        })
+        .catch(function(e){
+          serverEvents = null;
+          document.getElementById("mode-txt").textContent = "Serveur indisponible ("+e.message+") — retour au mode démo local";
+          render();
+        });
+    }
+    document.getElementById("load").addEventListener("click", loadServer);
+
+    render();
+  })();
+  </script>
+</body>
+</html>
