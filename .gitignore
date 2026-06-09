@@ -18,31 +18,8 @@ Thumbs.db
 # Claude Code local config
 .claude/
 
-# Fichiers sources de design (lourds, hors site) — ne pas committer
-*.psd
-*.zip
-*.lnk
-
-# Exports / brouillons marketing (posts Instagram, bannières, textes) — hors site
-screenshots-export/
-.shots/
-Messages_Pre-Made_WIJHA.txt
-Posts_Promo_WIJHA.txt
-/1.png
-/2.png
-/3.png
-/4.png
-/5.png
-/post 1.png
-/post 2.png
-/post 3.png
-/post 5.png
-/psot 4.png
-/baner.png
-/banner 2.png
-/small baner.png
-/hero section desktopimg.png
-/hero section mobile img.png
+# Archive : ancien site sombre, sources design (PSD/ZIP), exports marketing — hors déploiement
+_archive/
 
 # Artefacts de dev (captures, uploads non référencés)
 **/screenshots/
