@@ -201,7 +201,7 @@ function Tracks() {
     <section className="section" id="tracks">
       <div className="wrap">
         <div className="sec-head center reveal">
-          <Kicker num="04">{tr("Les formations")}</Kicker>
+          <Kicker num="01">{tr("Les formations")}</Kicker>
           <h2 className="h2" style={{ marginTop: 16 }}>
             {tr("Deux niveaux.")} <span className="pop-text">{tr("Choisis le tien.")}</span>
           </h2>
@@ -288,7 +288,7 @@ function LiveVsRecorded() {
     <section className="section compare" id="live">
       <div className="wrap">
         <div className="sec-head center reveal">
-          <Kicker num="04b">{tr("Le live change tout")}</Kicker>
+          <Kicker num="02">{tr("Le live change tout")}</Kicker>
           <h2 className="h2" style={{ marginTop: 16 }}>
             {tr("Pas une vidéo de plus à")} <span className="pop-text">{tr("regarder seul.")}</span>
           </h2>

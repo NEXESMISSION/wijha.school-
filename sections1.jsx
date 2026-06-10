@@ -92,7 +92,7 @@ function Hero() {
 
 function Logos() {
   const tr = useT();
-  const items = ["ChatGPT", "Figma", "Google Meet", "GitHub", "Vercel"];
+  const items = ["ChatGPT", "Cursor", "Claude Code", "Figma", "GitHub", "Vercel", "Google Meet"];
   return (
     <section className="section--tight" style={{ paddingBottom: 0 }}>
       <div className="wrap">
