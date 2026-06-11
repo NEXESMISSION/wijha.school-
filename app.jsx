@@ -48,10 +48,10 @@ function App() {
         {/* Offre en premier : on met les formations + prix tout de suite */}
         <Tracks />
         <LiveVsRecorded />
-        <Expert />
         <FAQ />
         <FinalCTA />
         {/* Sections masquées (à réactiver plus tard) :
+            <Expert /> = nos produits / notre travail — à réactiver quand on aura les vraies captures.
             <Showcase /> = galerie d'images défilantes sous le hero — masquée.
             <Manifesto /> <HowWeTeach /> <Work /> <Testimonials /> <Roadmap /> = redondantes / preuves non vérifiées. */}
       </main>

@@ -136,7 +136,7 @@ const FAQS = [
   { q: "Est-ce que j'obtiens un certificat ?", a: "Oui — tu repars avec un certificat WIJHA et, surtout, un portfolio de vrais projets à montrer à tes clients et employeurs." },
   { q: "Ai-je besoin d'un ordinateur puissant ?", a: "Non. N'importe quel ordinateur portable récent suffit. Les outils qu'on utilise sont surtout en ligne et légers." },
   { q: "Y a-t-il une limite d'âge ?", a: "Aucune. Que tu sois lycéen, étudiant ou en pleine carrière — si tu sais suivre des étapes simples, tu peux le faire." },
-  { q: "Combien ça coûte et comment réserver ?", a: "Site Web : 1 session live de 2h — 90 DT en early-bird (10 premières places), 120 DT ensuite. Application Web : 4 sessions live (8h au total, 1 par jour) — 350 DT en pré-inscription, 700 DT au lancement. 20 places max. Tu réserves en 2 minutes, puis tu confirmes ta place par paiement (D17 / Flouci / international)." },
+  { q: "Combien ça coûte et comment réserver ?", a: "Site Web : 1 session live de 3h — 90 DT en early-bird (10 premières places), 120 DT ensuite. Application Web : 4 sessions live (8h au total, 1 par jour) — 350 DT en pré-inscription, 700 DT au lancement. 20 places max. Tu réserves en 2 minutes, puis tu confirmes ta place par paiement (D17 / Flouci / international)." },
 ];
 
 function FAQ() {
@@ -147,7 +147,7 @@ function FAQ() {
       <div className="wrap">
         <div className="faq">
           <div className="reveal">
-            <Kicker num="04">{tr("Questions")}</Kicker>
+            <Kicker num="03">{tr("Questions")}</Kicker>
             <h2 className="h2" style={{ marginTop: 22 }}>
               {tr("Tout ce que tu dois savoir.")}
             </h2>

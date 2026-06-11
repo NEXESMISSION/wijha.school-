@@ -143,7 +143,7 @@ const TRACKS = [
     oldPrice: "120", // prix standard barré (90 = tarif early-bird)
     per: "/ formation",
     chip: "🐦 90 DT · 10 premières places",
-    metaLine: "🔴 En live · 2h · 🎟️ 20 places",
+    metaLine: "🔴 En live · 3h · 🎟️ 20 places",
     reassure: "Sans code · paiement à la réservation",
     cta: "Voir la formation",
     ctaHref: "static-web-apps.html",
@@ -151,7 +151,7 @@ const TRACKS = [
     page: "static-web-apps.html",
     meta: [
       { ic: "🔴", t: "Live · Google Meet" },
-      { ic: "⏱️", t: "2h en direct" },
+      { ic: "⏱️", t: "3h en direct" },
       { ic: "📅", t: "Prochaine session : bientôt" },
       { ic: "🎟️", t: "20 places" },
     ],
