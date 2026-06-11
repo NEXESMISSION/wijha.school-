@@ -21,6 +21,9 @@ Thumbs.db
 # Archive : ancien site sombre, sources design (PSD/ZIP), exports marketing — hors déploiement
 _archive/
 
+# Dossier de travail : retouche des visuels des étapes (local seulement)
+images-a-retoucher/
+
 # Artefacts de dev (captures, uploads non référencés)
 **/screenshots/
 **/uploads/
