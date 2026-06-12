@@ -55,7 +55,7 @@ function Nav() {
         </div>
         <div className="nav__right">
           {LangSwitch}
-          <Btn variant="pop" href="static-web-apps.html#reserver" arrow>{tr("Réserver")}</Btn>
+          <Btn variant="pop" href="static-web-apps.html" arrow>{tr("Réserver")}</Btn>
         </div>
       </div>
     </nav>
@@ -79,7 +79,7 @@ function Hero() {
             {tr("Des sessions en direct où tu construis de vrais projets avec l'IA, guidé pas à pas — sans taper le code toi-même.")}
           </p>
           <div className="hero__cta reveal in" data-d="3">
-            <Btn variant="pop" href="static-web-apps.html#reserver" arrow>{tr("Réserver ma place — 90 DT")}</Btn>
+            <Btn variant="pop" href="static-web-apps.html" arrow>{tr("Réserver ma place — 90 DT")}</Btn>
             <a className="hero__how" href="#tracks">{tr("Voir les formations")}</a>
           </div>
         </div>

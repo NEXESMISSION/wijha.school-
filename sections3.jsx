@@ -171,7 +171,7 @@ function FAQ() {
         </div>
         <div className="faq__cta reveal" data-d="2">
           <p className="faq__cta-q">{tr("Encore une question ? Écris-nous, on répond vite.")}</p>
-          <Btn variant="pop" href="static-web-apps.html#reserver" arrow>{tr("Réserver ma place — 90 DT")}</Btn>
+          <Btn variant="pop" href="static-web-apps.html" arrow>{tr("Réserver ma place — 90 DT")}</Btn>
           <span className="faq__cta-note">{tr("Session du 26 juin — 20 places seulement")}</span>
         </div>
       </div>
@@ -208,8 +208,8 @@ function FinalCTA() {
             </div>
           </div>
           <div className="final__cta">
-            <Btn variant="paper" href="static-web-apps.html#reserver" arrow>{tr("Réserver ma place — Site Web · 90 DT")}</Btn>
-            <Btn variant="outline" href="web-apps.html#reserver" arrow>{tr("Se pré-inscrire — Application Web · 350 DT")}</Btn>
+            <Btn variant="paper" href="static-web-apps.html" arrow>{tr("Réserver ma place — Site Web · 90 DT")}</Btn>
+            <Btn variant="outline" href="web-apps.html" arrow>{tr("Se pré-inscrire — Application Web · 350 DT")}</Btn>
             <span style={{ fontFamily: "var(--mono)", fontSize: 12 }}>{tr("Réservation gratuite en 2 min · tu paies après confirmation de ta place")}</span>
             <span style={{ fontFamily: "var(--mono)", fontSize: 12, opacity: .8 }}>{tr("Aucune expérience requise · tout âge")}</span>
           </div>
@@ -281,7 +281,7 @@ function Footer() {
         </div>
         <div className="footer__cta">
           <span>{tr("📅 26 juin · 🎟️ 20 places · 🐦 90 DT early-bird")}</span>
-          <a className="footer__cta-link" href="static-web-apps.html#reserver">{tr("Réserver ma place →")}</a>
+          <a className="footer__cta-link" href="static-web-apps.html">{tr("Réserver ma place →")}</a>
         </div>
         <div className="footer__bottom">
           <span>{tr("© 2026 WIJHA Academy — Tous droits réservés.")}</span>

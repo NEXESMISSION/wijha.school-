@@ -144,9 +144,10 @@ const TRACKS = [
     per: "/ formation",
     chip: "🐦 90 DT · 10 premières places",
     metaLine: "🔴 En live · 26 juin, 17h-20h · 🎟️ 20 places",
+    countdown: "2026-06-26T17:00:00+01:00",
     reassure: "Sans code · paiement à la réservation",
     cta: "Réserver ma place",
-    ctaHref: "static-web-apps.html#reserver",
+    ctaHref: "static-web-apps.html",
     ribbon: "★ Commence ici",
     page: "static-web-apps.html",
     meta: [
@@ -175,7 +176,7 @@ const TRACKS = [
     metaLine: "🎓 4 sessions live · 8h · après Site Web",
     reassure: "Aucun paiement maintenant · garde ta place",
     cta: "Je me pré-inscris",
-    ctaHref: "web-apps.html#reserver",
+    ctaHref: "web-apps.html",
     softtag: "🚧 En préparation",
     soon: true,      // formation en préparation → on ouvre la pré-inscription
     page: "web-apps.html",
@@ -231,6 +232,9 @@ function Tracks() {
                     {t.oldPrice && <s className="old">{t.oldPrice} DT</s>}
                   </div>
                   <p className="offer__meta">{tr(t.metaLine)}</p>
+                  {t.countdown && (
+                    <div className="cdown--card" data-countdown={t.countdown} data-countdown-label={tr("Début du live dans")} />
+                  )}
                 </div>
 
                 <ul className="offer__feats">

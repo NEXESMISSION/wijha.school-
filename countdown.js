@@ -10,6 +10,8 @@
   ];
 
   function build(el) {
+    if (el.dataset.cdownReady) return; // idempotent (React peut re-déclencher init)
+    el.dataset.cdownReady = "1";
     var target = new Date(el.getAttribute("data-countdown")).getTime();
     if (!isFinite(target)) return;
     var label = el.getAttribute("data-countdown-label") || "Le live commence dans";
@@ -71,4 +73,9 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
+
+  // Les pages React (accueil) rendent leur contenu APRÈS le chargement :
+  // on observe le DOM et on initialise les compteurs ajoutés plus tard.
+  window.initCountdowns = init;
+  new MutationObserver(init).observe(document.documentElement, { childList: true, subtree: true });
 })();

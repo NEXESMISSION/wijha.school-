@@ -73,6 +73,7 @@ const AR_DICT = {
   "Tu repars avec un projet en ligne": "Tetla3 b projet online",
   "Dès 90 DT en early-bird": "Mn 90 DT en early-bird",
   "Prochaine session : 26 juin · 20 places max": "Session jeya : 26 juin · 20 blasa max",
+  "Début du live dans": "El live yebda fi",
   "Recommandé": "Recommandé",
   "Voir les formations live": "Chouf el formations live",
   "Questions": "Questions",
