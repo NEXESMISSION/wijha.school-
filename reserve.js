@@ -1,19 +1,10 @@
-/* reserve.js — réservations WIJHA → notification Telegram (propre, sans friction).
-
-   ┌─ COMMENT ÇA MARCHE ─────────────────────────────────────────────────┐
-   │ • EN PRODUCTION : le formulaire envoie les infos à une petite        │
-   │   fonction serverless (api/reserve) qui les transmet à ton bot       │
-   │   Telegram. Le TOKEN reste SECRET côté serveur.  → TELEGRAM-SETUP.md │
-   │ • EN LOCAL (localhost) : si tu colles un token de test ci-dessous,   │
-   │   le message part directement pour que tu VOIES tout de suite.       │
-   │   Ce mode ne s'active JAMAIS en ligne.                               │
-   └──────────────────────────────────────────────────────────────────────┘
+/* reserve.js — réservations WIJHA → enregistrées sur le serveur (table Supabase),
+   visibles dans /admin (onglet Réservations), reçu de paiement inclus.
+   → Guide : ADMIN-SETUP.md
 */
 (function () {
   var CONFIG = {
-    // [PROD] URL de la fonction qui transmet à Telegram.
-    //   Vercel (même domaine) : "/api/reserve"
-    //   Cloudflare Worker      : "https://ton-worker.workers.dev"
+    // [PROD] URL de la fonction qui enregistre la réservation côté serveur.
     endpoint: "/api/reserve",
 
     // [FALLBACK] si l'envoi échoue, on propose WhatsApp (sinon email).
@@ -30,15 +21,6 @@
       note: "Ta place est gardée 24h et confirmée dès réception du paiement.",
     },
 
-    // [TEST LOCAL UNIQUEMENT] pour voir le message arriver sans rien déployer.
-    // ⚠️⚠️  À VIDER (remettre "") AVANT DE METTRE LE SITE EN LIGNE.  ⚠️⚠️
-    //       En prod, le token passe par les variables d'env de Vercel (api/reserve.js),
-    //       jamais dans ce fichier — sinon n'importe qui peut le lire dans la page.
-    // ⚠️ L'ancien token de test a été EFFACÉ (il avait fuité) — RÉVOQUE-le via @BotFather.
-    //    En prod, le vrai token reste UNIQUEMENT dans les variables d'env Vercel (api/reserve.js).
-    //    Pour un test local ponctuel, colle un token JETABLE ici, puis re-vide avant de déployer.
-    testBotToken: "",
-    testChatId: "",
   };
 
   var IS_LOCAL = ["localhost", "127.0.0.1", "0.0.0.0", ""].indexOf(location.hostname) !== -1;
@@ -56,28 +38,7 @@
     };
   }
 
-  function textFor(p) {
-    return (
-      "🎓 Nouvelle réservation WIJHA\n\n" +
-      "Formation : " + p.formation + "\n" +
-      (p.amount ? "Montant : " + p.amount + " DT (à confirmer par paiement)\n" : "Type : pré-inscription (sans paiement)\n") +
-      "Nom : " + p.nom + "\n" +
-      "Email : " + p.email + "\n" +
-      "WhatsApp : " + p.tel + "\n\n" +
-      "Page : " + p.page
-    );
-  }
-
-  // Local test : navigateur → Telegram (token de test, localhost seulement).
-  function sendDirect(p) {
-    return fetch("https://api.telegram.org/bot" + CONFIG.testBotToken + "/sendMessage", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: CONFIG.testChatId, text: textFor(p), disable_web_page_preview: true }),
-    }).then(function (r) { if (!r.ok) throw new Error("telegram " + r.status); return true; });
-  }
-
-  // Production : navigateur → ta fonction serverless → Telegram.
+  // Production : navigateur → fonction serverless → enregistrée en base (visible dans /admin).
   function sendEndpoint(p) {
     return fetch(CONFIG.endpoint, {
       method: "POST",
@@ -105,22 +66,9 @@
     });
   }
 
-  // Local test : envoie le reçu en PHOTO à Telegram (sendPhoto, multipart).
-  function sendPhotoDirect(p, file) {
-    var fd = new FormData();
-    fd.append("chat_id", CONFIG.testChatId);
-    fd.append("caption", textFor(p));
-    fd.append("photo", file);
-    return fetch("https://api.telegram.org/bot" + CONFIG.testBotToken + "/sendPhoto", { method: "POST", body: fd })
-      .then(function (r) { if (!r.ok) throw new Error("telegram " + r.status); return true; });
-  }
-
   function send(p, file) {
-    if (IS_LOCAL && CONFIG.testBotToken && CONFIG.testChatId) {
-      return file ? sendPhotoDirect(p, file) : sendDirect(p);
-    }
     if (CONFIG.endpoint) {
-      // prod : le reçu (image réduite en base64) part dans le JSON → api/reserve.js le renvoie en photo
+      // le reçu (image réduite en base64) part dans le JSON → enregistré avec la réservation
       return (file ? readDataUrl(file) : Promise.resolve("")).then(function (dataUrl) {
         if (dataUrl) p.recu = dataUrl;
         return sendEndpoint(p);
@@ -167,7 +115,7 @@
     if (P.d17)     rows += '<div class="rpay__m rpay__m--info">📲 D17 / e-Dinar : <b>' + P.d17 + '</b></div>';
     var body = rows
       ? '<div class="rpay__methods">' + rows + '</div>'
-      : '<p class="rpay__soon">On t\'envoie le lien de paiement tout de suite sur WhatsApp / Telegram. 📲</p>';
+      : '<p class="rpay__soon">On t\'envoie le lien de paiement tout de suite sur WhatsApp. 📲</p>';
     return (
       '<div class="rpay">' +
         '<div class="rpay__amt">Pour confirmer ta place : <b>' + amount + ' DT</b></div>' +
@@ -253,10 +201,10 @@
         setLoading(btn, false);
         if (IS_LOCAL) {
           // Aucun transport configuré en local : on montre quand même le flux (aperçu).
-          console.warn("[WIJHA reserve] Telegram non configuré — aperçu local (mode démo). Détail :", err && err.message);
+          console.warn("[WIJHA reserve] Serveur non configuré — aperçu local (mode démo). Détail :", err && err.message);
           hide(ok);
           showPopup("Réservation envoyée ✅",
-            p.amount ? "(Aperçu local) Étape de paiement ci-dessous — configure Telegram pour recevoir la demande (TELEGRAM-SETUP.md)." : "(Aperçu local) Configure Telegram pour la recevoir pour de vrai — voir TELEGRAM-SETUP.md.",
+            p.amount ? "(Aperçu local) Étape de paiement ci-dessous — configure Supabase pour enregistrer la demande (ADMIN-SETUP.md)." : "(Aperçu local) Configure Supabase pour l'enregistrer pour de vrai — voir ADMIN-SETUP.md.",
             payBlockHtml(p.amount));
           form.reset();
         } else {

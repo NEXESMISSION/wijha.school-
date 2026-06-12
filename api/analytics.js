@@ -1,22 +1,25 @@
 // api/analytics.js — Fonction serverless (Vercel) : renvoie les événements analytics
-// pour le tableau de bord /admin-me. PROTÉGÉ par une clé admin.
+// pour la page /admin. PROTÉGÉ : exige le jeton de connexion (obtenu via /api/login).
 //
 // ⚙️  Variables d'environnement (Vercel) :
 //     SUPABASE_URL          = https://xxxx.supabase.co
 //     SUPABASE_SERVICE_KEY  = clé "service_role" (SECRÈTE)
-//     ADMIN_KEY             = un mot de passe que TU choisis (ex : long aléatoire)
+//     ADMIN_CODE            = le code de connexion admin (sert à vérifier les jetons)
 //
-// Usage : GET /api/analytics?key=TON_ADMIN_KEY   (la page /admin-me l'envoie pour toi)
-// Renvoie un tableau d'événements (max 5000, les plus récents) au format attendu par /admin-me.
+// Renvoie un tableau d'événements (max 5000, les plus récents).
+
+import { verifyToken } from "./login.js";
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", process.env.ALLOW_ORIGIN || "*");
+  res.setHeader("Access-Control-Allow-Headers", "Authorization");
+  if (req.method === "OPTIONS") return res.status(204).end();
   if (req.method !== "GET") return res.status(405).json({ ok: false, error: "method" });
 
-  const ADMIN = process.env.ADMIN_KEY;
-  // clé passée dans un en-tête (pas dans l'URL → ne fuite pas via l'historique / les logs / le referer)
-  const given = req.headers["x-admin-key"] || "";
-  if (!ADMIN || given !== ADMIN) return res.status(401).json({ ok: false, error: "unauthorized" });
+  const token = String(req.headers.authorization || "").replace(/^Bearer\s+/i, "");
+  if (!verifyToken(token, process.env.ADMIN_CODE)) {
+    return res.status(401).json({ ok: false, error: "unauthorized" });
+  }
 
   const URL = process.env.SUPABASE_URL;
   const KEY = process.env.SUPABASE_SERVICE_KEY;

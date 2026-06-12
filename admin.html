@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>WIJHA · Admin</title>
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --pop: oklch(0.55 0.225 264); --pop-soft: oklch(0.95 0.04 264);
+      --paper:#fbfcfe; --paper-2:#f1f4f9; --card:#fff; --ink:#0f1729; --ink-2:#475069; --ink-3:#8a92a8;
+      --line:#e7ebf3; --serif:"Sora",sans-serif; --sans:"Plus Jakarta Sans",sans-serif; --mono:"JetBrains Mono",monospace;
+      --radius:18px; --shadow:0 20px 50px -28px rgba(15,23,41,.35); --ok:#16a34a; --warn:#d97706; --bad:#dc2626;
+    }
+    *{box-sizing:border-box} html{-webkit-text-size-adjust:100%}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+    a{color:var(--pop);text-decoration:none} a:hover{text-decoration:underline}
+    button{font-family:inherit}
+
+    /* ---- header ---- */
+    .top{position:sticky;top:0;z-index:20;background:rgba(251,252,254,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+    .top__in{display:flex;align-items:center;gap:12px;height:64px}
+    .brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:800;font-size:17px;color:var(--ink)}
+    .brand img{width:30px;height:30px;border-radius:9px}
+    .brand small{font-family:var(--mono);font-weight:500;color:var(--ink-3);font-size:12px}
+    .top__act{margin-left:auto;display:flex;gap:8px}
+    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);
+      border-radius:11px;padding:9px 14px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+    .btn:hover{border-color:var(--pop);color:var(--pop)}
+    .btn--pop{background:var(--pop);border-color:var(--pop);color:#fff}
+    .btn--pop:hover{filter:brightness(1.08);color:#fff}
+
+    /* ---- login ---- */
+    .login{min-height:100svh;display:grid;place-items:center;padding:20px}
+    .login__card{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line);border-radius:22px;
+      box-shadow:var(--shadow);padding:34px 30px}
+    .login__card h1{font-family:var(--serif);font-size:22px;margin:14px 0 4px}
+    .login__card p{color:var(--ink-2);font-size:14px;margin:0 0 22px}
+    .login__logo{width:46px;height:46px;border-radius:13px}
+    .field{margin-bottom:14px}
+    .field label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-2);margin-bottom:6px;letter-spacing:.02em}
+    .field input{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:12px 14px;
+      font-size:15px;font-family:inherit;color:var(--ink);outline:none;transition:border-color .15s}
+    .field input:focus{border-color:var(--pop)}
+    .login__btn{width:100%;justify-content:center;padding:13px;font-size:15px;border-radius:12px;margin-top:6px}
+    .login__err{display:none;margin-top:14px;background:#fef2f2;border:1px solid #fecaca;color:var(--bad);
+      font-size:13.5px;border-radius:11px;padding:10px 13px}
+    .login__err.on{display:block}
+
+    /* ---- tabs ---- */
+    .tabs{display:flex;gap:8px;margin:26px 0 22px;flex-wrap:wrap}
+    .tab{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:10px 18px;font-size:14px;
+      font-weight:600;color:var(--ink-2);cursor:pointer;transition:.15s}
+    .tab:hover{border-color:var(--pop);color:var(--pop)}
+    .tab.on{background:var(--pop);border-color:var(--pop);color:#fff}
+    .panel{display:none;padding-bottom:70px}
+    .panel.on{display:block}
+
+    /* ---- stats / cards ---- */
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
+    .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+    .stat b{display:block;font-family:var(--serif);font-size:26px;letter-spacing:-.02em}
+    .stat span{font-size:12.5px;color:var(--ink-3);font-weight:600}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:14px}
+    .card h3{font-family:var(--serif);font-size:16px;margin:0 0 14px}
+    .muted{color:var(--ink-3);font-size:13.5px}
+    .empty{padding:50px 20px;text-align:center;color:var(--ink-3);font-size:14.5px;border:1px dashed var(--line);border-radius:var(--radius)}
+
+    /* réservations */
+    .resa{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:start}
+    .resa__thumb{width:74px;height:74px;border-radius:12px;object-fit:cover;border:1px solid var(--line);cursor:zoom-in;background:var(--paper-2)}
+    .resa__nothumb{width:74px;height:74px;border-radius:12px;border:1px dashed var(--line);display:grid;place-items:center;
+      font-size:11px;color:var(--ink-3);text-align:center;padding:6px}
+    .resa b{font-family:var(--serif);font-size:16px}
+    .resa .chips{display:flex;gap:6px;flex-wrap:wrap;margin:7px 0}
+    .chip{font-family:var(--mono);font-size:11.5px;font-weight:600;background:var(--pop-soft);color:var(--pop);
+      border-radius:999px;padding:4px 10px}
+    .chip--ok{background:#f0fdf4;color:var(--ok)}
+    .resa__links{display:flex;flex-direction:column;gap:6px;font-size:13.5px;text-align:right;white-space:nowrap}
+    .resa__date{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+    @media (max-width:620px){.resa{grid-template-columns:auto 1fr}.resa__links{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;text-align:left}}
+
+    /* barres (sondage / analytics) */
+    .bar{display:grid;grid-template-columns:140px 1fr 44px;gap:10px;align-items:center;margin-bottom:9px;font-size:13.5px}
+    .bar i{font-style:normal;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .bar .tr{height:9px;border-radius:99px;background:var(--paper-2);overflow:hidden}
+    .bar .tr u{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--pop),oklch(0.62 0.2 290));transition:width .6s}
+    .bar em{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--ink-3);text-align:right}
+    .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width:760px){.cols{grid-template-columns:1fr}}
+
+    /* lightbox reçu */
+    .lb{position:fixed;inset:0;z-index:50;background:rgba(10,15,30,.78);display:none;place-items:center;padding:24px;cursor:zoom-out}
+    .lb.on{display:grid}
+    .lb img{max-width:min(94vw,860px);max-height:88vh;border-radius:14px;box-shadow:0 30px 90px rgba(0,0,0,.5)}
+
+    .loading{display:inline-block;width:17px;height:17px;border:2.5px solid var(--line);border-top-color:var(--pop);
+      border-radius:50%;animation:spin .7s linear infinite;vertical-align:-3px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+
+  <!-- ===== LOGIN ===== -->
+  <div class="login" id="login">
+    <form class="login__card" id="loginForm">
+      <img class="login__logo" src="logo.png" alt="" />
+      <h1>WIJHA · Admin</h1>
+      <p>Connecte-toi pour voir les réservations, le sondage et les analytics.</p>
+      <div class="field">
+        <label for="lg-email">Email</label>
+        <input id="lg-email" type="email" autocomplete="username" required />
+      </div>
+      <div class="field">
+        <label for="lg-code">Code</label>
+        <input id="lg-code" type="password" autocomplete="current-password" required />
+      </div>
+      <button class="btn btn--pop login__btn" type="submit" id="loginBtn">Se connecter</button>
+      <div class="login__err" id="loginErr"></div>
+    </form>
+  </div>
+
+  <!-- ===== APP ===== -->
+  <div id="app" style="display:none">
+    <header class="top">
+      <div class="wrap top__in">
+        <span class="brand"><img src="logo.png" alt="" />WIJHA <small>· Admin</small></span>
+        <div class="top__act">
+          <button class="btn" id="refreshBtn">↻ Actualiser</button>
+          <button class="btn" id="logoutBtn">Se déconnecter</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <div class="tabs">
+        <button class="tab on" data-tab="resa">📩 Réservations</button>
+        <button class="tab" data-tab="survey">📊 Sondage</button>
+        <button class="tab" data-tab="ana">📈 Analytics</button>
+      </div>
+
+      <section class="panel on" id="panel-resa"><div class="empty"><span class="loading"></span></div></section>
+      <section class="panel" id="panel-survey"><div class="empty"><span class="loading"></span></div></section>
+      <section class="panel" id="panel-ana"><div class="empty"><span class="loading"></span></div></section>
+    </main>
+  </div>
+
+  <div class="lb" id="lb"><img id="lbImg" alt="Reçu de paiement" /></div>
+
+  <script>
+  (function () {
+    var TOKEN_KEY = "wijha_admin_token";
+    var $ = function (s) { return document.querySelector(s); };
+    var esc = function (s) { return String(s == null ? "" : s).replace(/[<>&"]/g, function (c) { return { "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]; }); };
+    var token = localStorage.getItem(TOKEN_KEY) || "";
+
+    /* ---------- auth ---------- */
+    function showLogin() { $("#login").style.display = "grid"; $("#app").style.display = "none"; }
+    function showApp() { $("#login").style.display = "none"; $("#app").style.display = "block"; loadAll(); }
+
+    $("#loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var btn = $("#loginBtn"), err = $("#loginErr");
+      btn.disabled = true; btn.textContent = "Connexion…"; err.classList.remove("on");
+      fetch("/api/login", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: $("#lg-email").value, code: $("#lg-code").value }),
+      }).then(function (r) { return r.json().then(function (j) { return { s: r.status, j: j }; }); })
+        .then(function (x) {
+          btn.disabled = false; btn.textContent = "Se connecter";
+          if (x.j && x.j.ok && x.j.token) { token = x.j.token; localStorage.setItem(TOKEN_KEY, token); showApp(); return; }
+          err.textContent = x.s === 401 ? "Email ou code incorrect." :
+            (x.j && x.j.error === "not-configured") ? "Variables ADMIN_EMAIL / ADMIN_CODE non configurées sur Vercel." :
+            "Connexion impossible — réessaie.";
+          err.classList.add("on");
+        })
+        .catch(function () { btn.disabled = false; btn.textContent = "Se connecter"; err.textContent = "Erreur réseau."; err.classList.add("on"); });
+    });
+
+    $("#logoutBtn").addEventListener("click", function () { localStorage.removeItem(TOKEN_KEY); token = ""; showLogin(); });
+    $("#refreshBtn").addEventListener("click", function () { loadAll(); });
+
+    function authed(url) {
+      return fetch(url, { headers: { Authorization: "Bearer " + token } }).then(function (r) {
+        if (r.status === 401) { localStorage.removeItem(TOKEN_KEY); token = ""; showLogin(); throw new Error("401"); }
+        return r.json();
+      });
+    }
+
+    /* ---------- tabs ---------- */
+    document.querySelectorAll(".tab").forEach(function (t) {
+      t.addEventListener("click", function () {
+        document.querySelectorAll(".tab").forEach(function (x) { x.classList.remove("on"); });
+        document.querySelectorAll(".panel").forEach(function (x) { x.classList.remove("on"); });
+        t.classList.add("on");
+        $("#panel-" + t.getAttribute("data-tab")).classList.add("on");
+      });
+    });
+
+    /* ---------- helpers ---------- */
+    function fdate(ts) {
+      try { return new Date(ts).toLocaleString("fr-FR", { timeZone: "Africa/Tunis", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }); }
+      catch (e) { return ts; }
+    }
+    function bars(counts, total) {
+      var keys = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).slice(0, 8);
+      if (!keys.length) return '<p class="muted">Aucune donnée pour le moment.</p>';
+      return keys.map(function (k) {
+        var n = counts[k], pc = total ? Math.round(n / total * 100) : 0;
+        return '<div class="bar"><i title="' + esc(k) + '">' + esc(k) + '</i><span class="tr"><u style="width:' + pc + '%"></u></span><em>' + n + "</em></div>";
+      }).join("");
+    }
+    function tally(arr, fn) {
+      var o = {};
+      arr.forEach(function (x) { var k = fn(x); if (k) o[k] = (o[k] || 0) + 1; });
+      return o;
+    }
+
+    /* ---------- réservations ---------- */
+    function renderResa(rows) {
+      var p = $("#panel-resa");
+      if (!rows.length) { p.innerHTML = '<div class="empty">Aucune réservation pour le moment.<br><span class="muted">Elles apparaîtront ici dès qu\'un visiteur remplit le formulaire.</span></div>'; return; }
+      var today = new Date().toDateString();
+      var withRecu = rows.filter(function (r) { return r.recu; }).length;
+      var todayN = rows.filter(function (r) { return new Date(r.ts).toDateString() === today; }).length;
+      var html =
+        '<div class="stats">' +
+          '<div class="stat"><b>' + rows.length + "</b><span>Réservations</span></div>" +
+          '<div class="stat"><b>' + withRecu + "</b><span>Avec reçu de paiement</span></div>" +
+          '<div class="stat"><b>' + todayN + "</b><span>Aujourd'hui</span></div>" +
+        "</div>";
+      html += rows.map(function (r) {
+        var thumb = r.recu
+          ? '<img class="resa__thumb" src="' + r.recu + '" alt="Reçu" data-lb />'
+          : '<span class="resa__nothumb">sans<br>reçu</span>';
+        var wa = (r.tel || "").replace(/[^0-9+]/g, "");
+        return (
+          '<div class="card resa">' +
+            thumb +
+            "<div><b>" + esc(r.nom) + "</b>" +
+              '<div class="chips"><span class="chip">' + esc(r.formation) + "</span>" +
+              (r.amount ? '<span class="chip chip--ok">' + esc(r.amount) + " DT</span>" : '<span class="chip">pré-inscription</span>') +
+              (r.recu ? '<span class="chip chip--ok">🧾 reçu joint</span>' : "") + "</div>" +
+              '<div class="muted">' + esc(r.page || "") + "</div></div>" +
+            '<div class="resa__links">' +
+              '<span class="resa__date">' + fdate(r.ts) + "</span>" +
+              '<a href="mailto:' + esc(r.email) + '">✉️ ' + esc(r.email) + "</a>" +
+              (wa ? '<a href="https://wa.me/' + esc(wa.replace(/^\+/, "")) + '" target="_blank" rel="noopener">📱 ' + esc(r.tel) + "</a>" : "") +
+            "</div>" +
+          "</div>"
+        );
+      }).join("");
+      p.innerHTML = html;
+      p.querySelectorAll("[data-lb]").forEach(function (img) {
+        img.addEventListener("click", function () { $("#lbImg").src = img.src; $("#lb").classList.add("on"); });
+      });
+    }
+
+    /* ---------- sondage ---------- */
+    var QUESTIONS = [
+      { key: "source", label: "Comment nous ont-ils trouvés ?" },
+      { key: "interet", label: "Ce qui les intéresse le plus" },
+      { key: "profil", label: "Leur profil" },
+    ];
+    function renderSurvey(events) {
+      var p = $("#panel-survey");
+      var answers = events.filter(function (e) { return e.survey; }).map(function (e) { return { s: e.survey, ts: e.ts, country: e.country }; });
+      if (!answers.length) { p.innerHTML = '<div class="empty">Aucune réponse au sondage pour le moment.</div>'; return; }
+      var html = '<div class="stats"><div class="stat"><b>' + answers.length + "</b><span>Réponses au sondage</span></div></div>";
+      html += '<div class="cols">';
+      QUESTIONS.forEach(function (q) {
+        var counts = tally(answers, function (a) { return a.s && a.s[q.key]; });
+        html += '<div class="card"><h3>' + q.label + "</h3>" + bars(counts, answers.length) + "</div>";
+      });
+      html += "</div>";
+      html += '<div class="card"><h3>Dernières réponses</h3>' + answers.slice(0, 20).map(function (a) {
+        return '<div class="bar" style="grid-template-columns:110px 1fr"><em style="text-align:left">' + fdate(a.ts) + "</em><i>" +
+          esc((a.s.source || "—") + " · " + (a.s.interet || "—") + " · " + (a.s.profil || "—") + (a.country ? " · " + a.country : "")) + "</i></div>";
+      }).join("") + "</div>";
+      p.innerHTML = html;
+    }
+
+    /* ---------- analytics ---------- */
+    function renderAna(events) {
+      var p = $("#panel-ana");
+      if (!events.length) { p.innerHTML = '<div class="empty">Aucune visite enregistrée pour le moment.<br><span class="muted">Vérifie SUPABASE_URL / SUPABASE_SERVICE_KEY et la table events (ANALYTICS-SETUP.md).</span></div>'; return; }
+      var views = events.filter(function (e) { return e.type === "pageview"; });
+      var vids = {}, sids = {}, newV = 0;
+      views.forEach(function (e) {
+        if (e.vid) vids[e.vid] = 1;
+        if (e.sid) sids[e.sid] = 1;
+        if (e.isNew) newV++;
+      });
+      // temps actif : max "active" par session (events ping/duration)
+      var act = {};
+      events.forEach(function (e) {
+        if (e.active && e.sid) act[e.sid] = Math.max(act[e.sid] || 0, e.active);
+      });
+      var actVals = Object.keys(act).map(function (k) { return act[k]; });
+      var avgAct = actVals.length ? Math.round(actVals.reduce(function (a, b) { return a + b; }, 0) / actVals.length) : 0;
+
+      var html =
+        '<div class="stats">' +
+          '<div class="stat"><b>' + views.length + "</b><span>Pages vues</span></div>" +
+          '<div class="stat"><b>' + Object.keys(vids).length + "</b><span>Visiteurs uniques</span></div>" +
+          '<div class="stat"><b>' + Object.keys(sids).length + "</b><span>Sessions</span></div>" +
+          '<div class="stat"><b>' + avgAct + " s</b><span>Temps actif moyen</span></div>" +
+        "</div>";
+      html += '<div class="cols">';
+      html += '<div class="card"><h3>Sources</h3>' + bars(tally(views, function (e) { return e.utm_source || e.source || "direct"; }), views.length) + "</div>";
+      html += '<div class="card"><h3>Pages</h3>' + bars(tally(views, function (e) { return e.page || "/"; }), views.length) + "</div>";
+      html += '<div class="card"><h3>Appareils</h3>' + bars(tally(views, function (e) { return e.device || "?"; }), views.length) + "</div>";
+      html += '<div class="card"><h3>Pays</h3>' + bars(tally(views, function (e) { return e.country || "?"; }), views.length) + "</div>";
+      html += '<div class="card"><h3>Navigateurs</h3>' + bars(tally(views, function (e) { return e.browser || "?"; }), views.length) + "</div>";
+      html += '<div class="card"><h3>Campagnes (utm_campaign)</h3>' + bars(tally(views, function (e) { return e.utm_campaign; }), views.length) + "</div>";
+      html += "</div>";
+      p.innerHTML = html;
+    }
+
+    /* ---------- chargement ---------- */
+    function loadAll() {
+      $("#panel-resa").innerHTML = '<div class="empty"><span class="loading"></span></div>';
+      $("#panel-survey").innerHTML = '<div class="empty"><span class="loading"></span></div>';
+      $("#panel-ana").innerHTML = '<div class="empty"><span class="loading"></span></div>';
+      authed("/api/reservations").then(function (j) { renderResa(j.reservations || []); })
+        .catch(function (e) { if (e.message !== "401") $("#panel-resa").innerHTML = '<div class="empty">Erreur de chargement des réservations.<br><span class="muted">Vérifie SUPABASE_URL / SUPABASE_SERVICE_KEY et la table reservations (ADMIN-SETUP.md).</span></div>'; });
+      authed("/api/analytics").then(function (j) {
+        var ev = j.events || [];
+        renderSurvey(ev); renderAna(ev);
+      }).catch(function (e) {
+        if (e.message !== "401") {
+          $("#panel-survey").innerHTML = '<div class="empty">Erreur de chargement.</div>';
+          $("#panel-ana").innerHTML = '<div class="empty">Erreur de chargement des analytics.</div>';
+        }
+      });
+    }
+
+    /* ---------- lightbox ---------- */
+    $("#lb").addEventListener("click", function () { $("#lb").classList.remove("on"); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") $("#lb").classList.remove("on"); });
+
+    /* ---------- boot ---------- */
+    if (token) showApp(); else showLogin();
+  })();
+  </script>
+</body>
+</html>

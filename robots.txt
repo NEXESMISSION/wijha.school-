@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /admin-me
+Disallow: /admin
 Disallow: /api/
