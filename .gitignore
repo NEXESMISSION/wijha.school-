@@ -27,3 +27,6 @@ images-a-retoucher/
 # Artefacts de dev (captures, uploads non référencés)
 **/screenshots/
 **/uploads/
+
+# Posts sponsorises (marketing, local seulement)
+postes/
