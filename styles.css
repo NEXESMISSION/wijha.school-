@@ -1170,19 +1170,16 @@ section[id], header[id] { scroll-margin-top: 96px; }
   .cdown__units { gap: 8px; }
 }
 
-/* variante carte claire — dans la carte blanche Site Web (Deux niveaux) :
-   on annule le conteneur navy, chiffres en bleu pop sur fond clair */
-.cdown--card { max-width: none; margin: 16px 0 2px; padding: 0; background: none; border: 0;
-  box-shadow: none; border-radius: 0; overflow: visible; text-align: left; }
-.cdown--card::before { display: none; }
-.cdown--card .cdown__head { justify-content: flex-start; font-size: 10px; letter-spacing: .16em;
-  color: var(--ink-3); margin-bottom: 10px; gap: 7px; }
+/* variante carte — dans la carte blanche Site Web (Deux niveaux) :
+   mini version du panneau navy gradient, pleine largeur de la carte */
+.cdown--card { max-width: none; margin: 16px 0 4px; padding: 14px 14px 16px; border-radius: 16px; }
+.cdown--card .cdown__head { font-size: 9.5px; letter-spacing: .16em; margin-bottom: 10px; }
 .cdown--card .cdown__dot { width: 6px; height: 6px; }
-.cdown--card .cdown__units { justify-content: flex-start; gap: clamp(10px, 2vw, 16px); }
-.cdown--card .cdown__num { font-size: clamp(24px, 3vw, 30px); color: var(--pop); text-shadow: none; }
-.cdown--card .cdown__lbl { color: var(--ink-3); font-size: 8.5px; letter-spacing: .14em; }
-.cdown--card .cdown__sep { font-size: 15px; color: var(--ink-3); margin-top: 4px; }
-.cdown--card .cdown__live { color: var(--ink); font-size: 11.5px; justify-content: flex-start; }
+.cdown--card .cdown__units { gap: clamp(8px, 1.6vw, 16px); }
+.cdown--card .cdown__num { font-size: clamp(22px, 2.4vw, 28px); text-shadow: 0 5px 20px rgba(99, 132, 255, .5); }
+.cdown--card .cdown__lbl { font-size: 8.5px; letter-spacing: .14em; }
+.cdown--card .cdown__sep { font-size: 14px; margin-top: 4px; }
+.cdown--card .cdown__live { font-size: 11.5px; }
 
 /* garde-fou mobile : aucun débordement horizontal possible (clip ne casse pas position:sticky) */
 html, body { overflow-x: clip; }
