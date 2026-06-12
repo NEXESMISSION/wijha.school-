@@ -145,8 +145,8 @@ const TRACKS = [
     chip: "🐦 90 DT · 10 premières places",
     metaLine: "🔴 En live · 26 juin, 17h-20h · 🎟️ 20 places",
     reassure: "Sans code · paiement à la réservation",
-    cta: "Voir la formation",
-    ctaHref: "static-web-apps.html",
+    cta: "Réserver ma place",
+    ctaHref: "static-web-apps.html#reserver",
     ribbon: "★ Commence ici",
     page: "static-web-apps.html",
     meta: [
@@ -171,7 +171,7 @@ const TRACKS = [
     price: "350",
     oldPrice: "700", // prix réel après lancement (350 = tarif pré-inscription, 1ères places)
     per: "/ pré-inscription",
-    chip: "🎟️ Tarif pré-inscription",
+    chip: "🎟️ Pré-inscription · prix réel 700 DT",
     metaLine: "🎓 4 sessions live · 8h · après Site Web",
     reassure: "Aucun paiement maintenant · garde ta place",
     cta: "Je me pré-inscris",
@@ -277,7 +277,7 @@ const COMPARE = {
       "Tu bloques ? On débloque, en direct",
       "Petits groupes : 20 places",
       "Tu repars avec un projet en ligne",
-      "Dès 90 DT",
+      "Dès 90 DT en early-bird",
     ],
   },
 };
@@ -333,6 +333,7 @@ function LiveVsRecorded() {
             </ul>
             <div className="compare-card__cta">
               <Btn variant="pop" href="#tracks" arrow>{tr("Voir les formations live")}</Btn>
+              <p className="compare-card__note">{tr("Prochaine session : 26 juin · 20 places max")}</p>
             </div>
           </article>
         </div>

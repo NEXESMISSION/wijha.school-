@@ -140,5 +140,15 @@
       setTimeout(close, 1400);
     });
   }
-  if (!localStorage.getItem(SURVEY_DONE)) setTimeout(showSurvey, 12000);
+  // Sondage : à 45s OU après 70% de scroll (le premier des deux) — jamais pendant
+  // la lecture initiale, jamais en concurrence avec le CTA final.
+  if (!localStorage.getItem(SURVEY_DONE)) {
+    var surveyShown = false;
+    var maybeShowSurvey = function () { if (surveyShown) return; surveyShown = true; showSurvey(); };
+    setTimeout(maybeShowSurvey, 45000);
+    window.addEventListener("scroll", function onSc() {
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      if (max > 0 && window.scrollY / max > 0.7) { window.removeEventListener("scroll", onSc); maybeShowSurvey(); }
+    }, { passive: true });
+  }
 })();

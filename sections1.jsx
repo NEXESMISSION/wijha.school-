@@ -68,13 +68,20 @@ function Hero() {
     <header className="hero hero--stack section--tight" id="top">
       <div className="wrap">
         <div className="hero__lead">
+          <div className="reveal in" data-d="0">
+            <span className="hero__eyebrow">{tr("🔴 Prochaine session live : 26 juin · 20 places max")}</span>
+          </div>
           <h1 className="display reveal in" data-d="1">
-            {tr("Crée le web")}<br />
+            {tr("Crée ton site web")}<br />
             <span className="pop-text">{tr("avec l'IA, en live.")}</span>
           </h1>
           <p className="lede reveal in" data-d="2">
             {tr("Des sessions en direct où tu construis de vrais projets avec l'IA, guidé pas à pas — sans taper le code toi-même.")}
           </p>
+          <div className="hero__cta reveal in" data-d="3">
+            <Btn variant="pop" href="static-web-apps.html#reserver" arrow>{tr("Réserver ma place — 90 DT")}</Btn>
+            <a className="hero__how" href="#tracks">{tr("Voir les formations")}</a>
+          </div>
         </div>
 
         <div className="hero__flow reveal in" data-d="4">
@@ -84,6 +91,9 @@ function Hero() {
                  width="1400" height="696" decoding="async" fetchpriority="high"
                  alt="Comment ça marche : Idée → Session IA → Site en ligne" />
           </picture>
+          <p className="hero__microcopy" style={{ textAlign: "center" }}>
+            {tr("Tout ça en une seule session live de 3h, guidé pas à pas.")}
+          </p>
         </div>
       </div>
     </header>
@@ -96,7 +106,7 @@ function Logos() {
   return (
     <section className="section--tight" style={{ paddingBottom: 0 }}>
       <div className="wrap">
-        <div className="logos-label reveal">{tr("Tes outils — guidés pas à pas")}</div>
+        <div className="logos-label reveal">{tr("Les outils que tu vas maîtriser — guidés pas à pas")}</div>
         <div className="logos-row reveal" data-d="1">
           {items.map((l, i) => (
             <span className="logo-item" key={i}>

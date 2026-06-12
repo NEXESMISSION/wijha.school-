@@ -1107,3 +1107,17 @@ section[id], header[id] { scroll-margin-top: 96px; }
 .footer__legal { display: flex; gap: 16px; flex-wrap: wrap; }
 .footer__legal a { color: var(--ink-3); }
 .footer__legal a:hover { color: var(--pop); }
+
+/* ---- ajouts conversion (hero badge, comparaison, FAQ CTA, bouton outline, footer strip) ---- */
+.hero--stack .hero__eyebrow { margin-bottom: 18px; }
+.hero__flow .hero__microcopy { margin-top: 18px; }
+.compare-card__note { margin: 12px 0 0; font-family: var(--mono); font-size: 11.5px; letter-spacing: .04em; color: var(--ink-3); }
+.faq__cta { margin-top: clamp(36px, 5vh, 52px); display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
+.faq__cta-q { font-weight: 600; color: var(--ink); font-size: 16.5px; margin: 0; }
+.faq__cta-note { font-family: var(--mono); font-size: 12px; letter-spacing: .03em; color: var(--ink-3); }
+.btn--outline { background: transparent; border: 1px solid rgba(255,255,255,.55); color: #fff; }
+.btn--outline:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.85); }
+.faq__a-inner { color: color-mix(in oklab, var(--ink) 82%, var(--ink-2)); }
+.footer__cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; margin-top: 44px; padding: 16px 20px; border: 1px solid var(--line); border-radius: 14px; font-size: 14px; color: var(--ink-2); }
+.footer__cta-link { font-weight: 700; color: var(--pop); white-space: nowrap; }
+.footer__cta-link:hover { text-decoration: underline; }

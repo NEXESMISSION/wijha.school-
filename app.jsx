@@ -44,9 +44,9 @@ function App() {
       <Nav />
       <main>
         <Hero />
-        <Logos />
         {/* Offre en premier : on met les formations + prix tout de suite */}
         <Tracks />
+        <Logos />
         <LiveVsRecorded />
         <FAQ />
         <FinalCTA />

@@ -130,17 +130,18 @@ function Expert() {
 
 const FAQS = [
   { q: "Je suis totalement débutant — est-ce pour moi ?", a: "Absolument. Ce parcours est conçu pour les débutants complets : on part de zéro, sans jargon, étape par étape. Pas besoin d'avoir déjà codé ou créé quoi que ce soit." },
+  { q: "Combien ça coûte et comment réserver ?", a: "Site Web : 1 session live de 3h — 90 DT en early-bird (10 premières places), 120 DT ensuite. Application Web : 4 sessions live (8h au total, 1 par jour) — 350 DT en pré-inscription, 700 DT au lancement. 20 places max. Tu réserves en 2 minutes, puis tu confirmes ta place par paiement (D17 / Flouci / international)." },
   { q: "Pourquoi payer alors que ChatGPT et les tutos YouTube sont gratuits ?", a: "Parce que l'info gratuite est partout — mais éparpillée, contradictoire et sans accompagnement. Ici tu as un chemin clair, en direct, avec un mentor qui répond à TES questions et te corrige en temps réel. Tu repars avec un vrai projet fini, pas 40 onglets ouverts et zéro résultat. Tu paies pour le raccourci et le résultat, pas pour l'information." },
   { q: "L'IA évolue si vite — ce que j'apprends ne sera-t-il pas vite dépassé ?", a: "Non, parce qu'on ne t'apprend pas à cliquer dans un outil précis qui changera demain — on t'apprend à raisonner, construire et t'adapter à n'importe quel outil. Les fondations (structure, design, logique, mise en ligne) restent valables des années, et comme c'est en live, on enseigne toujours les outils du moment, pas une vidéo enregistrée il y a deux ans." },
   { q: "C'est en ligne ou en présentiel ?", a: "100% en ligne, en direct sur Google Meet. Prochaine session Site Web : 26 juin, de 17h à 20h. Tu reçois le lien à l'inscription, et tu construis ton projet en live avec nous." },
   { q: "Est-ce que j'obtiens un certificat ?", a: "Oui — tu repars avec un certificat WIJHA et, surtout, un portfolio de vrais projets à montrer à tes clients et employeurs." },
   { q: "Ai-je besoin d'un ordinateur puissant ?", a: "Non. N'importe quel ordinateur portable récent suffit. Les outils qu'on utilise sont surtout en ligne et légers." },
   { q: "Y a-t-il une limite d'âge ?", a: "Aucune. Que tu sois lycéen, étudiant ou en pleine carrière — si tu sais suivre des étapes simples, tu peux le faire." },
-  { q: "Combien ça coûte et comment réserver ?", a: "Site Web : 1 session live de 3h — 90 DT en early-bird (10 premières places), 120 DT ensuite. Application Web : 4 sessions live (8h au total, 1 par jour) — 350 DT en pré-inscription, 700 DT au lancement. 20 places max. Tu réserves en 2 minutes, puis tu confirmes ta place par paiement (D17 / Flouci / international)." },
 ];
 
 function FAQ() {
-  const [open, setOpen] = useState(0);
+  const [open, setOpen] = useState([0, 1]);
+  const toggle = (i) => setOpen(open.includes(i) ? open.filter((x) => x !== i) : [...open, i]);
   const tr = useT();
   return (
     <section className="section" id="faq">
@@ -154,19 +155,24 @@ function FAQ() {
           </div>
           <div className="faq__list reveal" data-d="1">
             {FAQS.map((f, i) => (
-              <div className={`faq__item ${open === i ? "open" : ""}`} key={i}>
-                <button className="faq__q" onClick={() => setOpen(open === i ? -1 : i)} aria-expanded={open === i}>
+              <div className={`faq__item ${open.includes(i) ? "open" : ""}`} key={i}>
+                <button className="faq__q" onClick={() => toggle(i)} aria-expanded={open.includes(i)}>
                   {tr(f.q)}
                   <span className="ic">
                     <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
                   </span>
                 </button>
-                <div className="faq__a" style={{ maxHeight: open === i ? 360 : 0 }}>
+                <div className="faq__a" style={{ maxHeight: open.includes(i) ? 420 : 0 }}>
                   <div className="faq__a-inner">{tr(f.a)}</div>
                 </div>
               </div>
             ))}
           </div>
+        </div>
+        <div className="faq__cta reveal" data-d="2">
+          <p className="faq__cta-q">{tr("Encore une question ? Écris-nous, on répond vite.")}</p>
+          <Btn variant="pop" href="static-web-apps.html#reserver" arrow>{tr("Réserver ma place — 90 DT")}</Btn>
+          <span className="faq__cta-note">{tr("Session du 26 juin — 20 places seulement")}</span>
         </div>
       </div>
     </section>
@@ -202,8 +208,9 @@ function FinalCTA() {
             </div>
           </div>
           <div className="final__cta">
-            <Btn variant="paper" href="static-web-apps.html#reserver" arrow>{tr("Site Web · 90 DT")}</Btn>
-            <Btn variant="paper" href="web-apps.html#reserver" arrow>{tr("Application Web · pré-inscription")}</Btn>
+            <Btn variant="paper" href="static-web-apps.html#reserver" arrow>{tr("Réserver ma place — Site Web · 90 DT")}</Btn>
+            <Btn variant="outline" href="web-apps.html#reserver" arrow>{tr("Se pré-inscrire — Application Web · 350 DT")}</Btn>
+            <span style={{ fontFamily: "var(--mono)", fontSize: 12 }}>{tr("Réservation gratuite en 2 min · tu paies après confirmation de ta place")}</span>
             <span style={{ fontFamily: "var(--mono)", fontSize: 12, opacity: .8 }}>{tr("Aucune expérience requise · tout âge")}</span>
           </div>
         </div>
@@ -211,10 +218,10 @@ function FinalCTA() {
         <div className="pay-methods pay-methods--center reveal" data-d="2">
           <span className="pay-methods__label">{tr("💳 Paiement accepté")}</span>
           <div className="pay-methods__logos">
-            <span className="pay-logo"><img src="img/pay-visa.svg" alt="Visa" /></span>
-            <span className="pay-logo"><img src="img/pay-mastercard.svg" alt="Mastercard" /></span>
             <span className="pay-logo"><img src="img/pay-d17.svg" alt="D17" /></span>
             <span className="pay-logo"><img src="img/pay-flouci.svg" alt="Flouci" /></span>
+            <span className="pay-logo"><img src="img/pay-visa.svg" alt="Visa" /></span>
+            <span className="pay-logo"><img src="img/pay-mastercard.svg" alt="Mastercard" /></span>
             <span className="pay-logo"><img src="img/pay-btl.svg" alt="Banque BTL" /></span>
             <span className="pay-logo"><img src="img/pay-bte.svg" alt="Banque BTE" /></span>
           </div>
@@ -271,6 +278,10 @@ function Footer() {
               ))}
             </div>
           ))}
+        </div>
+        <div className="footer__cta">
+          <span>{tr("📅 26 juin · 🎟️ 20 places · 🐦 90 DT early-bird")}</span>
+          <a className="footer__cta-link" href="static-web-apps.html#reserver">{tr("Réserver ma place →")}</a>
         </div>
         <div className="footer__bottom">
           <span>{tr("© 2026 WIJHA Academy — Tous droits réservés.")}</span>
