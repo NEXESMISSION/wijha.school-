@@ -143,7 +143,7 @@ const TRACKS = [
     oldPrice: "120", // prix standard barré (90 = tarif early-bird)
     per: "/ formation",
     chip: "🐦 90 DT · 10 premières places",
-    metaLine: "🔴 En live · 3h · 🎟️ 20 places",
+    metaLine: "🔴 En live · jeudi 26 juin, 17h-20h · 🎟️ 20 places",
     reassure: "Sans code · paiement à la réservation",
     cta: "Voir la formation",
     ctaHref: "static-web-apps.html",
@@ -152,7 +152,7 @@ const TRACKS = [
     meta: [
       { ic: "🔴", t: "Live · Google Meet" },
       { ic: "⏱️", t: "3h en direct" },
-      { ic: "📅", t: "Prochaine session : bientôt" },
+      { ic: "📅", t: "Prochaine session : jeudi 26 juin, 17h-20h" },
       { ic: "🎟️", t: "20 places" },
     ],
     outcomes: [
@@ -182,7 +182,7 @@ const TRACKS = [
     meta: [
       { ic: "🔴", t: "Live · Google Meet" },
       { ic: "⏱️", t: "Sessions en direct" },
-      { ic: "📅", t: "Prochaine date : bientôt" },
+      { ic: "📅", t: "Prochaine date : bientôt annoncée" },
       { ic: "🎟️", t: "20 places" },
     ],
     outcomes: [
