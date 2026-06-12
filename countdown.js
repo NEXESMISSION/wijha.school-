@@ -1,6 +1,6 @@
 /* countdown.js — compte à rebours vers la session live.
-   Usage : <div data-countdown="2026-06-26T17:00:00+01:00"></div>
-   Variante compacte : ajouter class="cdown--sm" sur le conteneur. */
+   Usage : <div data-countdown="2026-06-26T17:00:00+01:00" data-countdown-label="Le live commence dans"></div>
+   Variante compacte (carte bleue) : ajouter class="cdown--sm" sur le conteneur. */
 (function () {
   var UNITS = [
     ["j", "Jours"],
@@ -12,16 +12,21 @@
   function build(el) {
     var target = new Date(el.getAttribute("data-countdown")).getTime();
     if (!isFinite(target)) return;
+    var label = el.getAttribute("data-countdown-label") || "Le live commence dans";
 
     el.classList.add("cdown");
-    el.innerHTML = UNITS.map(function (u) {
-      return (
-        '<div class="cdown__unit" data-u="' + u[0] + '">' +
-          '<span class="cdown__num">--</span>' +
-          '<span class="cdown__lbl">' + u[1] + "</span>" +
-        "</div>"
-      );
-    }).join('<span class="cdown__sep">:</span>');
+    el.innerHTML =
+      '<div class="cdown__head"><span class="cdown__dot"></span>' + label + "</div>" +
+      '<div class="cdown__units">' +
+      UNITS.map(function (u) {
+        return (
+          '<div class="cdown__unit" data-u="' + u[0] + '">' +
+            '<span class="cdown__num">--</span>' +
+            '<span class="cdown__lbl">' + u[1] + "</span>" +
+          "</div>"
+        );
+      }).join('<span class="cdown__sep" aria-hidden="true">:</span>') +
+      "</div>";
 
     var nums = {};
     el.querySelectorAll(".cdown__unit").forEach(function (unit) {
@@ -35,7 +40,7 @@
       prev[key] = txt;
       var n = nums[key];
       n.textContent = txt;
-      // petit "pop" à chaque changement de valeur
+      // glissement doux à chaque changement de valeur
       n.classList.remove("tick");
       void n.offsetWidth;
       n.classList.add("tick");
