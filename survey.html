@@ -83,7 +83,7 @@
         <svg class="flag" viewBox="0 0 60 40"><rect width="60" height="40" fill="#fff"/><rect width="20" height="40" fill="#0055A4"/><rect x="40" width="20" height="40" fill="#EF4135"/></svg> Français
       </button>
       <button type="button" data-lang="ar">
-        <svg class="flag" viewBox="0 0 60 40"><rect width="60" height="40" fill="#E70013"/><circle cx="30" cy="20" r="11" fill="#fff"/><circle cx="31.4" cy="20" r="8" fill="#E70013"/><circle cx="34.2" cy="20" r="8" fill="#fff"/><path d="M35.5 16.6 36.32 18.87 38.73 18.95 36.83 20.43 37.5 22.75 35.5 21.4 33.5 22.75 34.17 20.43 32.27 18.95 34.68 18.87Z" fill="#E70013"/></svg> تونسي
+        <svg class="flag" viewBox="0 0 60 40"><rect width="60" height="40" fill="#E70013"/><circle cx="30" cy="20" r="11" fill="#fff"/><circle cx="31.4" cy="20" r="8" fill="#E70013"/><circle cx="34.2" cy="20" r="8" fill="#fff"/><path d="M35.5 16.6 36.32 18.87 38.73 18.95 36.83 20.43 37.5 22.75 35.5 21.4 33.5 22.75 34.17 20.43 32.27 18.95 34.68 18.87Z" fill="#E70013"/></svg> العربية
       </button>
     </div>
 
@@ -109,61 +109,61 @@
     // textes d'interface
     var T = {
       fr: { title:"Aide-nous à créer ta formation idéale 🚀", sub:"Moins de 2 minutes, juste des boutons à taper. En échange, tu reçois la date de la prochaine session en avant-première.", badge:"⏱️ ~90 secondes · que des clics", submit:"Envoyer mes réponses →", sending:"Envoi…", optional:"(optionnel)", other:"Précise…", foot:"🔒 On ne partage jamais tes infos. Tes réponses servent juste à améliorer WIJHA.", doneH:"Merci ! 🎉", doneP:"On a bien reçu tes réponses — elles nous aident à créer la formation qui te ressemble. On te prévient dès la prochaine session live. À très vite 👋", eTel:"Ajoute ton numéro WhatsApp 📱", eForm:"Choisis la formation qui t'attire le plus.", eInt:"Dis-nous où tu en es 🙂", eBud:"Indique ton budget — ça nous aide vraiment.", eNet:"Oups, l'envoi a échoué. Réessaie dans un instant 🙏" },
-      ar: { title:"عاونّا نصنعو الفورماسيون اللي تلزمك 🚀", sub:"أقل من دقيقتين، كان بوتونات تكليكي عليهم. و في المقابل، تاخو تاريخ الحصة الجاية قبل الكل.", badge:"⏱️ ~90 ثانية · كان كليكات", submit:"إبعث الإجابات →", sending:"قاعد يتبعث…", optional:"(اختياري)", other:"وضّح…", foot:"🔒 عمرنا ما نعطيو معلوماتك. الإجابات كان باش نحسّنو WIJHA.", doneH:"يعيشك ! 🎉", doneP:"وصلونا الإجابات متاعك — باش يعاونونا نصنعو الفورماسيون اللي تشبهك. باش نعلموك بالحصة الجاية. نتلاقاو قريب 👋", eTel:"زيد رقم تيليفونك 📱", eForm:"إختار الفورماسيون اللي تحبها.", eInt:"قلّنا وين راك 🙂", eBud:"حدّد الميزانية متاعك — يعاونّا برشة.", eNet:"أوبس، الإرسال فشل. أعاود بعد لحظة 🙏" }
+      ar: { title:"ساعدنا في إنشاء التكوين المثالي لك 🚀", sub:"أقل من دقيقتين، مجرّد أزرار للنقر عليها. وفي المقابل، تحصل على موعد الحصة القادمة قبل الجميع.", badge:"⏱️ ~90 ثانية · مجرّد نقرات", submit:"إرسال إجاباتي →", sending:"جارٍ الإرسال…", optional:"(اختياري)", other:"حدّد…", foot:"🔒 لن نشارك معلوماتك أبدًا. إجاباتك تساعدنا فقط على تحسين WIJHA.", doneH:"شكرًا لك ! 🎉", doneP:"لقد استلمنا إجاباتك — إنها تساعدنا على إنشاء التكوين الذي يناسبك. سنُعلمك بموعد الحصة المباشرة القادمة. إلى اللقاء قريبًا 👋", eTel:"أضف رقم هاتفك (واتساب) 📱", eForm:"اختر التكوين الذي يجذبك أكثر.", eInt:"أخبرنا أين أنت الآن 🙂", eBud:"حدّد ميزانيتك — هذا يساعدنا كثيرًا.", eNet:"عذرًا، فشل الإرسال. حاول مرة أخرى بعد قليل 🙏" }
     };
     // o(valeur_canonique, fr, ar) — la VALEUR canonique est ce qui est stocké (data propre quelle que soit la langue)
     var o = function (v, fr, ar) { return { v: v, fr: fr, ar: ar }; };
     var FIELDS = [
-      { id:"tel", type:"tel", req:true, L:{fr:"📱 Ton numéro WhatsApp", ar:"📱 رقم تيليفونك (WhatsApp)"}, H:{fr:"Pour qu'on t'envoie la date de la prochaine session live (et rien d'autre). 🔒 On ne partage jamais ton numéro.", ar:"باش نبعثولك تاريخ الحصة الجاية برك. 🔒 عمرنا ما نعطيو رقمك لحتى حد."}, P:{fr:"+216 ...", ar:"+216 ..."} },
-      { id:"prenom", type:"text", req:false, L:{fr:"Ton prénom", ar:"إسمك"}, H:{fr:"Pour qu'on t'écrive correctement 🙂", ar:"باش نكتبولك بإسمك 🙂"}, P:{fr:"Ton prénom", ar:"إسمك"} },
-      { id:"formation_cible", type:"pills", req:true, L:{fr:"Quelle formation t'attire le plus ?", ar:"أنهي فورماسيون تحبها أكثر ؟"}, O:[
-        o("Site Web","Site Web — créer un site en live, sans coder","Site Web — تعمل موقع لايف بلا كود"),
-        o("Web Apps","Web Apps — une vraie appli (base de données, comptes, paiement)","Web Apps — أبليكاسيون حقيقية (قاعدة بيانات، حسابات، خلاص)"),
-        o("Les deux","Les deux m'intéressent","الزوز يهموني"),
-        o("Pas sûr","Je ne sais pas encore, aide-moi à choisir","مازلت ما نعرفش، عاونّي نختار") ] },
-      { id:"intention", type:"pills", req:true, L:{fr:"Tu en es où, là, maintenant ?", ar:"وين راك توا بالضبط ؟"}, H:{fr:"Sois honnête, ça nous aide à t'aider — pas de mauvaise réponse.", ar:"كن صادق، باش نعاونوك — ما فماش جواب غالط."}, O:[
-        o("Chaud 🔥","Je veux m'inscrire, je suis chaud(e) 🔥","نحب نسجّل، راني شدّ 🔥"),
-        o("Très intéressé","Très intéressé(e), j'ai juste 1-2 questions","مهتم برشة، عندي كان سؤال ولا زوز"),
-        o("Plus tard","Ça m'intéresse, mais pas tout de suite","يهمني، أما موش توا"),
-        o("Découvre","Je regarde juste / je découvre","كان نتفرّج / نكتشف") ] },
-      { id:"objectif", type:"pills", req:false, other:true, L:{fr:"Ton objectif principal avec WIJHA ?", ar:"شنوّة هدفك الأساسي مع WIJHA ؟"}, O:[
-        o("Business/projet","Créer un site/appli pour mon business ou projet","نعمل موقع/أبليكاسيون للبيزناس ولا المشروع متاعي"),
-        o("Freelance","Gagner de l'argent en freelance (clients TN ou étranger)","نربح فلوس فري لانس (حرفاء تونس ولا برّا)"),
-        o("Emploi","Décrocher un emploi / changer de métier","نلقى خدمة / نبدّل المجال"),
-        o("Startup","Lancer ma propre startup / app","نطلّق ستارت أب / أبليكاسيون متاعي"),
-        o("Compétences","Monter en compétences pour mon travail","نطوّر روحي في خدمتي"),
-        o("Curiosité","Apprendre par curiosité / projet perso","نتعلّم بحب الفضول / مشروع شخصي") ] },
-      { id:"budget", type:"pills", req:true, L:{fr:"Pour une formation LIVE qui te fait sortir un vrai projet, tu mettrais combien ?", ar:"على فورماسيون LIVE تخرّجك بمشروع حقيقي، قدّاش تحط ؟"}, H:{fr:"💳 Pas besoin de carte bancaire — D17, Flouci ou poste, on te guide.", ar:"💳 ما تلزمكش كارط — D17 ولا Flouci ولا البوسطة، نوجّهوك."}, O:[
-        o("Gratuit","Gratuit seulement","كان بلاش"),
+      { id:"tel", type:"tel", req:true, L:{fr:"📱 Ton numéro WhatsApp", ar:"📱 رقم هاتفك (واتساب)"}, H:{fr:"Pour qu'on t'envoie la date de la prochaine session live (et rien d'autre). 🔒 On ne partage jamais ton numéro.", ar:"لكي نرسل لك موعد الحصة المباشرة القادمة (لا غير). 🔒 لن نشارك رقمك أبدًا."}, P:{fr:"+216 ...", ar:"+216 ..."} },
+      { id:"prenom", type:"text", req:false, L:{fr:"Ton prénom", ar:"اسمك"}, H:{fr:"Pour qu'on t'écrive correctement 🙂", ar:"لكي نخاطبك باسمك 🙂"}, P:{fr:"Ton prénom", ar:"اسمك"} },
+      { id:"formation_cible", type:"pills", req:true, L:{fr:"Quelle formation t'attire le plus ?", ar:"أي تكوين يجذبك أكثر ؟"}, O:[
+        o("Site Web","Site Web — créer un site en live, sans coder","موقع ويب — أنشئ موقعًا مباشرةً، دون برمجة"),
+        o("Web Apps","Web Apps — une vraie appli (base de données, comptes, paiement)","تطبيق ويب — تطبيق حقيقي (قاعدة بيانات، حسابات، دفع)"),
+        o("Les deux","Les deux m'intéressent","كلاهما يهمّني"),
+        o("Pas sûr","Je ne sais pas encore, aide-moi à choisir","لا أعرف بعد، ساعدني على الاختيار") ] },
+      { id:"intention", type:"pills", req:true, L:{fr:"Tu en es où, là, maintenant ?", ar:"أين أنت الآن بالضبط ؟"}, H:{fr:"Sois honnête, ça nous aide à t'aider — pas de mauvaise réponse.", ar:"كن صريحًا، هذا يساعدنا على مساعدتك — لا توجد إجابة خاطئة."}, O:[
+        o("Chaud 🔥","Je veux m'inscrire, je suis chaud(e) 🔥","أريد التسجيل، أنا متحمّس 🔥"),
+        o("Très intéressé","Très intéressé(e), j'ai juste 1-2 questions","مهتمّ جدًا، لديّ سؤال أو سؤالان فقط"),
+        o("Plus tard","Ça m'intéresse, mais pas tout de suite","يهمّني، لكن ليس الآن"),
+        o("Découvre","Je regarde juste / je découvre","أتصفّح فقط / أكتشف") ] },
+      { id:"objectif", type:"pills", req:false, other:true, L:{fr:"Ton objectif principal avec WIJHA ?", ar:"ما هدفك الأساسي مع WIJHA ؟"}, O:[
+        o("Business/projet","Créer un site/appli pour mon business ou projet","إنشاء موقع/تطبيق لمشروعي أو عملي"),
+        o("Freelance","Gagner de l'argent en freelance (clients TN ou étranger)","كسب المال كمستقلّ (عملاء محليون أو من الخارج)"),
+        o("Emploi","Décrocher un emploi / changer de métier","الحصول على عمل / تغيير المهنة"),
+        o("Startup","Lancer ma propre startup / app","إطلاق شركتي الناشئة / تطبيقي"),
+        o("Compétences","Monter en compétences pour mon travail","تطوير مهاراتي من أجل عملي"),
+        o("Curiosité","Apprendre par curiosité / projet perso","التعلّم بدافع الفضول / مشروع شخصي") ] },
+      { id:"budget", type:"pills", req:true, L:{fr:"Pour une formation LIVE qui te fait sortir un vrai projet, tu mettrais combien ?", ar:"لتكوين مباشر يخرّجك بمشروع حقيقي، كم تدفع ؟"}, H:{fr:"💳 Pas besoin de carte bancaire — D17, Flouci ou poste, on te guide.", ar:"💳 لا حاجة لبطاقة بنكية — D17 أو Flouci أو البريد، سنرشدك."}, O:[
+        o("Gratuit","Gratuit seulement","مجانًا فقط"),
         o("<50 DT","Moins de 50 DT","أقل من 50 دينار"),
         o("50-100 DT","50 – 100 DT","50 – 100 دينار"),
         o("100-200 DT","100 – 200 DT","100 – 200 دينار"),
         o("200-400 DT","200 – 400 DT","200 – 400 دينار"),
-        o("400+ DT","Plus de 400 DT si ça vaut le coup","أكثر من 400 دينار كان يستاهل") ] },
-      { id:"blocage", type:"pills", req:false, L:{fr:"Qu'est-ce qui pourrait t'empêcher de t'inscrire ?", ar:"شنوّة ينجّم يمنعك باش تسجّل ؟"}, H:{fr:"Dis-nous franchement — c'est pour lever le frein, pas pour te vendre.", ar:"قلّنا بصراحة — باش نحلّو المشكل، موش باش نبيعولك."}, O:[
-        o("Prix","Le prix / mon budget","الثمن / الميزانية متاعي"),
-        o("Temps","Le manque de temps","ما عنديش وقت"),
-        o("Niveau","Peur de ne pas suivre / niveau trop dur","نخاف ما نلحقش / المستوى صعيب"),
-        o("Résultat ?","Pas sûr(e) que ça donne un résultat concret","ما راني متأكّد إلّي باش يجيب نتيجة"),
-        o("Paiement","Comment payer en ligne (j'ai pas de carte)","كيفاش نخلّص أونلاين (ما عنديش كارط)"),
-        o("Préfère vidéo","Je préfère les vidéos enregistrées au live","نفضّل الفيديوهات المسجّلة على اللايف"),
-        o("Rien (prêt 🔥)","Rien, je suis prêt(e) à m'inscrire 🔥","حتى حاجة، راني حاضر نسجّل 🔥") ] },
-      { id:"equipement", type:"pills", req:false, L:{fr:"Pour suivre la formation, tu as…", ar:"باش تتبع الفورماسيون، عندك…"}, O:[
-        o("PC","Un PC / laptop","PC / لابتوب"),
-        o("Smartphone","Seulement un smartphone","كان تيليفون"),
-        o("PC moyen","Un PC mais pas terrible / partagé","PC أما ماهوش باهي / مشترك"),
-        o("Emprunt/cyber","Je peux en emprunter / aller au cyber","ننجّم نسلّف / نمشي للسيبار") ] },
-      { id:"dispo", type:"pills", req:false, L:{fr:"Quand serais-tu le plus dispo pour une session live ?", ar:"وقتاش تكون فاضي أكثر لحصة لايف ؟"}, O:[
-        o("Soir semaine","Soirées en semaine (après 18h)","الليل في الأسبوع (بعد 18س)"),
-        o("Journée semaine","En journée en semaine","في النهار في الأسبوع"),
-        o("Week-end","Le week-end","في الويكاند"),
-        o("Vacances","Pendant les vacances","في العطلة"),
-        o("Flexible","Flexible / peu importe","فليكسيبل / كيفما كان") ] },
-      { id:"source", type:"pills", req:false, other:true, L:{fr:"Comment tu as connu WIJHA ?", ar:"كيفاش عرفت WIJHA ؟"}, O:[
+        o("400+ DT","Plus de 400 DT si ça vaut le coup","أكثر من 400 دينار إذا كان يستحقّ") ] },
+      { id:"blocage", type:"pills", req:false, L:{fr:"Qu'est-ce qui pourrait t'empêcher de t'inscrire ?", ar:"ما الذي قد يمنعك من التسجيل ؟"}, H:{fr:"Dis-nous franchement — c'est pour lever le frein, pas pour te vendre.", ar:"أخبرنا بصراحة — لرفع العائق، لا لبيعك شيئًا."}, O:[
+        o("Prix","Le prix / mon budget","السعر / ميزانيتي"),
+        o("Temps","Le manque de temps","ضيق الوقت"),
+        o("Niveau","Peur de ne pas suivre / niveau trop dur","الخوف من عدم المتابعة / المستوى صعب"),
+        o("Résultat ?","Pas sûr(e) que ça donne un résultat concret","لست متأكّدًا أنه يعطي نتيجة ملموسة"),
+        o("Paiement","Comment payer en ligne (j'ai pas de carte)","كيفية الدفع عبر الإنترنت (ليس لديّ بطاقة)"),
+        o("Préfère vidéo","Je préfère les vidéos enregistrées au live","أفضّل الفيديوهات المسجّلة على المباشر"),
+        o("Rien (prêt 🔥)","Rien, je suis prêt(e) à m'inscrire 🔥","لا شيء، أنا مستعدّ للتسجيل 🔥") ] },
+      { id:"equipement", type:"pills", req:false, L:{fr:"Pour suivre la formation, tu as…", ar:"لمتابعة التكوين، لديك…"}, O:[
+        o("PC","Un PC / laptop","حاسوب / لابتوب"),
+        o("Smartphone","Seulement un smartphone","هاتف ذكي فقط"),
+        o("PC moyen","Un PC mais pas terrible / partagé","حاسوب لكنه ليس جيدًا / مشترك"),
+        o("Emprunt/cyber","Je peux en emprunter / aller au cyber","يمكنني استعارته / الذهاب إلى مقهى إنترنت") ] },
+      { id:"dispo", type:"pills", req:false, L:{fr:"Quand serais-tu le plus dispo pour une session live ?", ar:"متى تكون متاحًا أكثر لحصة مباشرة ؟"}, O:[
+        o("Soir semaine","Soirées en semaine (après 18h)","مساءً في أيام الأسبوع (بعد 18س)"),
+        o("Journée semaine","En journée en semaine","نهارًا في أيام الأسبوع"),
+        o("Week-end","Le week-end","في عطلة نهاية الأسبوع"),
+        o("Vacances","Pendant les vacances","أثناء العطل"),
+        o("Flexible","Flexible / peu importe","مرن / لا يهمّ") ] },
+      { id:"source", type:"pills", req:false, other:true, L:{fr:"Comment tu as connu WIJHA ?", ar:"كيف تعرّفت على WIJHA ؟"}, O:[
         o("Instagram","Instagram","Instagram"), o("TikTok","TikTok","TikTok"),
-        o("Facebook","Facebook (page/pub)","Facebook (صفحة/إشهار)"), o("Groupe FB","Un groupe Facebook","قروب Facebook"),
-        o("Ami","Un(e) ami(e)","صاحب / حد قاللي"), o("Google","Google","Google") ] },
-      { id:"gouvernorat", type:"select", req:false, L:{fr:"Tu es dans quel gouvernorat ?", ar:"في أنهي ولاية راك ؟"}, H:{fr:"Pour savoir d'où vient notre communauté 🇹🇳", ar:"باش نعرفو منين جايّة العائلة متاعنا 🇹🇳"} },
+        o("Facebook","Facebook (page/pub)","Facebook (صفحة/إعلان)"), o("Groupe FB","Un groupe Facebook","مجموعة على Facebook"),
+        o("Ami","Un(e) ami(e)","صديق / أخبرني أحدهم"), o("Google","Google","Google") ] },
+      { id:"gouvernorat", type:"select", req:false, L:{fr:"Tu es dans quel gouvernorat ?", ar:"في أي ولاية تقيم ؟"}, H:{fr:"Pour savoir d'où vient notre communauté 🇹🇳", ar:"لكي نعرف من أين يأتي مجتمعنا 🇹🇳"} },
     ];
 
     var form = document.getElementById("surveyForm");
