@@ -102,10 +102,10 @@
   }
   function hide(ok) { if (ok) { ok.style.display = "none"; ok.classList.remove("is-err"); } }
   function showOk(ok, text) { if (!ok) return; ok.classList.remove("is-err"); ok.textContent = text; ok.style.display = "block"; }
-  function showErr(ok, p) {
+  function showErr(ok, p, err) {
     if (!ok) return;
     ok.classList.add("is-err");
-    ok.textContent = "Oups, l'envoi a échoué. ";
+    ok.textContent = "Oups, l'envoi a échoué" + (err && err.message ? " — détail : " + err.message : "") + ". ";
     var a = document.createElement("a");
     a.href = fallbackUrl(p); a.target = "_blank"; a.rel = "noopener";
     a.textContent = CONFIG.whatsapp ? "Réserver via WhatsApp →" : "Réserver par email →";
@@ -194,7 +194,7 @@
             "(Aperçu local) Configure Supabase pour l'enregistrer pour de vrai — voir ADMIN-SETUP.md.");
           form.reset();
         } else {
-          showErr(ok, p);
+          showErr(ok, p, err);
         }
       });
     });
