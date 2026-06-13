@@ -38,6 +38,7 @@ export default async function handler(req, res) {
     source: clip(body.source, 80),
     source_autre: clip(body.source_autre, 200),
     gouvernorat: clip(body.gouvernorat, 80),
+    langue: clip(body.langue, 8),
     page: clip(body.page, 120),
   };
   if (!row.tel) return res.status(400).json({ ok: false, error: "missing-tel" });

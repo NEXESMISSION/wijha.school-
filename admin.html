@@ -319,6 +319,7 @@
       html += '<div class="card"><h3>🚀 Objectif</h3>' + bars(tally(rows, obj), rows.length) + "</div>";
       html += '<div class="card"><h3>📣 Comment ils nous ont connus</h3>' + bars(tally(rows, src), rows.length) + "</div>";
       html += '<div class="card"><h3>💻 Équipement</h3>' + bars(tally(rows, function (r) { return r.equipement; }), rows.length) + "</div>";
+      html += '<div class="card"><h3>🗣️ Langue du sondage</h3>' + bars(tally(rows, function (r) { return r.langue === "ar" ? "Tounsi (AR)" : r.langue === "fr" ? "Français" : "?"; }), rows.length) + "</div>";
       html += "</div>";
       html += rows.map(function (r) {
         var wa = (r.tel || "").replace(/[^0-9+]/g, "").replace(/^\+/, "");
@@ -330,6 +331,7 @@
         chip(r.equipement); chip(r.dispo);
         if (r.gouvernorat) chips += '<span class="chip">📍 ' + esc(r.gouvernorat) + "</span>";
         if (src(r)) chips += '<span class="chip">via ' + esc(src(r)) + "</span>";
+        if (r.langue) chips += '<span class="chip">' + (r.langue === "ar" ? "🇹🇳 tounsi" : "🇫🇷 fr") + "</span>";
         return '<div class="card" style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap">' +
             '<div style="flex:1;min-width:200px">' +
               '<span class="chip" style="background:' + ls.c + '20;color:' + ls.c + ';font-weight:700">' + ls.e + " " + ls.t + "</span> " +
