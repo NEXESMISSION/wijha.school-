@@ -30,3 +30,6 @@ images-a-retoucher/
 
 # Posts sponsorises (marketing, local seulement)
 postes/
+
+# Documents business (local seulement — contient des secrets : NE PAS committer)
+WIJHA-DOCS/

@@ -8,17 +8,15 @@
     endpoint: "/api/reserve",
 
     // [FALLBACK] si l'envoi échoue, on propose WhatsApp (sinon email).
-    whatsapp: "",                       // [placeholder] n° international SANS + , ex "21612345678"
+    whatsapp: "21658415520",            // n° international SANS + (Tunisie : 216 + numéro)
     email: "nexesmission@gmail.com",
 
     // [PAIEMENT] pour confirmer la place APRÈS la réservation (anti no-show).
-    //   Remplis ce que tu utilises ; laisse "" pour masquer. Si tout est vide,
-    //   on dit simplement « on t'envoie le lien de paiement tout de suite ».
     pay: {
-      d17: "",        // [placeholder] ton numéro D17 / e-Dinar, ex "22 333 444"
-      flouci: "",     // [placeholder] ton lien Flouci, ex "https://flouci.com/..."
-      konnect: "",    // [placeholder] ton lien Konnect, ex "https://konnect.network/..."
-      note: "Ta place est gardée 24h et confirmée dès réception du paiement.",
+      d17: "58415520",        // D17 / e-Dinar
+      flouci: "58415520",     // Flouci (numéro ou lien https)
+      konnect: "",            // lien Konnect (optionnel)
+      note: "💳 D17 ou Flouci : 58415520 · ou virement bancaire (RIB BTE / BTL envoyé sur WhatsApp). Place gardée 24h, confirmée dès réception du paiement.",
     },
 
   };
@@ -110,7 +108,8 @@
     if (!amount) return "";
     var P = CONFIG.pay || {};
     var rows = "";
-    if (P.flouci)  rows += '<a class="rpay__m" href="' + P.flouci + '" target="_blank" rel="noopener">💳 Payer avec Flouci →</a>';
+    if (P.flouci && /^https?:/.test(P.flouci)) rows += '<a class="rpay__m" href="' + P.flouci + '" target="_blank" rel="noopener">💳 Payer avec Flouci →</a>';
+    else if (P.flouci) rows += '<div class="rpay__m rpay__m--info">📲 Flouci : <b>' + P.flouci + '</b></div>';
     if (P.konnect) rows += '<a class="rpay__m" href="' + P.konnect + '" target="_blank" rel="noopener">💳 Payer avec Konnect →</a>';
     if (P.d17)     rows += '<div class="rpay__m rpay__m--info">📲 D17 / e-Dinar : <b>' + P.d17 + '</b></div>';
     var body = rows

@@ -20,6 +20,7 @@
   --pop-soft:   color-mix(in oklab, var(--pop) 12%, var(--paper));
   --pop-ink:    oklch(0.985 0.01 264);   /* text on pop */
   --warm:       oklch(0.86 0.075 58);    /* peach glow */
+  --save:       oklch(0.58 0.21 16);     /* rouge "économie" (= point live) */
 
   --serif: "Sora", system-ui, -apple-system, sans-serif;   /* display / headings */
   --sans:  "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
@@ -1017,7 +1018,12 @@ section[id], header[id] { scroll-margin-top: 96px; }
 .offer--soon .offer__amount .amt { color: var(--ink-2); }
 .offer__amount .cur { font-family: var(--serif); font-weight: 700; font-size: 21px; color: var(--ink-2); }
 .offer__amount .per { font-family: var(--mono); font-size: 12px; letter-spacing: .03em; color: var(--ink-3); margin-left: 4px; }
-.offer__amount .old { font-size: 18px; font-weight: 700; color: var(--ink-3); text-decoration: line-through; margin-left: 8px; }
+.offer__amount .old { font-size: 20px; font-weight: 700; color: var(--ink-2); margin-left: 8px;
+  text-decoration: line-through; text-decoration-color: var(--save); text-decoration-thickness: 2px; text-underline-offset: 1px; }
+.offer__save { display: inline-flex; align-items: center; margin-left: 8px; font-family: var(--mono); font-size: 11px;
+  font-weight: 700; letter-spacing: .02em; color: var(--save); white-space: nowrap;
+  background: color-mix(in oklab, var(--save) 12%, var(--paper));
+  border: 1px solid color-mix(in oklab, var(--save) 30%, transparent); border-radius: 999px; padding: 3px 9px; }
 .offer__meta { margin: 12px 0 0; font-family: var(--mono); font-size: 11.5px; letter-spacing: .02em; color: var(--ink-2); }
 
 /* fonctionnalités */

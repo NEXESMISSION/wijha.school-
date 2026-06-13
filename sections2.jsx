@@ -230,6 +230,7 @@ function Tracks() {
                     <span className="cur">DT</span>
                     <span className="per">{tr(t.per)}</span>
                     {t.oldPrice && <s className="old">{t.oldPrice} DT</s>}
+                    {t.oldPrice && <span className="offer__save">−{t.oldPrice - t.price} DT</span>}
                   </div>
                   <p className="offer__meta">{tr(t.metaLine)}</p>
                   {t.countdown && (

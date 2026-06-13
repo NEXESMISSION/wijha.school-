@@ -218,6 +218,11 @@
 .reserve__summary .pricing__kick { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
 .reserve__summary .pricing__price { font-family: var(--serif); font-weight: 800; font-size: clamp(46px, 7vw, 64px); line-height: 1; letter-spacing: -0.03em; margin: 10px 0 0; }
 .reserve__summary .pricing__price small { font-size: 22px; font-weight: 700; opacity: .82; }
+.reserve__summary .pricing__old { opacity: 1; font-weight: 600; color: color-mix(in oklab, #fff 80%, transparent);
+  text-decoration-color: #ff9aae; text-decoration-thickness: 2px; text-underline-offset: 1px; }
+.reserve__summary .pricing__save { display: inline-block; margin-left: 8px; vertical-align: middle;
+  font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: .02em; color: #fff; white-space: nowrap;
+  background: rgba(255, 255, 255, .18); border: 1px solid rgba(255, 255, 255, .34); border-radius: 999px; padding: 4px 10px; }
 /* lignes session (date / heure / durée / places) — texte clair sur la carte bleue */
 .reserve__rows { list-style: none; padding: 18px 0; margin: 22px 0 0; display: grid; gap: 12px;
   border-top: 1px solid rgba(255,255,255,.22); border-bottom: 1px solid rgba(255,255,255,.22); }
