@@ -297,18 +297,32 @@
 .rpay__soon { margin: 0; font-size: 14px; color: var(--ink-2); line-height: 1.5; }
 .rpay__note { margin: 12px 0 0; font-size: 12.5px; color: var(--ink-3); line-height: 1.45; }
 
-/* bloc paiement compact EN HAUT du formulaire (avant l'envoi) */
-.paybox { margin: 0 0 20px; padding: 13px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper-2); }
-.paybox__top { font-size: 13px; color: var(--ink-2); margin-bottom: 9px; }
-.paybox__top b { font-family: var(--serif); font-weight: 800; color: var(--pop); font-size: 16px; margin-left: 4px; }
-.paybox__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-.paybox__list li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 13.5px; }
-.paybox__list span { color: var(--ink-2); }
-.paybox__list b { font-family: var(--mono); font-weight: 700; color: var(--ink); white-space: nowrap; }
-.paybox__rib { margin-top: 9px; display: grid; gap: 3px; }
-.paybox__rib > span { font-size: 11.5px; color: var(--ink-3); line-height: 1.4; }
-.paybox__rib > b { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--ink); letter-spacing: .01em; }
-.paybox__hint { display: block; margin-top: 9px; font-size: 11.5px; color: var(--ink-3); }
+/* bloc paiement EN HAUT du formulaire (avant l'envoi) — clair, sections + copie */
+.paybox { margin: 0 0 22px; padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper-2); }
+.paybox__top { font-size: 14px; color: var(--ink-2); }
+.paybox__top b { font-family: var(--serif); font-weight: 800; color: var(--pop); font-size: 18px; margin-left: 5px; }
+.paymethod { margin-top: 16px; }
+.paymethod__head { display: flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 11px; font-weight: 700;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 9px; }
+.paymethod__ic { font-size: 14px; }
+.paymethod__tag { font-family: var(--sans); font-size: 10px; font-weight: 700; text-transform: none; letter-spacing: .01em;
+  color: var(--pop); background: var(--pop-soft); border-radius: 999px; padding: 2px 8px; }
+.paymethod__benef { font-size: 12.5px; color: var(--ink-3); margin: -2px 0 9px; }
+.paymethod__benef b { color: var(--ink-2); font-weight: 700; }
+.payrow { display: block; width: 100%; text-align: left; background: var(--card); border: 1px solid var(--line);
+  border-radius: 11px; padding: 10px 13px; cursor: pointer; font-family: inherit; transition: border-color .15s, background .15s; }
+.payrow:hover { border-color: var(--pop); background: var(--pop-soft); }
+.payrow:active { transform: scale(.995); }
+.payrow + .payrow { margin-top: 7px; }
+.payrow__line { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 3px; }
+.payrow__name { font-size: 11.5px; font-weight: 700; color: var(--ink-2); }
+.payrow__copy { display: inline-flex; align-items: center; gap: 4px; flex: none; font-family: var(--mono);
+  font-size: 10.5px; font-weight: 700; color: var(--pop); letter-spacing: .03em; }
+.payrow.copied { border-color: #16a34a; background: color-mix(in oklab, #16a34a 7%, var(--card)); }
+.payrow.copied .payrow__copy { color: #16a34a; }
+.payrow__val { display: block; font-family: var(--mono); font-size: 15px; font-weight: 700; color: var(--ink);
+  letter-spacing: .02em; word-break: break-all; }
+.paybox__hint { display: block; margin: 14px 0 0; font-size: 12px; color: var(--ink-3); line-height: 1.5; }
 
 /* ---- FAQ (no-JS) ---- */
 .cfaq { max-width: 760px; margin: 0 auto; display: grid; gap: 12px; }

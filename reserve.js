@@ -202,4 +202,29 @@
   });
 
   document.querySelectorAll("form.reserve__form").forEach(handle);
+
+  // Coordonnées de paiement : clic = copier (numéro / RIB) avec retour visuel immédiat.
+  document.querySelectorAll(".payrow[data-copy]").forEach(function (b) {
+    var lbl = b.querySelector(".payrow__copy");
+    var orig = lbl ? lbl.textContent : "";
+    var revert;
+    b.addEventListener("click", function () {
+      var val = b.getAttribute("data-copy");
+      // copie (best effort, ne bloque pas le retour visuel)
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(val);
+        else {
+          var t = document.createElement("textarea");
+          t.value = val; t.style.position = "fixed"; t.style.opacity = "0";
+          document.body.appendChild(t); t.focus(); t.select();
+          document.execCommand("copy"); t.remove();
+        }
+      } catch (e) {}
+      // retour visuel immédiat
+      b.classList.add("copied");
+      if (lbl) lbl.textContent = "✓ Copié";
+      clearTimeout(revert);
+      revert = setTimeout(function () { b.classList.remove("copied"); if (lbl) lbl.textContent = orig; }, 1600);
+    });
+  });
 })();
