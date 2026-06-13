@@ -25,18 +25,38 @@
     [dir=rtl] .sv-q { text-align: right; }
     [dir=rtl] .sv-opt { text-align: right; }
 
-    /* sélecteur de langue */
-    .sv-lang { display: flex; justify-content: center; gap: 8px; margin-bottom: 18px; }
-    .sv-lang button { display: inline-flex; align-items: center; gap: 7px; font-family: var(--sans); font-size: 13.5px;
-      font-weight: 700; color: var(--ink-2); background: var(--card); border: 1px solid var(--line);
-      border-radius: 999px; padding: 7px 14px; cursor: pointer; transition: .15s; }
-    .sv-lang button.on { background: var(--pop); border-color: var(--pop); color: #fff; }
-    .sv-lang .flag { width: 20px; height: 14px; border-radius: 2px; flex: none; box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
+    /* barre du haut : logo + sélecteur de langue, centrés côte à côte */
+    .sv-top { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 22px; }
+    .sv-logo { width: 52px; height: 52px; border-radius: 14px; flex: none; box-shadow: 0 6px 16px -8px rgba(0,0,0,.35); }
+
+    /* dropdown langue (custom) */
+    .sv-lang { position: relative; }
+    .sv-lang__btn { display: inline-flex; align-items: center; gap: 9px; font-family: var(--sans); font-size: 14px;
+      font-weight: 700; color: var(--ink); background: var(--card); border: 1px solid var(--line);
+      border-radius: 12px; padding: 9px 12px; cursor: pointer; transition: .15s; }
+    .sv-lang__btn:hover { border-color: var(--pop); }
+    .sv-lang.open .sv-lang__btn { border-color: var(--pop); box-shadow: 0 0 0 3px var(--pop-soft); }
+    .sv-lang__cur { display: inline-flex; align-items: center; gap: 8px; }
+    .sv-lang .flag { width: 22px; height: 15px; border-radius: 3px; flex: none; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+    .sv-lang__chev { width: 15px; height: 15px; color: var(--ink-3); transition: transform .2s; flex: none; }
+    .sv-lang.open .sv-lang__chev { transform: rotate(180deg); }
+    .sv-lang__menu { position: absolute; top: calc(100% + 7px); left: 0; right: auto; min-width: 172px; background: var(--card);
+      border: 1px solid var(--line); border-radius: 13px; box-shadow: 0 18px 44px -14px rgba(0,0,0,.32); padding: 5px;
+      z-index: 40; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .16s, transform .16s, visibility .16s; }
+    .sv-lang.open .sv-lang__menu { opacity: 1; visibility: visible; transform: none; }
+    [dir=rtl] .sv-lang__menu { left: auto; right: 0; }
+    .sv-lang__opt { display: flex; align-items: center; gap: 10px; width: 100%; font-family: var(--sans); font-size: 14px;
+      font-weight: 600; color: var(--ink-2); background: transparent; border: 0; border-radius: 9px; padding: 10px 11px;
+      cursor: pointer; transition: .12s; text-align: left; }
+    .sv-lang__opt:hover { background: var(--paper-2); color: var(--ink); }
+    .sv-lang__opt.on { color: var(--pop); font-weight: 700; }
+    .sv-lang__opt .check { margin-inline-start: auto; width: 15px; height: 15px; opacity: 0; color: var(--pop); }
+    .sv-lang__opt.on .check { opacity: 1; }
+    [dir=rtl] .sv-lang__opt { text-align: right; }
 
     .sv-head { text-align: center; margin-bottom: 20px; }
-    .sv-head img.logo { width: 50px; height: 50px; border-radius: 14px; }
     .sv-head h1 { font-family: var(--serif); font-weight: 800; font-size: clamp(25px, 5vw, 34px);
-      letter-spacing: -0.03em; line-height: 1.15; margin: 14px 0 0; }
+      letter-spacing: -0.03em; line-height: 1.15; margin: 0; }
     [dir=rtl] .sv-head h1 { font-family: "Cairo", var(--serif); letter-spacing: 0; }
     .sv-head p { color: var(--ink-2); font-size: 15.5px; margin: 12px auto 0; max-width: 46ch; line-height: 1.6; }
     [dir=rtl] .sv-head p { font-family: "Cairo", var(--sans); }
@@ -66,8 +86,32 @@
     .sv-submit { width: 100%; justify-content: center; padding: 15px; font-size: 16px; border-radius: 13px; margin-top: 20px; }
     .sv-foot { text-align: center; margin-top: 14px; font-size: 12px; color: var(--ink-3); }
     .hp { position: absolute; left: -9999px; opacity: 0; height: 0; overflow: hidden; }
-    .sv-err { display: none; margin-top: 12px; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; font-size: 14px; border-radius: 11px; padding: 11px 14px; text-align: center; }
-    .sv-err.on { display: block; }
+
+    /* champ requis manquant : surlignage rouge + petit message */
+    .sv-q.err > label, .sv-q.err > .sv-label { color: #e11d48; }
+    .sv-q.err input[type=tel], .sv-q.err input[type=text], .sv-q.err select { border-color: #e11d48; box-shadow: 0 0 0 3px rgba(225,29,72,.13); }
+    .sv-q.err .sv-opts { outline: 2px solid rgba(225,29,72,.4); outline-offset: 5px; border-radius: 14px; }
+    .sv-qerr { display: block; margin-top: 10px; font-size: 12.5px; font-weight: 700; color: #e11d48; }
+    .sv-q.err { animation: svShake .42s cubic-bezier(.36,.07,.19,.97); }
+    @keyframes svShake { 0%,100%{transform:translateX(0)} 18%{transform:translateX(-6px)} 38%{transform:translateX(6px)} 58%{transform:translateX(-4px)} 78%{transform:translateX(4px)} }
+
+    /* popup centré (validation + erreur réseau) */
+    .sv-modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; opacity: 0; transition: opacity .2s; }
+    .sv-modal.in { opacity: 1; }
+    .sv-modal__scrim { position: absolute; inset: 0; background: rgba(13,16,25,.52); backdrop-filter: blur(3px); }
+    .sv-modal__card { position: relative; width: 100%; max-width: 384px; background: var(--card); border: 1px solid var(--line);
+      border-radius: 20px; box-shadow: 0 28px 64px -14px rgba(0,0,0,.45); padding: 32px 26px 26px; text-align: center;
+      transform: translateY(10px) scale(.97); transition: transform .22s var(--ease, ease); }
+    .sv-modal.in .sv-modal__card { transform: none; }
+    .sv-modal__x { position: absolute; top: 12px; right: 13px; width: 34px; height: 34px; border-radius: 10px; border: 0;
+      background: transparent; color: var(--ink-3); font-size: 26px; line-height: 1; cursor: pointer; transition: .15s; display: grid; place-items: center; }
+    .sv-modal__x:hover { background: var(--paper-2); color: var(--ink); }
+    [dir=rtl] .sv-modal__x { right: auto; left: 13px; }
+    .sv-modal__ic { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 15px; background: #fef2f2; color: #e11d48; }
+    .sv-modal__t { font-family: var(--serif); font-weight: 800; font-size: 21px; margin: 0 0 9px; color: var(--ink); letter-spacing: -.01em; }
+    .sv-modal__m { font-size: 14.5px; color: var(--ink-2); line-height: 1.6; margin: 0 0 22px; }
+    [dir=rtl] .sv-modal__t, [dir=rtl] .sv-modal__m { font-family: "Cairo", var(--sans); }
+    .sv-modal__ok { width: 100%; justify-content: center; padding: 13px; font-size: 15px; border-radius: 12px; }
     .sv-done { display: none; text-align: center; padding: 36px 14px; background: var(--card); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); }
     .sv-done.on { display: block; }
     .sv-done .sv-check { width: 66px; height: 66px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 18px; background: color-mix(in oklab, #16a34a 12%, var(--card)); color: #16a34a; }
@@ -78,17 +122,27 @@
 </head>
 <body>
   <div class="sv-wrap">
-    <div class="sv-lang" id="svLang">
-      <button type="button" data-lang="fr" class="on">
-        <svg class="flag" viewBox="0 0 60 40"><rect width="60" height="40" fill="#fff"/><rect width="20" height="40" fill="#0055A4"/><rect x="40" width="20" height="40" fill="#EF4135"/></svg> Français
-      </button>
-      <button type="button" data-lang="ar">
-        <svg class="flag" viewBox="0 0 60 40"><rect width="60" height="40" fill="#E70013"/><circle cx="30" cy="20" r="11" fill="#fff"/><circle cx="31.4" cy="20" r="8" fill="#E70013"/><circle cx="34.2" cy="20" r="8" fill="#fff"/><path d="M35.5 16.6 36.32 18.87 38.73 18.95 36.83 20.43 37.5 22.75 35.5 21.4 33.5 22.75 34.17 20.43 32.27 18.95 34.68 18.87Z" fill="#E70013"/></svg> العربية
-      </button>
+    <div class="sv-top">
+      <img class="sv-logo" src="logo.png" alt="WIJHA" />
+      <div class="sv-lang" id="svLang">
+        <button type="button" class="sv-lang__btn" id="svLangBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Langue / اللغة">
+          <span class="sv-lang__cur" id="svLangCur"></span>
+          <svg class="sv-lang__chev" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="sv-lang__menu" id="svLangMenu" role="listbox">
+          <button type="button" class="sv-lang__opt" data-lang="fr" role="option">
+            <svg class="flag" viewBox="0 0 60 40"><rect width="60" height="40" fill="#fff"/><rect width="20" height="40" fill="#0055A4"/><rect x="40" width="20" height="40" fill="#EF4135"/></svg> Français
+            <svg class="check" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17.5 19.5 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="sv-lang__opt" data-lang="ar" role="option">
+            <svg class="flag" viewBox="0 0 60 40"><rect width="60" height="40" fill="#E70013"/><circle cx="30" cy="20" r="11" fill="#fff"/><circle cx="31.4" cy="20" r="8" fill="#E70013"/><circle cx="34.2" cy="20" r="8" fill="#fff"/><path d="M35.5 16.6 36.32 18.87 38.73 18.95 36.83 20.43 37.5 22.75 35.5 21.4 33.5 22.75 34.17 20.43 32.27 18.95 34.68 18.87Z" fill="#E70013"/></svg> العربية
+            <svg class="check" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17.5 19.5 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="sv-head">
-      <img class="logo" src="logo.png" alt="WIJHA" />
       <h1 id="svTitle"></h1>
       <p id="svSub"></p>
       <span class="sv-mins" id="svBadge"></span>
@@ -108,8 +162,8 @@
     var GOUV = ["Tunis","Ariana","Ben Arous","Manouba","Nabeul","Zaghouan","Bizerte","Béja","Jendouba","Le Kef","Siliana","Sousse","Monastir","Mahdia","Sfax","Kairouan","Kasserine","Sidi Bouzid","Gabès","Médenine","Tataouine","Gafsa","Tozeur","Kébili","Hors Tunisie"];
     // textes d'interface
     var T = {
-      fr: { title:"Aide-nous à créer ta formation idéale 🚀", sub:"Moins de 2 minutes, juste des boutons à taper. En échange, tu reçois la date de la prochaine session en avant-première.", badge:"⏱️ ~90 secondes · que des clics", submit:"Envoyer mes réponses →", sending:"Envoi…", optional:"(optionnel)", other:"Précise…", foot:"🔒 On ne partage jamais tes infos. Tes réponses servent juste à améliorer WIJHA.", doneH:"Merci ! 🎉", doneP:"On a bien reçu tes réponses — elles nous aident à créer la formation qui te ressemble. On te prévient dès la prochaine session live. À très vite 👋", eTel:"Ajoute ton numéro WhatsApp 📱", eForm:"Choisis la formation qui t'attire le plus.", eInt:"Dis-nous où tu en es 🙂", eBud:"Indique ton budget — ça nous aide vraiment.", eNet:"Oups, l'envoi a échoué. Réessaie dans un instant 🙏" },
-      ar: { title:"ساعدنا في إنشاء التكوين المثالي لك 🚀", sub:"أقل من دقيقتين، مجرّد أزرار للنقر عليها. وفي المقابل، تحصل على موعد الحصة القادمة قبل الجميع.", badge:"⏱️ ~90 ثانية · مجرّد نقرات", submit:"إرسال إجاباتي →", sending:"جارٍ الإرسال…", optional:"(اختياري)", other:"حدّد…", foot:"🔒 لن نشارك معلوماتك أبدًا. إجاباتك تساعدنا فقط على تحسين WIJHA.", doneH:"شكرًا لك ! 🎉", doneP:"لقد استلمنا إجاباتك — إنها تساعدنا على إنشاء التكوين الذي يناسبك. سنُعلمك بموعد الحصة المباشرة القادمة. إلى اللقاء قريبًا 👋", eTel:"أضف رقم هاتفك (واتساب) 📱", eForm:"اختر التكوين الذي يجذبك أكثر.", eInt:"أخبرنا أين أنت الآن 🙂", eBud:"حدّد ميزانيتك — هذا يساعدنا كثيرًا.", eNet:"عذرًا، فشل الإرسال. حاول مرة أخرى بعد قليل 🙏" }
+      fr: { title:"Aide-nous à créer ta formation idéale 🚀", sub:"Moins de 2 minutes, juste des boutons à taper. En échange, tu reçois la date de la prochaine session en avant-première.", badge:"⏱️ ~90 secondes · que des clics", submit:"Envoyer mes réponses →", sending:"Envoi…", optional:"(optionnel)", other:"Précise…", foot:"🔒 On ne partage jamais tes infos. Tes réponses servent juste à améliorer WIJHA.", doneH:"Merci ! 🎉", doneP:"On a bien reçu tes réponses — elles nous aident à créer la formation qui te ressemble. On te prévient dès la prochaine session live. À très vite 👋", eTel:"Ajoute ton numéro WhatsApp 📱", eForm:"Choisis la formation qui t'attire le plus.", eInt:"Dis-nous où tu en es 🙂", eBud:"Indique ton budget — ça nous aide vraiment.", eNet:"L'envoi a échoué. Réessaie dans un instant 🙏", errH:"Oups…", missH:"Il manque quelques infos", missP:"Remplis les champs surlignés en rouge pour envoyer tes réponses.", reqMsg:"⚠ Ce champ est requis", okBtn:"J'ai compris", close:"Fermer" },
+      ar: { title:"ساعدنا في إنشاء التكوين المثالي لك 🚀", sub:"أقل من دقيقتين، مجرّد أزرار للنقر عليها. وفي المقابل، تحصل على موعد الحصة القادمة قبل الجميع.", badge:"⏱️ ~90 ثانية · مجرّد نقرات", submit:"إرسال إجاباتي →", sending:"جارٍ الإرسال…", optional:"(اختياري)", other:"حدّد…", foot:"🔒 لن نشارك معلوماتك أبدًا. إجاباتك تساعدنا فقط على تحسين WIJHA.", doneH:"شكرًا لك ! 🎉", doneP:"لقد استلمنا إجاباتك — إنها تساعدنا على إنشاء التكوين الذي يناسبك. سنُعلمك بموعد الحصة المباشرة القادمة. إلى اللقاء قريبًا 👋", eTel:"أضف رقم هاتفك (واتساب) 📱", eForm:"اختر التكوين الذي يجذبك أكثر.", eInt:"أخبرنا أين أنت الآن 🙂", eBud:"حدّد ميزانيتك — هذا يساعدنا كثيرًا.", eNet:"فشل الإرسال. حاول مرة أخرى بعد قليل 🙏", errH:"عذرًا…", missH:"تنقص بعض المعلومات", missP:"يرجى ملء الحقول المحدّدة بالأحمر لإرسال إجاباتك.", reqMsg:"⚠ هذا الحقل مطلوب", okBtn:"فهمت", close:"إغلاق" }
     };
     // o(valeur_canonique, fr, ar) — la VALEUR canonique est ce qui est stocké (data propre quelle que soit la langue)
     var o = function (v, fr, ar) { return { v: v, fr: fr, ar: ar }; };
@@ -171,6 +225,57 @@
     var values = {}; // id -> canonical value
     var esc = function (s) { return String(s).replace(/[<>&"]/g, function (c) { return { "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]; }); };
 
+    // drapeaux + noms pour le dropdown langue
+    var FLAGS = {
+      fr: '<svg class="flag" viewBox="0 0 60 40"><rect width="60" height="40" fill="#fff"/><rect width="20" height="40" fill="#0055A4"/><rect x="40" width="20" height="40" fill="#EF4135"/></svg>',
+      ar: '<svg class="flag" viewBox="0 0 60 40"><rect width="60" height="40" fill="#E70013"/><circle cx="30" cy="20" r="11" fill="#fff"/><circle cx="31.4" cy="20" r="8" fill="#E70013"/><circle cx="34.2" cy="20" r="8" fill="#fff"/><path d="M35.5 16.6 36.32 18.87 38.73 18.95 36.83 20.43 37.5 22.75 35.5 21.4 33.5 22.75 34.17 20.43 32.27 18.95 34.68 18.87Z" fill="#E70013"/></svg>'
+    };
+    var LANGNAME = { fr: "Français", ar: "العربية" };
+    var REQ_FIELDS = ["tel", "formation_cible", "intention", "budget"]; // champs obligatoires
+
+    // popup centré réutilisable (validation + erreur réseau) ; onClose appelé sur toute fermeture
+    function popup(opts) {
+      var prev = document.getElementById("svModal"); if (prev) prev.remove();
+      var t = T[lang];
+      var m = document.createElement("div"); m.className = "sv-modal"; m.id = "svModal";
+      m.innerHTML =
+        '<div class="sv-modal__scrim"></div>' +
+        '<div class="sv-modal__card" role="dialog" aria-modal="true" aria-live="polite">' +
+          '<button class="sv-modal__x" type="button" aria-label="' + esc(t.close) + '">&times;</button>' +
+          '<div class="sv-modal__ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M12 8v5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="16.6" r="1.3" fill="currentColor"/><path d="M12 3 22 20H2L12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>' +
+          '<h3 class="sv-modal__t"></h3><p class="sv-modal__m"></p>' +
+          '<button class="btn btn--pop sv-modal__ok" type="button"></button>' +
+        '</div>';
+      m.querySelector(".sv-modal__t").textContent = opts.title;
+      m.querySelector(".sv-modal__m").textContent = opts.msg;
+      m.querySelector(".sv-modal__ok").textContent = opts.ok || t.okBtn;
+      document.body.appendChild(m);
+      document.body.style.overflow = "hidden";
+      void m.offsetWidth; m.classList.add("in");
+      var done = false;
+      function close() {
+        if (done) return; done = true;
+        m.classList.remove("in"); document.body.style.overflow = "";
+        document.removeEventListener("keydown", onKey);
+        setTimeout(function () { if (m.parentNode) m.remove(); }, 230);
+        if (opts.onClose) opts.onClose();
+      }
+      function onKey(e) { if (e.key === "Escape") close(); }
+      m.querySelector(".sv-modal__scrim").addEventListener("click", close);
+      m.querySelector(".sv-modal__x").addEventListener("click", close);
+      m.querySelector(".sv-modal__ok").addEventListener("click", close);
+      document.addEventListener("keydown", onKey);
+      m.querySelector(".sv-modal__ok").focus();
+    }
+
+    var qEl = function (id) { return form.querySelector('.sv-q[data-q="' + id + '"]'); };
+    function markError(id) {
+      var q = qEl(id); if (!q) return;
+      q.classList.remove("err"); void q.offsetWidth; q.classList.add("err"); // relance l'animation shake
+      if (!q.querySelector(".sv-qerr")) { var s = document.createElement("span"); s.className = "sv-qerr"; s.textContent = T[lang].reqMsg; q.appendChild(s); }
+    }
+    function clearError(id) { var q = qEl(id); if (!q) return; q.classList.remove("err"); var m = q.querySelector(".sv-qerr"); if (m) m.remove(); }
+
     function build() {
       var t = T[lang];
       document.documentElement.setAttribute("lang", lang === "ar" ? "ar" : "fr");
@@ -180,11 +285,12 @@
       document.getElementById("svBadge").textContent = t.badge;
       document.getElementById("svDoneH").textContent = t.doneH;
       document.getElementById("svDoneP").textContent = t.doneP;
-      document.querySelectorAll(".sv-lang button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-lang") === lang); });
+      document.getElementById("svLangCur").innerHTML = FLAGS[lang] + '<span class="sv-lang__name">' + LANGNAME[lang] + '</span>';
+      document.querySelectorAll(".sv-lang__opt").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-lang") === lang); });
 
       form.innerHTML = "";
       FIELDS.forEach(function (f) {
-        var q = document.createElement("div"); q.className = "sv-q";
+        var q = document.createElement("div"); q.className = "sv-q"; q.setAttribute("data-q", f.id);
         var tag = f.req ? '<span class="req"> *</span>' : '<span class="opt"> ' + t.optional + '</span>';
         var label = f.L[lang];
         if (f.type === "tel" || f.type === "text") {
@@ -207,7 +313,7 @@
       var tail = document.createElement("div");
       tail.innerHTML = '<div class="hp" aria-hidden="true"><label>x<input name="company" type="text" tabindex="-1" autocomplete="off" /></label></div>' +
         '<button type="submit" class="btn btn--pop sv-submit" id="svBtn">' + t.submit + '</button>' +
-        '<div class="sv-err" id="svErr"></div><p class="sv-foot">' + t.foot + '</p>';
+        '<p class="sv-foot">' + t.foot + '</p>';
       form.appendChild(tail);
       wire(); updateProgress();
     }
@@ -224,37 +330,50 @@
           grp.querySelectorAll(".sv-opt").forEach(function (x) { x.classList.remove("on"); });
           b.classList.add("on");
           values[field] = b.getAttribute("data-v");
+          clearError(field);
           var other = form.querySelector('input[name="' + field + '_autre"]');
           if (other) other.classList.toggle("on", /Autre|أخرى/i.test(values[field]) || values[field] === "Autre");
           updateProgress();
         });
       });
       form.querySelectorAll('input[type=text],input[type=tel],select').forEach(function (el) {
-        el.addEventListener("input", function () { values[el.name] = el.value; updateProgress(); });
-        el.addEventListener("change", function () { values[el.name] = el.value; updateProgress(); });
+        el.addEventListener("input", function () { values[el.name] = el.value; clearError(el.name); updateProgress(); });
+        el.addEventListener("change", function () { values[el.name] = el.value; clearError(el.name); updateProgress(); });
       });
     }
 
-    // langue
-    document.getElementById("svLang").addEventListener("click", function (e) {
-      var b = e.target.closest("button"); if (!b) return;
+    // dropdown langue
+    var svLang = document.getElementById("svLang");
+    var svLangBtn = document.getElementById("svLangBtn");
+    function openLang(on) { svLang.classList.toggle("open", on); svLangBtn.setAttribute("aria-expanded", on ? "true" : "false"); }
+    svLangBtn.addEventListener("click", function (e) { e.stopPropagation(); openLang(!svLang.classList.contains("open")); });
+    document.getElementById("svLangMenu").addEventListener("click", function (e) {
+      var b = e.target.closest(".sv-lang__opt"); if (!b) return;
       lang = b.getAttribute("data-lang");
       try { localStorage.setItem("wijha_survey_lang", lang); } catch (e2) {}
-      build();
+      openLang(false); build();
     });
+    document.addEventListener("click", function (e) { if (!svLang.contains(e.target)) openLang(false); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") openLang(false); });
 
     // submit
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var t = T[lang], err = document.getElementById("svErr");
-      function fail(m) { err.textContent = m; err.classList.add("on"); err.scrollIntoView({ block: "center", behavior: "smooth" }); }
-      err.classList.remove("on");
+      var t = T[lang];
       // recolle les valeurs des champs texte/select courants
       form.querySelectorAll('input[type=text],input[type=tel],select').forEach(function (el) { values[el.name] = el.value.trim(); });
-      if (!values.tel) return fail(t.eTel);
-      if (!values.formation_cible) return fail(t.eForm);
-      if (!values.intention) return fail(t.eInt);
-      if (!values.budget) return fail(t.eBud);
+      // validation : surligne TOUS les champs requis manquants + scrolle vers le premier
+      var missing = REQ_FIELDS.filter(function (id) { return !values[id] || !String(values[id]).trim(); });
+      if (missing.length) {
+        missing.forEach(markError);
+        var firstQ = qEl(missing[0]);
+        popup({ title: t.missH, msg: t.missP, onClose: function () {
+          if (!firstQ) return;
+          firstQ.scrollIntoView({ block: "center", behavior: "smooth" });
+          var inp = firstQ.querySelector("input, select"); if (inp) { try { inp.focus({ preventScroll: true }); } catch (e3) {} }
+        } });
+        return;
+      }
       var data = { langue: lang, page: location.pathname, company: (form.querySelector('[name=company]') || {}).value || "" };
       FIELDS.forEach(function (f) { data[f.id] = values[f.id] || ""; if (f.other) data[f.id + "_autre"] = values[f.id + "_autre"] || ""; });
       var btn = document.getElementById("svBtn"); btn.disabled = true; btn.textContent = t.sending; btn.style.opacity = ".7";
@@ -262,7 +381,7 @@
         .then(function (r) { if (!r.ok) throw new Error("http " + r.status);
           form.style.display = "none"; document.querySelector(".sv-prog").style.display = "none"; document.querySelector(".sv-lang").style.display = "none";
           document.getElementById("svDone").classList.add("on"); window.scrollTo({ top: 0, behavior: "smooth" }); })
-        .catch(function () { btn.disabled = false; btn.textContent = t.submit; btn.style.opacity = ""; fail(t.eNet); });
+        .catch(function () { btn.disabled = false; btn.textContent = t.submit; btn.style.opacity = ""; popup({ title: t.errH, msg: t.eNet }); });
     });
 
     build();
