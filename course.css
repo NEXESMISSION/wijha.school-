@@ -297,6 +297,16 @@
 .rpay__soon { margin: 0; font-size: 14px; color: var(--ink-2); line-height: 1.5; }
 .rpay__note { margin: 12px 0 0; font-size: 12.5px; color: var(--ink-3); line-height: 1.45; }
 
+/* bloc paiement EN HAUT du formulaire (avant l'envoi) — mis en avant */
+.rpay--form { margin: 0 0 22px; padding: 18px; background: var(--pop-soft);
+  border-color: color-mix(in oklab, var(--pop) 24%, var(--line)); }
+.rpay--form .rpay__amt { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; font-size: 13.5px; margin-bottom: 12px; }
+.rpay--form .rpay__amt b { color: var(--pop); }
+.rpay--form .rpay__m--info { font-size: 15px; padding: 13px 16px; }
+.rpay--form .rpay__m--info b { font-size: 16px; letter-spacing: .01em; }
+.pay-methods--inline { margin: 14px 0 0; padding: 0; border-bottom: 0; }
+.pay-methods--inline .pay-methods__logos { gap: 8px; }
+
 /* ---- FAQ (no-JS) ---- */
 .cfaq { max-width: 760px; margin: 0 auto; display: grid; gap: 12px; }
 .cfaq details { background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }

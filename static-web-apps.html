@@ -198,19 +198,26 @@
           <p class="reserve__re">Paiement D17 / Flouci / international · place confirmée dès réception.</p>
         </div>
         <form class="reserve__form" data-formation="Site Web — 90 DT (early-bird)" data-amount="90">
-          <div class="pay-methods">
-            <span class="pay-methods__label">💳 Paiement accepté</span>
-            <div class="pay-methods__logos">
-              <span class="pay-logo"><img src="img/pay-d17.svg" alt="D17" /></span>
-              <span class="pay-logo"><img src="img/pay-flouci.svg" alt="Flouci" /></span>
-              <span class="pay-logo"><img src="img/pay-visa.svg" alt="Visa" /></span>
-              <span class="pay-logo"><img src="img/pay-mastercard.svg" alt="Mastercard" /></span>
-              <span class="pay-logo"><img src="img/pay-btl.svg" alt="Banque BTL" /></span>
-              <span class="pay-logo"><img src="img/pay-bte.svg" alt="Banque BTE" /></span>
+          <div class="rpay rpay--form">
+            <div class="rpay__amt">💳 Pour réserver ta place : <b>90 DT</b></div>
+            <div class="rpay__methods">
+              <div class="rpay__m rpay__m--info">📲 D17 / e-Dinar : <b>58&nbsp;415&nbsp;520</b></div>
+              <div class="rpay__m rpay__m--info">📲 Flouci : <b>58&nbsp;415&nbsp;520</b></div>
+            </div>
+            <p class="rpay__note">Ou virement bancaire (RIB BTE / BTL envoyé sur WhatsApp) · carte internationale possible. Place gardée 24h, confirmée dès réception.</p>
+            <div class="pay-methods pay-methods--inline">
+              <div class="pay-methods__logos">
+                <span class="pay-logo"><img src="img/pay-d17.svg" alt="D17" /></span>
+                <span class="pay-logo"><img src="img/pay-flouci.svg" alt="Flouci" /></span>
+                <span class="pay-logo"><img src="img/pay-visa.svg" alt="Visa" /></span>
+                <span class="pay-logo"><img src="img/pay-mastercard.svg" alt="Mastercard" /></span>
+                <span class="pay-logo"><img src="img/pay-btl.svg" alt="Banque BTL" /></span>
+                <span class="pay-logo"><img src="img/pay-bte.svg" alt="Banque BTE" /></span>
+              </div>
             </div>
           </div>
           <h3>Tes informations</h3>
-          <p class="reserve__sub">On t'envoie les détails de paiement et le lien de la session.</p>
+          <p class="reserve__sub">Paie avec une méthode ci-dessus, puis laisse tes infos et la capture de ton reçu.</p>
           <div class="field"><label for="s-nom">Nom complet</label><input id="s-nom" name="nom" type="text" placeholder="Ton nom" required></div>
           <div class="field"><label for="s-email">Email</label><input id="s-email" name="email" type="email" placeholder="toi@email.com" required></div>
           <div class="field"><label for="s-tel">Numéro WhatsApp</label><input id="s-tel" name="tel" type="tel" placeholder="+216 ..." required></div>
@@ -225,8 +232,8 @@
           <div class="hp" aria-hidden="true"><label>Ne pas remplir<input name="company" type="text" tabindex="-1" autocomplete="off"></label></div>
           <div class="reserve__after">
             <span class="reserve__after-t">Après ta réservation</span>
-            <div class="reserve__after-row"><b>1.</b> On te contacte sur WhatsApp pour le paiement</div>
-            <div class="reserve__after-row"><b>2.</b> Tu règles 90 DT — ta place est gardée 24h</div>
+            <div class="reserve__after-row"><b>1.</b> On vérifie ton paiement (ou on te contacte sur WhatsApp si besoin)</div>
+            <div class="reserve__after-row"><b>2.</b> Ta place est confirmée — gardée 24h</div>
             <div class="reserve__after-row"><b>3.</b> Tu reçois le lien Google Meet + l'accès au groupe privé</div>
           </div>
           <button type="submit" class="btn btn--pop">Réserver ma place →</button>

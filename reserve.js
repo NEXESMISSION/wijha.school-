@@ -103,27 +103,6 @@
     ok.style.display = "block";
   }
 
-  // Bloc « paiement pour confirmer » (anti no-show). Renvoie du HTML (ou "").
-  function payBlockHtml(amount) {
-    if (!amount) return "";
-    var P = CONFIG.pay || {};
-    var rows = "";
-    if (P.flouci && /^https?:/.test(P.flouci)) rows += '<a class="rpay__m" href="' + P.flouci + '" target="_blank" rel="noopener">💳 Payer avec Flouci →</a>';
-    else if (P.flouci) rows += '<div class="rpay__m rpay__m--info">📲 Flouci : <b>' + P.flouci + '</b></div>';
-    if (P.konnect) rows += '<a class="rpay__m" href="' + P.konnect + '" target="_blank" rel="noopener">💳 Payer avec Konnect →</a>';
-    if (P.d17)     rows += '<div class="rpay__m rpay__m--info">📲 D17 / e-Dinar : <b>' + P.d17 + '</b></div>';
-    var body = rows
-      ? '<div class="rpay__methods">' + rows + '</div>'
-      : '<p class="rpay__soon">On t\'envoie le lien de paiement tout de suite sur WhatsApp. 📲</p>';
-    return (
-      '<div class="rpay">' +
-        '<div class="rpay__amt">Pour confirmer ta place : <b>' + amount + ' DT</b></div>' +
-        body +
-        (P.note ? '<p class="rpay__note">' + P.note + '</p>' : '') +
-      '</div>'
-    );
-  }
-
   // Popup de confirmation (modal centré, fermable au clic / Échap).
   // extraHtml (optionnel) = bloc inséré avant le bouton (ex : instructions de paiement).
   function showPopup(title, message, extraHtml) {
@@ -186,10 +165,9 @@
         setLoading(btn, false);
         hide(ok);
         if (p.amount) {
-          // Réservation payante → étape de paiement pour confirmer la place (anti no-show).
-          showPopup("Presque fini, " + (p.nom || "") + " ! 🎉",
-            "Ta place est réservée. Dernière étape : règle le paiement pour la confirmer.",
-            payBlockHtml(p.amount));
+          // Réservation payante — le paiement se fait via les méthodes affichées EN HAUT du formulaire.
+          showPopup("Merci " + (p.nom || "") + " ! 🎉",
+            "Ta réservation est bien reçue. Si tu as déjà payé (reçu joint), on confirme ta place tout de suite — sinon on te contacte sur WhatsApp.");
         } else {
           // Pré-inscription (sans paiement maintenant).
           showPopup("Merci " + (p.nom || "") + " ! 🎉", "Ta pré-inscription est bien reçue — on te prévient dès l'ouverture, avec ton tarif bloqué.");
@@ -203,8 +181,7 @@
           console.warn("[WIJHA reserve] Serveur non configuré — aperçu local (mode démo). Détail :", err && err.message);
           hide(ok);
           showPopup("Réservation envoyée ✅",
-            p.amount ? "(Aperçu local) Étape de paiement ci-dessous — configure Supabase pour enregistrer la demande (ADMIN-SETUP.md)." : "(Aperçu local) Configure Supabase pour l'enregistrer pour de vrai — voir ADMIN-SETUP.md.",
-            payBlockHtml(p.amount));
+            "(Aperçu local) Configure Supabase pour l'enregistrer pour de vrai — voir ADMIN-SETUP.md.");
           form.reset();
         } else {
           showErr(ok, p);
