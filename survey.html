@@ -118,6 +118,8 @@
     .sv-done h2 { font-family: var(--serif); font-weight: 800; font-size: 27px; margin: 0 0 10px; }
     [dir=rtl] .sv-done h2, [dir=rtl] .sv-done p { font-family: "Cairo", var(--sans); }
     .sv-done p { color: var(--ink-2); font-size: 16px; margin: 0 auto; max-width: 40ch; line-height: 1.6; }
+    .sv-done__go { display: inline-flex; justify-content: center; align-items: center; margin-top: 24px; padding: 13px 24px; font-size: 15px; border-radius: 12px; text-decoration: none; }
+    .sv-done__redir { font-size: 12.5px !important; color: var(--ink-3) !important; margin-top: 14px !important; }
   </style>
 </head>
 <body>
@@ -154,6 +156,8 @@
     <div class="sv-done" id="svDone">
       <div class="sv-check"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17.5 19.5 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <h2 id="svDoneH"></h2><p id="svDoneP"></p>
+      <a class="btn btn--pop sv-done__go" id="svDoneGo" href="/"></a>
+      <p class="sv-done__redir" id="svDoneRedir"></p>
     </div>
   </div>
 
@@ -162,8 +166,8 @@
     var GOUV = ["Tunis","Ariana","Ben Arous","Manouba","Nabeul","Zaghouan","Bizerte","Béja","Jendouba","Le Kef","Siliana","Sousse","Monastir","Mahdia","Sfax","Kairouan","Kasserine","Sidi Bouzid","Gabès","Médenine","Tataouine","Gafsa","Tozeur","Kébili","Hors Tunisie"];
     // textes d'interface
     var T = {
-      fr: { title:"Aide-nous à créer ta formation idéale 🚀", sub:"Moins de 2 minutes, juste des boutons à taper. Tes réponses nous aident à créer la bonne formation.", badge:"⏱️ ~90 secondes · que des clics", submit:"Envoyer mes réponses →", sending:"Envoi…", optional:"(optionnel)", other:"Précise…", foot:"🔒 On ne partage jamais tes infos. Tes réponses servent juste à améliorer WIJHA.", doneH:"Merci ! 🎉", doneP:"On a bien reçu tes réponses — elles nous aident à créer la formation qui te ressemble. On te prévient dès la prochaine session live. À très vite 👋", eTel:"Ajoute ton numéro WhatsApp 📱", eForm:"Choisis la formation qui t'attire le plus.", eInt:"Dis-nous où tu en es 🙂", eBud:"Indique ton budget — ça nous aide vraiment.", eNet:"L'envoi a échoué. Réessaie dans un instant 🙏", errH:"Oups…", missH:"Il manque quelques infos", missP:"Remplis les champs surlignés en rouge pour envoyer tes réponses.", reqMsg:"⚠ Ce champ est requis", okBtn:"J'ai compris", close:"Fermer" },
-      ar: { title:"ساعدنا في إنشاء التكوين المثالي لك 🚀", sub:"أقل من دقيقتين، مجرّد أزرار للنقر عليها. إجاباتك تساعدنا على إنشاء التكوين المناسب.", badge:"⏱️ ~90 ثانية · مجرّد نقرات", submit:"إرسال إجاباتي →", sending:"جارٍ الإرسال…", optional:"(اختياري)", other:"حدّد…", foot:"🔒 لن نشارك معلوماتك أبدًا. إجاباتك تساعدنا فقط على تحسين WIJHA.", doneH:"شكرًا لك ! 🎉", doneP:"لقد استلمنا إجاباتك — إنها تساعدنا على إنشاء التكوين الذي يناسبك. سنُعلمك بموعد الحصة المباشرة القادمة. إلى اللقاء قريبًا 👋", eTel:"أضف رقم هاتفك (واتساب) 📱", eForm:"اختر التكوين الذي يجذبك أكثر.", eInt:"أخبرنا أين أنت الآن 🙂", eBud:"حدّد ميزانيتك — هذا يساعدنا كثيرًا.", eNet:"فشل الإرسال. حاول مرة أخرى بعد قليل 🙏", errH:"عذرًا…", missH:"تنقص بعض المعلومات", missP:"يرجى ملء الحقول المحدّدة بالأحمر لإرسال إجاباتك.", reqMsg:"⚠ هذا الحقل مطلوب", okBtn:"فهمت", close:"إغلاق" }
+      fr: { title:"Aide-nous à créer ta formation idéale 🚀", sub:"Moins de 2 minutes, juste des boutons à taper. Tes réponses nous aident à créer la bonne formation.", badge:"⏱️ ~90 secondes · que des clics", submit:"Envoyer mes réponses →", sending:"Envoi…", optional:"(optionnel)", other:"Précise…", foot:"🔒 On ne partage jamais tes infos. Tes réponses servent juste à améliorer WIJHA.", doneH:"Merci ! 🎉", doneP:"On a bien reçu tes réponses — merci de nous aider à créer la bonne formation 👋", eTel:"Ajoute ton numéro WhatsApp 📱", eForm:"Choisis la formation qui t'attire le plus.", eInt:"Dis-nous où tu en es 🙂", eBud:"Indique ton budget — ça nous aide vraiment.", eNet:"L'envoi a échoué. Réessaie dans un instant 🙏", errH:"Oups…", missH:"Il manque quelques infos", missP:"Remplis les champs surlignés en rouge pour envoyer tes réponses.", reqMsg:"⚠ Ce champ est requis", okBtn:"J'ai compris", close:"Fermer", doneGo:"Aller sur le site →", redir:"Redirection automatique vers le site…" },
+      ar: { title:"ساعدنا في إنشاء التكوين المثالي لك 🚀", sub:"أقل من دقيقتين، مجرّد أزرار للنقر عليها. إجاباتك تساعدنا على إنشاء التكوين المناسب.", badge:"⏱️ ~90 ثانية · مجرّد نقرات", submit:"إرسال إجاباتي →", sending:"جارٍ الإرسال…", optional:"(اختياري)", other:"حدّد…", foot:"🔒 لن نشارك معلوماتك أبدًا. إجاباتك تساعدنا فقط على تحسين WIJHA.", doneH:"شكرًا لك ! 🎉", doneP:"لقد استلمنا إجاباتك — شكرًا لمساعدتنا على إنشاء التكوين المناسب 👋", eTel:"أضف رقم هاتفك (واتساب) 📱", eForm:"اختر التكوين الذي يجذبك أكثر.", eInt:"أخبرنا أين أنت الآن 🙂", eBud:"حدّد ميزانيتك — هذا يساعدنا كثيرًا.", eNet:"فشل الإرسال. حاول مرة أخرى بعد قليل 🙏", errH:"عذرًا…", missH:"تنقص بعض المعلومات", missP:"يرجى ملء الحقول المحدّدة بالأحمر لإرسال إجاباتك.", reqMsg:"⚠ هذا الحقل مطلوب", okBtn:"فهمت", close:"إغلاق", doneGo:"الذهاب إلى الموقع →", redir:"سيتم تحويلك إلى الموقع تلقائيًا…" }
     };
     // o(valeur_canonique, fr, ar) — la VALEUR canonique est ce qui est stocké (data propre quelle que soit la langue)
     var o = function (v, fr, ar) { return { v: v, fr: fr, ar: ar }; };
@@ -285,6 +289,8 @@
       document.getElementById("svBadge").textContent = t.badge;
       document.getElementById("svDoneH").textContent = t.doneH;
       document.getElementById("svDoneP").textContent = t.doneP;
+      document.getElementById("svDoneGo").textContent = t.doneGo;
+      document.getElementById("svDoneRedir").textContent = t.redir;
       document.getElementById("svLangCur").innerHTML = FLAGS[lang] + '<span class="sv-lang__name">' + LANGNAME[lang] + '</span>';
       document.querySelectorAll(".sv-lang__opt").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-lang") === lang); });
 
@@ -379,8 +385,14 @@
       var btn = document.getElementById("svBtn"); btn.disabled = true; btn.textContent = t.sending; btn.style.opacity = ".7";
       fetch("/api/survey", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
         .then(function (r) { if (!r.ok) throw new Error("http " + r.status);
-          form.style.display = "none"; document.querySelector(".sv-prog").style.display = "none"; document.querySelector(".sv-lang").style.display = "none";
-          document.getElementById("svDone").classList.add("on"); window.scrollTo({ top: 0, behavior: "smooth" }); })
+          // succès : on n'affiche QUE le remerciement, puis redirection auto vers le site
+          form.style.display = "none";
+          document.querySelector(".sv-prog").style.display = "none";
+          document.querySelector(".sv-top").style.display = "none";
+          document.querySelector(".sv-head").style.display = "none";
+          document.getElementById("svDone").classList.add("on");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          setTimeout(function () { window.location.href = "/"; }, 4000); })
         .catch(function () { btn.disabled = false; btn.textContent = t.submit; btn.style.opacity = ""; popup({ title: t.errH, msg: t.eNet }); });
     });
 
