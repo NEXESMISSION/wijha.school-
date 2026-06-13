@@ -140,11 +140,13 @@
     <main class="wrap">
       <div class="tabs">
         <button class="tab on" data-tab="resa">📩 Réservations</button>
-        <button class="tab" data-tab="survey">📊 Sondage</button>
+        <button class="tab" data-tab="enquete">📋 Enquête clients</button>
+        <button class="tab" data-tab="survey">📊 Sondage popup</button>
         <button class="tab" data-tab="ana">📈 Analytics</button>
       </div>
 
       <section class="panel on" id="panel-resa"><div class="empty"><span class="loading"></span></div></section>
+      <section class="panel" id="panel-enquete"><div class="empty"><span class="loading"></span></div></section>
       <section class="panel" id="panel-survey"><div class="empty"><span class="loading"></span></div></section>
       <section class="panel" id="panel-ana"><div class="empty"><span class="loading"></span></div></section>
     </main>
@@ -285,6 +287,46 @@
       p.innerHTML = html;
     }
 
+    /* ---------- enquête clients (page /survey) ---------- */
+    function renderEnquete(rows) {
+      var p = $("#panel-enquete");
+      if (!rows.length) { p.innerHTML = '<div class="empty">Aucune réponse à l\'enquête pour le moment.<br><span class="muted">Partage le lien <b>/survey</b> à tes prospects (WhatsApp, bio Insta…).</span></div>'; return; }
+      var today = new Date().toDateString();
+      var todayN = rows.filter(function (r) { return new Date(r.ts).toDateString() === today; }).length;
+      var html =
+        '<div class="stats">' +
+          '<div class="stat"><b>' + rows.length + "</b><span>Réponses</span></div>" +
+          '<div class="stat"><b>' + todayN + "</b><span>Aujourd'hui</span></div>" +
+        "</div>";
+      html += '<div class="cols">';
+      html += '<div class="card"><h3>Qui sont-ils (profil)</h3>' + bars(tally(rows, function (r) { return r.profil; }), rows.length) + "</div>";
+      html += '<div class="card"><h3>Ce qu\'ils veulent</h3>' + bars(tally(rows, function (r) { return r.interet; }), rows.length) + "</div>";
+      html += '<div class="card"><h3>Comment ils nous ont connus</h3>' + bars(tally(rows, function (r) { return r.source; }), rows.length) + "</div>";
+      html += '<div class="card"><h3>Localisation</h3>' + bars(tally(rows, function (r) { return r.gouvernorat || r.pays || "?"; }), rows.length) + "</div>";
+      html += "</div>";
+      html += rows.map(function (r) {
+        var wa = (r.tel || "").replace(/[^0-9+]/g, "").replace(/^\+/, "");
+        var chips = "";
+        if (r.profil) chips += '<span class="chip">' + esc(r.profil) + "</span>";
+        if (r.interet) chips += '<span class="chip">' + esc(r.interet) + "</span>";
+        if (r.source) chips += '<span class="chip">via ' + esc(r.source) + "</span>";
+        if (r.gouvernorat || r.pays) chips += '<span class="chip">📍 ' + esc(r.gouvernorat || r.pays) + "</span>";
+        return '<div class="card" style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap">' +
+            '<div style="flex:1;min-width:200px">' +
+              "<b style=\"font-family:var(--serif);font-size:16px\">" + esc(r.nom || "—") + "</b>" +
+              '<div class="chips" style="display:flex;gap:6px;flex-wrap:wrap;margin:7px 0">' + chips + "</div>" +
+              (r.attente ? '<div class="muted" style="margin-top:4px">« ' + esc(r.attente) + " »</div>" : "") +
+            "</div>" +
+            '<div class="resa__links">' +
+              '<span class="resa__date">' + fdate(r.ts) + "</span>" +
+              (wa ? '<a href="https://wa.me/' + esc(wa) + '" target="_blank" rel="noopener">📱 ' + esc(r.tel) + "</a>"
+                  : (r.tel ? "<span>📱 " + esc(r.tel) + "</span>" : "")) +
+            "</div>" +
+          "</div>";
+      }).join("");
+      p.innerHTML = html;
+    }
+
     /* ---------- analytics ---------- */
     function renderAna(events) {
       var p = $("#panel-ana");
@@ -325,10 +367,13 @@
     /* ---------- chargement ---------- */
     function loadAll() {
       $("#panel-resa").innerHTML = '<div class="empty"><span class="loading"></span></div>';
+      $("#panel-enquete").innerHTML = '<div class="empty"><span class="loading"></span></div>';
       $("#panel-survey").innerHTML = '<div class="empty"><span class="loading"></span></div>';
       $("#panel-ana").innerHTML = '<div class="empty"><span class="loading"></span></div>';
       authed("/api/reservations").then(function (j) { renderResa(j.reservations || []); })
         .catch(function (e) { if (e.message !== "401") $("#panel-resa").innerHTML = '<div class="empty">Erreur de chargement des réservations.<br><span class="muted">Vérifie SUPABASE_URL / SUPABASE_SERVICE_KEY et la table reservations (ADMIN-SETUP.md).</span></div>'; });
+      authed("/api/surveys").then(function (j) { renderEnquete(j.surveys || []); })
+        .catch(function (e) { if (e.message !== "401") $("#panel-enquete").innerHTML = '<div class="empty">Erreur de chargement de l\'enquête.</div>'; });
       authed("/api/analytics").then(function (j) {
         var ev = j.events || [];
         renderSurvey(ev); renderAna(ev);

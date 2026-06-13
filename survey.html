@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WIJHA — Aide-nous à mieux te connaître</title>
+  <meta name="description" content="2 minutes pour nous aider à créer les meilleures formations pour toi." />
+  <meta name="theme-color" content="#2563eb" />
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="apple-touch-icon" href="logo.png" />
+  <meta name="robots" content="noindex" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="WIJHA Academy" />
+  <meta property="og:title" content="Aide-nous à mieux te connaître — WIJHA" />
+  <meta property="og:description" content="2 min pour nous aider à créer les meilleures formations pour toi 🙏" />
+  <meta property="og:image" content="img/og-cover.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="course.css" />
+  <style>
+    body { background: var(--paper); }
+    .sv-wrap { max-width: 600px; margin: 0 auto; padding: clamp(28px, 6vh, 60px) 20px 80px; }
+    .sv-head { text-align: center; margin-bottom: 26px; }
+    .sv-head img { width: 50px; height: 50px; border-radius: 14px; }
+    .sv-head h1 { font-family: var(--serif); font-weight: 800; font-size: clamp(26px, 5vw, 36px);
+      letter-spacing: -0.03em; line-height: 1.1; margin: 16px 0 0; }
+    .sv-head p { color: var(--ink-2); font-size: 16px; margin: 12px auto 0; max-width: 42ch; line-height: 1.55; }
+    .sv-head .sv-mins { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 11.5px;
+      font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--pop);
+      background: var(--pop-soft); border-radius: 999px; padding: 6px 14px; }
+
+    .sv-card { background: var(--card); border: 1px solid var(--line); border-radius: 22px;
+      box-shadow: var(--shadow); padding: clamp(22px, 4vw, 34px); }
+    .sv-q { margin-bottom: 24px; }
+    .sv-q:last-of-type { margin-bottom: 8px; }
+    .sv-q > label, .sv-q > .sv-label { display: block; font-family: var(--serif); font-weight: 700;
+      font-size: 16px; color: var(--ink); margin-bottom: 12px; letter-spacing: -0.01em; }
+    .sv-q .req { color: var(--save, #e11d48); font-weight: 700; }
+    .sv-q .opt { font-family: var(--sans); font-weight: 500; font-size: 12.5px; color: var(--ink-3); }
+    .sv-q input[type=text], .sv-q input[type=tel], .sv-q textarea, .sv-q select {
+      width: 100%; border: 1px solid var(--line); background: var(--paper); border-radius: 12px;
+      padding: 13px 15px; font-size: 15.5px; font-family: inherit; color: var(--ink); outline: none;
+      transition: border-color .15s; }
+    .sv-q input:focus, .sv-q textarea:focus, .sv-q select:focus { border-color: var(--pop); }
+    .sv-q textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+    .sv-hint { display: block; margin-top: 7px; font-size: 12.5px; color: var(--ink-3); }
+
+    /* pills (choix unique) */
+    .sv-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+    .sv-opt { font-family: inherit; font-size: 14px; font-weight: 600; color: var(--ink-2);
+      background: var(--paper); border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px;
+      cursor: pointer; transition: .15s; }
+    .sv-opt:hover { border-color: var(--pop); color: var(--pop); }
+    .sv-opt.on { background: var(--pop); border-color: var(--pop); color: #fff; }
+
+    .sv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 460px) { .sv-grid { grid-template-columns: 1fr; } }
+
+    .sv-submit { width: 100%; justify-content: center; padding: 15px; font-size: 16px; border-radius: 13px; margin-top: 8px; }
+    .sv-foot { text-align: center; margin-top: 16px; font-size: 12.5px; color: var(--ink-3); }
+    .hp { position: absolute; left: -9999px; opacity: 0; height: 0; overflow: hidden; }
+
+    /* état merci */
+    .sv-done { display: none; text-align: center; padding: 30px 10px; }
+    .sv-done.on { display: block; }
+    .sv-done .sv-check { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
+      margin: 0 auto 18px; background: color-mix(in oklab, #16a34a 12%, var(--card)); color: #16a34a; }
+    .sv-done h2 { font-family: var(--serif); font-weight: 800; font-size: 26px; margin: 0 0 8px; }
+    .sv-done p { color: var(--ink-2); font-size: 16px; margin: 0 auto; max-width: 38ch; line-height: 1.55; }
+    .sv-err { display: none; margin-top: 12px; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626;
+      font-size: 14px; border-radius: 11px; padding: 11px 14px; text-align: center; }
+    .sv-err.on { display: block; }
+  </style>
+</head>
+<body>
+  <div class="sv-wrap">
+    <div class="sv-head">
+      <img src="logo.png" alt="WIJHA" />
+      <h1>Aide-nous à mieux te connaître 🙏</h1>
+      <p>2 minutes pour qu'on crée les formations qui te ressemblent vraiment. Tes réponses restent privées.</p>
+      <span class="sv-mins">⏱️ ~2 minutes</span>
+    </div>
+
+    <form class="sv-card" id="surveyForm" novalidate>
+      <!-- 1. Téléphone (le plus important : savoir qui répond) -->
+      <div class="sv-q">
+        <label for="sv-tel">📱 Ton numéro de téléphone / WhatsApp <span class="req">*</span></label>
+        <input id="sv-tel" name="tel" type="tel" inputmode="tel" placeholder="+216 ..." required />
+        <span class="sv-hint">Pour qu'on puisse te recontacter et t'envoyer les bonnes infos.</span>
+      </div>
+
+      <!-- 2. Prénom -->
+      <div class="sv-q">
+        <label for="sv-nom">Ton prénom <span class="opt">(optionnel)</span></label>
+        <input id="sv-nom" name="nom" type="text" placeholder="Ton prénom" />
+      </div>
+
+      <!-- 3. Profil : qui es-tu -->
+      <div class="sv-q">
+        <span class="sv-label">Tu es… <span class="req">*</span></span>
+        <div class="sv-opts" data-field="profil">
+          <button type="button" class="sv-opt">Étudiant(e)</button>
+          <button type="button" class="sv-opt">Lycéen(ne)</button>
+          <button type="button" class="sv-opt">Salarié(e)</button>
+          <button type="button" class="sv-opt">Freelance</button>
+          <button type="button" class="sv-opt">Entrepreneur</button>
+          <button type="button" class="sv-opt">Parent</button>
+          <button type="button" class="sv-opt">Sans emploi</button>
+          <button type="button" class="sv-opt">Autre</button>
+        </div>
+      </div>
+
+      <!-- 4. Intérêt : ce qu'ils veulent -->
+      <div class="sv-q">
+        <span class="sv-label">Qu'est-ce qui t'intéresse le plus ? <span class="req">*</span></span>
+        <div class="sv-opts" data-field="interet">
+          <button type="button" class="sv-opt">Créer un site web</button>
+          <button type="button" class="sv-opt">Créer une application</button>
+          <button type="button" class="sv-opt">Gagner de l'argent en ligne</button>
+          <button type="button" class="sv-opt">Apprendre l'IA</button>
+          <button type="button" class="sv-opt">Trouver un travail / freelance</button>
+          <button type="button" class="sv-opt">Autre</button>
+        </div>
+      </div>
+
+      <!-- 5. Attentes -->
+      <div class="sv-q">
+        <label for="sv-attente">Qu'espères-tu accomplir avec WIJHA ? <span class="opt">(optionnel)</span></label>
+        <textarea id="sv-attente" name="attente" placeholder="Ex : créer mon site, lancer mon business, trouver des clients en freelance…"></textarea>
+      </div>
+
+      <!-- 6. Source -->
+      <div class="sv-q">
+        <span class="sv-label">Comment as-tu connu WIJHA ? <span class="req">*</span></span>
+        <div class="sv-opts" data-field="source">
+          <button type="button" class="sv-opt">Instagram</button>
+          <button type="button" class="sv-opt">Facebook</button>
+          <button type="button" class="sv-opt">TikTok</button>
+          <button type="button" class="sv-opt">Google</button>
+          <button type="button" class="sv-opt">Un ami</button>
+          <button type="button" class="sv-opt">Autre</button>
+        </div>
+      </div>
+
+      <!-- 7. Localisation -->
+      <div class="sv-q">
+        <span class="sv-label">Où es-tu ? <span class="req">*</span></span>
+        <div class="sv-grid">
+          <select name="pays" id="sv-pays" aria-label="Pays">
+            <option value="Tunisie" selected>🇹🇳 Tunisie</option>
+            <option value="Algérie">🇩🇿 Algérie</option>
+            <option value="Maroc">🇲🇦 Maroc</option>
+            <option value="France">🇫🇷 France</option>
+            <option value="Autre">🌍 Autre pays</option>
+          </select>
+          <select name="gouvernorat" id="sv-gouv" aria-label="Gouvernorat">
+            <option value="Tunis" selected>Tunis</option>
+            <option>Ariana</option><option>Ben Arous</option><option>Manouba</option>
+            <option>Nabeul</option><option>Zaghouan</option><option>Bizerte</option>
+            <option>Béja</option><option>Jendouba</option><option>Le Kef</option>
+            <option>Siliana</option><option>Sousse</option><option>Monastir</option>
+            <option>Mahdia</option><option>Sfax</option><option>Kairouan</option>
+            <option>Kasserine</option><option>Sidi Bouzid</option><option>Gabès</option>
+            <option>Médenine</option><option>Tataouine</option><option>Gafsa</option>
+            <option>Tozeur</option><option>Kébili</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- hidden state for pills -->
+      <input type="hidden" name="profil" /><input type="hidden" name="interet" /><input type="hidden" name="source" />
+      <!-- honeypot -->
+      <div class="hp" aria-hidden="true"><label>Ne pas remplir<input name="company" type="text" tabindex="-1" autocomplete="off" /></label></div>
+
+      <button type="submit" class="btn btn--pop sv-submit" id="svBtn">Envoyer mes réponses →</button>
+      <div class="sv-err" id="svErr"></div>
+      <p class="sv-foot">🔒 Anonyme côté public · on ne partage jamais tes infos.</p>
+    </form>
+
+    <div class="sv-done" id="svDone">
+      <div class="sv-check"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17.5 19.5 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h2>Merci ! 🎉</h2>
+      <p>Tes réponses nous aident énormément à créer les meilleures formations pour toi. À très vite avec WIJHA !</p>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    var $ = function (s, r) { return (r || document).querySelector(s); };
+    // pills → hidden input
+    document.querySelectorAll(".sv-opts").forEach(function (grp) {
+      var field = grp.getAttribute("data-field");
+      var hidden = document.querySelector('input[name="' + field + '"]');
+      grp.addEventListener("click", function (e) {
+        var b = e.target.closest(".sv-opt"); if (!b) return;
+        grp.querySelectorAll(".sv-opt").forEach(function (x) { x.classList.remove("on"); });
+        b.classList.add("on");
+        if (hidden) hidden.value = b.textContent.trim();
+      });
+    });
+    // gouvernorat visible seulement pour la Tunisie
+    var pays = $("#sv-pays"), gouv = $("#sv-gouv");
+    function toggleGouv() { gouv.style.display = (pays.value === "Tunisie") ? "" : "none"; }
+    pays.addEventListener("change", toggleGouv); toggleGouv();
+
+    var form = $("#surveyForm"), btn = $("#svBtn"), err = $("#svErr");
+    function fail(msg) { err.textContent = msg; err.classList.add("on"); }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      err.classList.remove("on");
+      var data = {
+        tel: form.tel.value.trim(),
+        nom: form.nom.value.trim(),
+        profil: form.profil.value,
+        interet: form.interet.value,
+        attente: form.attente.value.trim(),
+        source: form.source.value,
+        pays: pays.value,
+        gouvernorat: pays.value === "Tunisie" ? gouv.value : "",
+        company: form.company.value,
+        page: location.pathname,
+      };
+      if (!data.tel) return fail("Ajoute ton numéro de téléphone 📱");
+      if (!data.profil) return fail("Dis-nous qui tu es 🙂");
+      if (!data.interet) return fail("Choisis ce qui t'intéresse le plus.");
+      if (!data.source) return fail("Comment nous as-tu connus ?");
+
+      btn.disabled = true; btn.textContent = "Envoi…"; btn.style.opacity = ".7";
+      fetch("/api/survey", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data),
+      }).then(function (r) {
+        if (!r.ok) throw new Error("http " + r.status);
+        form.style.display = "none"; $("#svDone").classList.add("on");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }).catch(function () {
+        btn.disabled = false; btn.textContent = "Envoyer mes réponses →"; btn.style.opacity = "";
+        fail("Oups, l'envoi a échoué. Réessaie dans un instant 🙏");
+      });
+    });
+  })();
+  </script>
+</body>
+</html>
