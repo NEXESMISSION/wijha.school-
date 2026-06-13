@@ -297,15 +297,16 @@
 .rpay__soon { margin: 0; font-size: 14px; color: var(--ink-2); line-height: 1.5; }
 .rpay__note { margin: 12px 0 0; font-size: 12.5px; color: var(--ink-3); line-height: 1.45; }
 
-/* bloc paiement EN HAUT du formulaire (avant l'envoi) — mis en avant */
-.rpay--form { margin: 0 0 22px; padding: 18px; background: var(--pop-soft);
-  border-color: color-mix(in oklab, var(--pop) 24%, var(--line)); }
-.rpay--form .rpay__amt { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; font-size: 13.5px; margin-bottom: 12px; }
-.rpay--form .rpay__amt b { color: var(--pop); }
-.rpay--form .rpay__m--info { font-size: 15px; padding: 13px 16px; }
-.rpay--form .rpay__m--info b { font-size: 16px; letter-spacing: .01em; }
-.pay-methods--inline { margin: 14px 0 0; padding: 0; border-bottom: 0; }
-.pay-methods--inline .pay-methods__logos { gap: 8px; }
+/* bloc paiement compact EN HAUT du formulaire (avant l'envoi) */
+.paybox { margin: 0 0 20px; padding: 13px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper-2); }
+.paybox__top { font-size: 13px; color: var(--ink-2); margin-bottom: 9px; }
+.paybox__top b { font-family: var(--serif); font-weight: 800; color: var(--pop); font-size: 16px; margin-left: 4px; }
+.paybox__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.paybox__list li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 13.5px; }
+.paybox__list span { color: var(--ink-2); }
+.paybox__list b { font-family: var(--mono); font-weight: 700; color: var(--ink); white-space: nowrap; }
+.paybox__todo { color: var(--ink-3); font-style: italic; font-weight: 600; }
+.paybox__hint { display: block; margin-top: 9px; font-size: 11.5px; color: var(--ink-3); }
 
 /* ---- FAQ (no-JS) ---- */
 .cfaq { max-width: 760px; margin: 0 auto; display: grid; gap: 12px; }

@@ -198,23 +198,13 @@
           <p class="reserve__re">Paiement D17 / Flouci / international · place confirmée dès réception.</p>
         </div>
         <form class="reserve__form" data-formation="Site Web — 90 DT (early-bird)" data-amount="90">
-          <div class="rpay rpay--form">
-            <div class="rpay__amt">💳 Pour réserver ta place : <b>90 DT</b></div>
-            <div class="rpay__methods">
-              <div class="rpay__m rpay__m--info">📲 D17 / e-Dinar : <b>58&nbsp;415&nbsp;520</b></div>
-              <div class="rpay__m rpay__m--info">📲 Flouci : <b>58&nbsp;415&nbsp;520</b></div>
-            </div>
-            <p class="rpay__note">Ou virement bancaire (RIB BTE / BTL envoyé sur WhatsApp) · carte internationale possible. Place gardée 24h, confirmée dès réception.</p>
-            <div class="pay-methods pay-methods--inline">
-              <div class="pay-methods__logos">
-                <span class="pay-logo"><img src="img/pay-d17.svg" alt="D17" /></span>
-                <span class="pay-logo"><img src="img/pay-flouci.svg" alt="Flouci" /></span>
-                <span class="pay-logo"><img src="img/pay-visa.svg" alt="Visa" /></span>
-                <span class="pay-logo"><img src="img/pay-mastercard.svg" alt="Mastercard" /></span>
-                <span class="pay-logo"><img src="img/pay-btl.svg" alt="Banque BTL" /></span>
-                <span class="pay-logo"><img src="img/pay-bte.svg" alt="Banque BTE" /></span>
-              </div>
-            </div>
+          <div class="paybox">
+            <div class="paybox__top">💳 Pour réserver : <b>90 DT</b></div>
+            <ul class="paybox__list">
+              <li><span>D17 / Flouci</span><b>58&nbsp;415&nbsp;520</b></li>
+              <li><span>Virement (RIB)</span><b class="paybox__todo">à compléter</b></li>
+            </ul>
+            <span class="paybox__hint">Paie, puis ajoute la capture de ton reçu plus bas.</span>
           </div>
           <h3>Tes informations</h3>
           <p class="reserve__sub">Paie avec une méthode ci-dessus, puis laisse tes infos et la capture de ton reçu.</p>
