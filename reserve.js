@@ -42,7 +42,17 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(p),
-    }).then(function (r) { if (!r.ok) throw new Error("endpoint " + r.status); return true; });
+    }).then(function (r) {
+      if (r.ok) return true;
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        // affiche la raison exacte dans la console (F12 → Console) pour diagnostiquer :
+        //   not-configured = variables Vercel manquantes / pas redéployé
+        //   supabase       = table « reservations » absente ou mauvaise clé
+        //   404 / method   = fonction /api/reserve introuvable (Root Directory)
+        console.error("[WIJHA reserve] échec /api/reserve →", r.status, j);
+        throw new Error((j && j.error ? j.error : "http") + " " + r.status);
+      });
+    });
   }
 
   // Lit l'image du reçu et la réduit (≤1280px, JPEG) pour un envoi léger → dataURL.
