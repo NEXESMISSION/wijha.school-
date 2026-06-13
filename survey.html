@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WIJHA — Aide-nous à mieux te connaître</title>
-  <meta name="description" content="2 minutes pour nous aider à créer les meilleures formations pour toi." />
+  <title>WIJHA — Aide-nous à créer ta formation idéale</title>
+  <meta name="description" content="90 secondes, que des boutons. Tu reçois la date de la prochaine session en avant-première." />
   <meta name="theme-color" content="#2563eb" />
   <link rel="icon" href="logo.png" type="image/png" />
   <link rel="apple-touch-icon" href="logo.png" />
   <meta name="robots" content="noindex" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="WIJHA Academy" />
-  <meta property="og:title" content="Aide-nous à mieux te connaître — WIJHA" />
-  <meta property="og:description" content="2 min pour nous aider à créer les meilleures formations pour toi 🙏" />
+  <meta property="og:title" content="Aide-nous à créer ta formation idéale — WIJHA" />
+  <meta property="og:description" content="90 secondes, que des boutons 🙏" />
   <meta property="og:image" content="img/og-cover.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,223 +21,207 @@
   <link rel="stylesheet" href="course.css" />
   <style>
     body { background: var(--paper); }
-    .sv-wrap { max-width: 600px; margin: 0 auto; padding: clamp(28px, 6vh, 60px) 20px 80px; }
-    .sv-head { text-align: center; margin-bottom: 26px; }
+    .sv-wrap { max-width: 600px; margin: 0 auto; padding: clamp(24px, 5vh, 50px) 20px 80px; }
+    .sv-head { text-align: center; margin-bottom: 22px; }
     .sv-head img { width: 50px; height: 50px; border-radius: 14px; }
-    .sv-head h1 { font-family: var(--serif); font-weight: 800; font-size: clamp(26px, 5vw, 36px);
-      letter-spacing: -0.03em; line-height: 1.1; margin: 16px 0 0; }
-    .sv-head p { color: var(--ink-2); font-size: 16px; margin: 12px auto 0; max-width: 42ch; line-height: 1.55; }
+    .sv-head h1 { font-family: var(--serif); font-weight: 800; font-size: clamp(25px, 5vw, 34px);
+      letter-spacing: -0.03em; line-height: 1.12; margin: 14px 0 0; }
+    .sv-head p { color: var(--ink-2); font-size: 15.5px; margin: 12px auto 0; max-width: 46ch; line-height: 1.55; }
     .sv-head .sv-mins { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 11.5px;
-      font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--pop);
+      font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--pop);
       background: var(--pop-soft); border-radius: 999px; padding: 6px 14px; }
 
+    /* barre de progression collante */
+    .sv-prog { position: sticky; top: 0; z-index: 10; height: 6px; background: var(--paper-2);
+      border-radius: 999px; overflow: hidden; margin: 0 0 22px; }
+    .sv-prog__bar { height: 100%; width: 0; border-radius: 999px;
+      background: linear-gradient(90deg, var(--pop), oklch(0.62 0.2 290)); transition: width .35s var(--ease, ease); }
+
     .sv-card { background: var(--card); border: 1px solid var(--line); border-radius: 22px;
-      box-shadow: var(--shadow); padding: clamp(22px, 4vw, 34px); }
-    .sv-q { margin-bottom: 24px; }
-    .sv-q:last-of-type { margin-bottom: 8px; }
+      box-shadow: var(--shadow); padding: clamp(20px, 4vw, 32px); }
+    .sv-q { padding: 18px 0; border-top: 1px solid var(--line-2, var(--line)); }
+    .sv-q:first-child { padding-top: 4px; border-top: 0; }
     .sv-q > label, .sv-q > .sv-label { display: block; font-family: var(--serif); font-weight: 700;
-      font-size: 16px; color: var(--ink); margin-bottom: 12px; letter-spacing: -0.01em; }
+      font-size: 16px; color: var(--ink); margin-bottom: 11px; letter-spacing: -0.01em; line-height: 1.35; }
     .sv-q .req { color: var(--save, #e11d48); font-weight: 700; }
     .sv-q .opt { font-family: var(--sans); font-weight: 500; font-size: 12.5px; color: var(--ink-3); }
-    .sv-q input[type=text], .sv-q input[type=tel], .sv-q textarea, .sv-q select {
+    .sv-q input[type=text], .sv-q input[type=tel], .sv-q select {
       width: 100%; border: 1px solid var(--line); background: var(--paper); border-radius: 12px;
-      padding: 13px 15px; font-size: 15.5px; font-family: inherit; color: var(--ink); outline: none;
-      transition: border-color .15s; }
-    .sv-q input:focus, .sv-q textarea:focus, .sv-q select:focus { border-color: var(--pop); }
-    .sv-q textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
-    .sv-hint { display: block; margin-top: 7px; font-size: 12.5px; color: var(--ink-3); }
+      padding: 13px 15px; font-size: 15.5px; font-family: inherit; color: var(--ink); outline: none; transition: border-color .15s; }
+    .sv-q input:focus, .sv-q select:focus { border-color: var(--pop); }
+    .sv-hint { display: block; margin-top: 8px; font-size: 12.5px; color: var(--ink-3); line-height: 1.45; }
 
-    /* pills (choix unique) */
     .sv-opts { display: flex; flex-wrap: wrap; gap: 8px; }
     .sv-opt { font-family: inherit; font-size: 14px; font-weight: 600; color: var(--ink-2);
-      background: var(--paper); border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px;
-      cursor: pointer; transition: .15s; }
+      background: var(--paper); border: 1px solid var(--line); border-radius: 999px; padding: 10px 15px;
+      cursor: pointer; transition: .15s; text-align: left; }
     .sv-opt:hover { border-color: var(--pop); color: var(--pop); }
     .sv-opt.on { background: var(--pop); border-color: var(--pop); color: #fff; }
+    .sv-other { margin-top: 8px; display: none; }
+    .sv-other.on { display: block; }
 
-    .sv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media (max-width: 460px) { .sv-grid { grid-template-columns: 1fr; } }
-
-    .sv-submit { width: 100%; justify-content: center; padding: 15px; font-size: 16px; border-radius: 13px; margin-top: 8px; }
-    .sv-foot { text-align: center; margin-top: 16px; font-size: 12.5px; color: var(--ink-3); }
+    .sv-submit { width: 100%; justify-content: center; padding: 15px; font-size: 16px; border-radius: 13px; margin-top: 20px; }
+    .sv-foot { text-align: center; margin-top: 14px; font-size: 12px; color: var(--ink-3); }
     .hp { position: absolute; left: -9999px; opacity: 0; height: 0; overflow: hidden; }
-
-    /* état merci */
-    .sv-done { display: none; text-align: center; padding: 30px 10px; }
-    .sv-done.on { display: block; }
-    .sv-done .sv-check { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
-      margin: 0 auto 18px; background: color-mix(in oklab, #16a34a 12%, var(--card)); color: #16a34a; }
-    .sv-done h2 { font-family: var(--serif); font-weight: 800; font-size: 26px; margin: 0 0 8px; }
-    .sv-done p { color: var(--ink-2); font-size: 16px; margin: 0 auto; max-width: 38ch; line-height: 1.55; }
     .sv-err { display: none; margin-top: 12px; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626;
       font-size: 14px; border-radius: 11px; padding: 11px 14px; text-align: center; }
     .sv-err.on { display: block; }
+
+    .sv-done { display: none; text-align: center; padding: 36px 14px; background: var(--card);
+      border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); }
+    .sv-done.on { display: block; }
+    .sv-done .sv-check { width: 66px; height: 66px; border-radius: 50%; display: grid; place-items: center;
+      margin: 0 auto 18px; background: color-mix(in oklab, #16a34a 12%, var(--card)); color: #16a34a; }
+    .sv-done h2 { font-family: var(--serif); font-weight: 800; font-size: 27px; margin: 0 0 10px; }
+    .sv-done p { color: var(--ink-2); font-size: 16px; margin: 0 auto; max-width: 40ch; line-height: 1.55; }
   </style>
 </head>
 <body>
   <div class="sv-wrap">
     <div class="sv-head">
       <img src="logo.png" alt="WIJHA" />
-      <h1>Aide-nous à mieux te connaître 🙏</h1>
-      <p>2 minutes pour qu'on crée les formations qui te ressemblent vraiment. Tes réponses restent privées.</p>
-      <span class="sv-mins">⏱️ ~2 minutes</span>
+      <h1>Aide-nous à créer ta formation idéale 🚀</h1>
+      <p>Moins de 2 minutes, juste des boutons à taper. En échange, tu reçois la date de la prochaine session en avant-première.</p>
+      <span class="sv-mins">⏱️ ~90 secondes · que des clics</span>
     </div>
 
-    <form class="sv-card" id="surveyForm" novalidate>
-      <!-- 1. Téléphone (le plus important : savoir qui répond) -->
-      <div class="sv-q">
-        <label for="sv-tel">📱 Ton numéro de téléphone / WhatsApp <span class="req">*</span></label>
-        <input id="sv-tel" name="tel" type="tel" inputmode="tel" placeholder="+216 ..." required />
-        <span class="sv-hint">Pour qu'on puisse te recontacter et t'envoyer les bonnes infos.</span>
-      </div>
+    <div class="sv-prog" aria-hidden="true"><div class="sv-prog__bar" id="svProg"></div></div>
 
-      <!-- 2. Prénom -->
-      <div class="sv-q">
-        <label for="sv-nom">Ton prénom <span class="opt">(optionnel)</span></label>
-        <input id="sv-nom" name="nom" type="text" placeholder="Ton prénom" />
-      </div>
-
-      <!-- 3. Profil : qui es-tu -->
-      <div class="sv-q">
-        <span class="sv-label">Tu es… <span class="req">*</span></span>
-        <div class="sv-opts" data-field="profil">
-          <button type="button" class="sv-opt">Étudiant(e)</button>
-          <button type="button" class="sv-opt">Lycéen(ne)</button>
-          <button type="button" class="sv-opt">Salarié(e)</button>
-          <button type="button" class="sv-opt">Freelance</button>
-          <button type="button" class="sv-opt">Entrepreneur</button>
-          <button type="button" class="sv-opt">Parent</button>
-          <button type="button" class="sv-opt">Sans emploi</button>
-          <button type="button" class="sv-opt">Autre</button>
-        </div>
-      </div>
-
-      <!-- 4. Intérêt : ce qu'ils veulent -->
-      <div class="sv-q">
-        <span class="sv-label">Qu'est-ce qui t'intéresse le plus ? <span class="req">*</span></span>
-        <div class="sv-opts" data-field="interet">
-          <button type="button" class="sv-opt">Créer un site web</button>
-          <button type="button" class="sv-opt">Créer une application</button>
-          <button type="button" class="sv-opt">Gagner de l'argent en ligne</button>
-          <button type="button" class="sv-opt">Apprendre l'IA</button>
-          <button type="button" class="sv-opt">Trouver un travail / freelance</button>
-          <button type="button" class="sv-opt">Autre</button>
-        </div>
-      </div>
-
-      <!-- 5. Attentes -->
-      <div class="sv-q">
-        <label for="sv-attente">Qu'espères-tu accomplir avec WIJHA ? <span class="opt">(optionnel)</span></label>
-        <textarea id="sv-attente" name="attente" placeholder="Ex : créer mon site, lancer mon business, trouver des clients en freelance…"></textarea>
-      </div>
-
-      <!-- 6. Source -->
-      <div class="sv-q">
-        <span class="sv-label">Comment as-tu connu WIJHA ? <span class="req">*</span></span>
-        <div class="sv-opts" data-field="source">
-          <button type="button" class="sv-opt">Instagram</button>
-          <button type="button" class="sv-opt">Facebook</button>
-          <button type="button" class="sv-opt">TikTok</button>
-          <button type="button" class="sv-opt">Google</button>
-          <button type="button" class="sv-opt">Un ami</button>
-          <button type="button" class="sv-opt">Autre</button>
-        </div>
-      </div>
-
-      <!-- 7. Localisation -->
-      <div class="sv-q">
-        <span class="sv-label">Où es-tu ? <span class="req">*</span></span>
-        <div class="sv-grid">
-          <select name="pays" id="sv-pays" aria-label="Pays">
-            <option value="Tunisie" selected>🇹🇳 Tunisie</option>
-            <option value="Algérie">🇩🇿 Algérie</option>
-            <option value="Maroc">🇲🇦 Maroc</option>
-            <option value="France">🇫🇷 France</option>
-            <option value="Autre">🌍 Autre pays</option>
-          </select>
-          <select name="gouvernorat" id="sv-gouv" aria-label="Gouvernorat">
-            <option value="Tunis" selected>Tunis</option>
-            <option>Ariana</option><option>Ben Arous</option><option>Manouba</option>
-            <option>Nabeul</option><option>Zaghouan</option><option>Bizerte</option>
-            <option>Béja</option><option>Jendouba</option><option>Le Kef</option>
-            <option>Siliana</option><option>Sousse</option><option>Monastir</option>
-            <option>Mahdia</option><option>Sfax</option><option>Kairouan</option>
-            <option>Kasserine</option><option>Sidi Bouzid</option><option>Gabès</option>
-            <option>Médenine</option><option>Tataouine</option><option>Gafsa</option>
-            <option>Tozeur</option><option>Kébili</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- hidden state for pills -->
-      <input type="hidden" name="profil" /><input type="hidden" name="interet" /><input type="hidden" name="source" />
-      <!-- honeypot -->
-      <div class="hp" aria-hidden="true"><label>Ne pas remplir<input name="company" type="text" tabindex="-1" autocomplete="off" /></label></div>
-
-      <button type="submit" class="btn btn--pop sv-submit" id="svBtn">Envoyer mes réponses →</button>
-      <div class="sv-err" id="svErr"></div>
-      <p class="sv-foot">🔒 Anonyme côté public · on ne partage jamais tes infos.</p>
-    </form>
+    <form class="sv-card" id="surveyForm" novalidate></form>
 
     <div class="sv-done" id="svDone">
       <div class="sv-check"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17.5 19.5 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <h2>Merci ! 🎉</h2>
-      <p>Tes réponses nous aident énormément à créer les meilleures formations pour toi. À très vite avec WIJHA !</p>
+      <p>On a bien reçu tes réponses — elles nous aident à créer la formation qui te ressemble. On te prévient dès la prochaine session live. À très vite 👋</p>
     </div>
   </div>
 
   <script>
   (function () {
-    var $ = function (s, r) { return (r || document).querySelector(s); };
-    // pills → hidden input
-    document.querySelectorAll(".sv-opts").forEach(function (grp) {
+    var GOUV = ["Tunis","Ariana","Ben Arous","Manouba","Nabeul","Zaghouan","Bizerte","Béja","Jendouba","Le Kef","Siliana","Sousse","Monastir","Mahdia","Sfax","Kairouan","Kasserine","Sidi Bouzid","Gabès","Médenine","Tataouine","Gafsa","Tozeur","Kébili","Hors Tunisie"];
+
+    // type: tel | text | pills | select ; required only on the 4 high-signal fields
+    var FIELDS = [
+      { id: "tel", label: "📱 Ton numéro WhatsApp", type: "tel", required: true,
+        placeholder: "+216 ...", hint: "Pour qu'on t'envoie la date de la prochaine session live (et rien d'autre). 🔒 On ne partage jamais ton numéro." },
+      { id: "prenom", label: "Ton prénom", type: "text", required: false, placeholder: "Ton prénom",
+        hint: "Pour qu'on t'écrive correctement 🙂" },
+      { id: "formation_cible", label: "Quelle formation t'attire le plus ?", type: "pills", required: true,
+        options: ["Site Web — créer un site en live, sans coder","Web Apps — une vraie appli (base de données, comptes, paiement)","Les deux m'intéressent","Je ne sais pas encore, aide-moi à choisir"] },
+      { id: "intention", label: "Tu en es où, là, maintenant ?", type: "pills", required: true,
+        options: ["Je veux m'inscrire, je suis chaud(e) 🔥","Très intéressé(e), j'ai juste 1-2 questions","Ça m'intéresse, mais pas tout de suite","Je regarde juste / je découvre"],
+        hint: "Sois honnête, ça nous aide à t'aider — pas de mauvaise réponse." },
+      { id: "objectif", label: "Ton objectif principal avec WIJHA ?", type: "pills", required: false, other: true,
+        options: ["Créer un site/appli pour mon business ou projet","Gagner de l'argent en freelance (clients TN ou étranger)","Décrocher un emploi / changer de métier","Lancer ma propre startup / app","Monter en compétences pour mon travail","Apprendre par curiosité / projet perso"] },
+      { id: "budget", label: "Pour une formation LIVE qui te fait sortir un vrai projet, tu mettrais combien ?", type: "pills", required: true,
+        options: ["Gratuit seulement","Moins de 50 DT","50 – 100 DT","100 – 200 DT","200 – 400 DT","Plus de 400 DT si ça vaut le coup"],
+        hint: "💳 Pas besoin de carte bancaire — D17, Flouci ou poste, on te guide." },
+      { id: "blocage", label: "Qu'est-ce qui pourrait t'empêcher de t'inscrire ?", type: "pills", required: false,
+        options: ["Le prix / mon budget","Le manque de temps","Peur de ne pas suivre / niveau trop dur","Pas sûr(e) que ça donne un résultat concret","Comment payer en ligne (j'ai pas de carte)","Je préfère les vidéos enregistrées au live","Rien, je suis prêt(e) à m'inscrire 🔥"],
+        hint: "Dis-nous franchement — c'est pour lever le frein, pas pour te vendre." },
+      { id: "equipement", label: "Pour suivre la formation, tu as…", type: "pills", required: false,
+        options: ["Un PC / laptop","Seulement un smartphone","Un PC mais pas terrible / partagé","Je peux en emprunter / aller au cyber"] },
+      { id: "dispo", label: "Quand serais-tu le plus dispo pour une session live ?", type: "pills", required: false,
+        options: ["Soirées en semaine (après 18h)","En journée en semaine","Le week-end","Pendant les vacances","Flexible / peu importe"] },
+      { id: "source", label: "Comment tu as connu WIJHA ?", type: "pills", required: false, other: true,
+        options: ["Instagram","TikTok","Facebook (page/pub)","Un groupe Facebook","Un(e) ami(e)","Google"] },
+      { id: "gouvernorat", label: "Tu es dans quel gouvernorat ?", type: "select", required: false,
+        options: GOUV, hint: "Pour savoir d'où vient notre communauté 🇹🇳" },
+    ];
+
+    var form = document.getElementById("surveyForm");
+    var esc = function (s) { return String(s).replace(/[<>&"]/g, function (c) { return { "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]; }); };
+
+    // ---- build form ----
+    FIELDS.forEach(function (f) {
+      var q = document.createElement("div"); q.className = "sv-q";
+      var optTag = f.required ? '<span class="req"> *</span>' : '<span class="opt"> (optionnel)</span>';
+      if (f.type === "tel" || f.type === "text") {
+        q.innerHTML = '<label for="f-' + f.id + '">' + f.label + optTag + '</label>' +
+          '<input id="f-' + f.id + '" name="' + f.id + '" type="' + f.type + '"' +
+          (f.type === "tel" ? ' inputmode="tel"' : '') + ' placeholder="' + (f.placeholder || "") + '" />' +
+          (f.hint ? '<span class="sv-hint">' + f.hint + '</span>' : '');
+      } else if (f.type === "select") {
+        var opts = f.options.map(function (o) { return '<option' + (o === "Tunis" ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join("");
+        q.innerHTML = '<label for="f-' + f.id + '">' + f.label + optTag + '</label>' +
+          '<select id="f-' + f.id + '" name="' + f.id + '">' + opts + '</select>' +
+          (f.hint ? '<span class="sv-hint">' + f.hint + '</span>' : '');
+      } else { // pills
+        var pills = f.options.map(function (o) { return '<button type="button" class="sv-opt">' + esc(o) + '</button>'; }).join("");
+        q.innerHTML = '<span class="sv-label">' + f.label + optTag + '</span>' +
+          (f.hint ? '<span class="sv-hint" style="margin:-4px 0 11px">' + f.hint + '</span>' : '') +
+          '<div class="sv-opts" data-field="' + f.id + '">' + pills + '</div>' +
+          '<input type="hidden" name="' + f.id + '" />' +
+          (f.other ? '<input class="sv-other" name="' + f.id + '_autre" type="text" placeholder="Précise…" />' : '');
+      }
+      form.appendChild(q);
+    });
+    // honeypot + submit + error
+    var tail = document.createElement("div");
+    tail.innerHTML =
+      '<div class="hp" aria-hidden="true"><label>Ne pas remplir<input name="company" type="text" tabindex="-1" autocomplete="off" /></label></div>' +
+      '<button type="submit" class="btn btn--pop sv-submit" id="svBtn">Envoyer mes réponses →</button>' +
+      '<div class="sv-err" id="svErr"></div>' +
+      '<p class="sv-foot">🔒 On ne partage jamais tes infos. Tes réponses servent juste à améliorer WIJHA.</p>';
+    form.appendChild(tail);
+
+    var prog = document.getElementById("svProg");
+    function updateProgress() {
+      var done = 0;
+      FIELDS.forEach(function (f) {
+        var el = form.querySelector('[name="' + f.id + '"]');
+        if (el && el.value && el.value.trim()) done++;
+      });
+      prog.style.width = Math.round(done / FIELDS.length * 100) + "%";
+    }
+
+    // pills → hidden input (+ Autre field toggle)
+    form.querySelectorAll(".sv-opts").forEach(function (grp) {
       var field = grp.getAttribute("data-field");
-      var hidden = document.querySelector('input[name="' + field + '"]');
+      var hidden = form.querySelector('input[name="' + field + '"]');
+      var other = form.querySelector('input[name="' + field + '_autre"]');
       grp.addEventListener("click", function (e) {
         var b = e.target.closest(".sv-opt"); if (!b) return;
         grp.querySelectorAll(".sv-opt").forEach(function (x) { x.classList.remove("on"); });
         b.classList.add("on");
-        if (hidden) hidden.value = b.textContent.trim();
+        var val = b.textContent.trim();
+        if (hidden) hidden.value = val;
+        if (other) other.classList.toggle("on", /^autre/i.test(val) || /autre/i.test(val) && val.length < 8);
+        updateProgress();
       });
     });
-    // gouvernorat visible seulement pour la Tunisie
-    var pays = $("#sv-pays"), gouv = $("#sv-gouv");
-    function toggleGouv() { gouv.style.display = (pays.value === "Tunisie") ? "" : "none"; }
-    pays.addEventListener("change", toggleGouv); toggleGouv();
+    form.querySelectorAll('input[type=text], input[type=tel], select').forEach(function (el) {
+      el.addEventListener("input", updateProgress);
+      el.addEventListener("change", updateProgress);
+    });
+    updateProgress();
 
-    var form = $("#surveyForm"), btn = $("#svBtn"), err = $("#svErr");
-    function fail(msg) { err.textContent = msg; err.classList.add("on"); }
+    // ---- submit ----
+    var btn = function () { return document.getElementById("svBtn"); };
+    var err = function () { return document.getElementById("svErr"); };
+    function fail(msg) { var e = err(); e.textContent = msg; e.classList.add("on"); e.scrollIntoView({ block: "center", behavior: "smooth" }); }
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      err.classList.remove("on");
-      var data = {
-        tel: form.tel.value.trim(),
-        nom: form.nom.value.trim(),
-        profil: form.profil.value,
-        interet: form.interet.value,
-        attente: form.attente.value.trim(),
-        source: form.source.value,
-        pays: pays.value,
-        gouvernorat: pays.value === "Tunisie" ? gouv.value : "",
-        company: form.company.value,
-        page: location.pathname,
-      };
-      if (!data.tel) return fail("Ajoute ton numéro de téléphone 📱");
-      if (!data.profil) return fail("Dis-nous qui tu es 🙂");
-      if (!data.interet) return fail("Choisis ce qui t'intéresse le plus.");
-      if (!data.source) return fail("Comment nous as-tu connus ?");
-
-      btn.disabled = true; btn.textContent = "Envoi…"; btn.style.opacity = ".7";
-      fetch("/api/survey", {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data),
-      }).then(function (r) {
-        if (!r.ok) throw new Error("http " + r.status);
-        form.style.display = "none"; $("#svDone").classList.add("on");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }).catch(function () {
-        btn.disabled = false; btn.textContent = "Envoyer mes réponses →"; btn.style.opacity = "";
-        fail("Oups, l'envoi a échoué. Réessaie dans un instant 🙏");
+      err().classList.remove("on");
+      var data = { page: location.pathname };
+      FIELDS.forEach(function (f) {
+        var el = form.querySelector('[name="' + f.id + '"]');
+        data[f.id] = el ? el.value.trim() : "";
+        if (f.other) { var o = form.querySelector('[name="' + f.id + '_autre"]'); if (o) data[f.id + "_autre"] = o.value.trim(); }
       });
+      data.company = form.querySelector('[name="company"]').value;
+      if (!data.tel) return fail("Ajoute ton numéro WhatsApp 📱");
+      if (!data.formation_cible) return fail("Choisis la formation qui t'attire le plus.");
+      if (!data.intention) return fail("Dis-nous où tu en es 🙂");
+      if (!data.budget) return fail("Indique ton budget — ça nous aide vraiment.");
+
+      var b = btn(); b.disabled = true; b.textContent = "Envoi…"; b.style.opacity = ".7";
+      fetch("/api/survey", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+        .then(function (r) { if (!r.ok) throw new Error("http " + r.status);
+          form.style.display = "none"; document.querySelector(".sv-prog").style.display = "none";
+          document.getElementById("svDone").classList.add("on"); window.scrollTo({ top: 0, behavior: "smooth" }); })
+        .catch(function () { b.disabled = false; b.textContent = "Envoyer mes réponses →"; b.style.opacity = "";
+          fail("Oups, l'envoi a échoué. Réessaie dans un instant 🙏"); });
     });
   })();
   </script>

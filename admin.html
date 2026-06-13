@@ -288,34 +288,53 @@
     }
 
     /* ---------- enquête clients (page /survey) ---------- */
+    // scoring du lead à partir de l'intention + blocage
+    function leadScore(r) {
+      var i = (r.intention || "").toLowerCase(), b = (r.blocage || "").toLowerCase();
+      if (i.indexOf("chaud") >= 0 || i.indexOf("inscrire") >= 0 || b.indexOf("prêt") >= 0 || b.indexOf("pret") >= 0) return { e: "🔥", t: "CHAUD", c: "#e11d48", o: 0 };
+      if (i.indexOf("regarde") >= 0 || i.indexOf("couvre") >= 0) return { e: "❄️", t: "FROID", c: "#0ea5e9", o: 2 };
+      return { e: "🟡", t: "TIÈDE", c: "#d97706", o: 1 };
+    }
     function renderEnquete(rows) {
       var p = $("#panel-enquete");
       if (!rows.length) { p.innerHTML = '<div class="empty">Aucune réponse à l\'enquête pour le moment.<br><span class="muted">Partage le lien <b>/survey</b> à tes prospects (WhatsApp, bio Insta…).</span></div>'; return; }
+      rows = rows.slice().sort(function (a, b) { return leadScore(a).o - leadScore(b).o; }); // chauds en premier
       var today = new Date().toDateString();
       var todayN = rows.filter(function (r) { return new Date(r.ts).toDateString() === today; }).length;
+      var hotN = rows.filter(function (r) { return leadScore(r).t === "CHAUD"; }).length;
       var html =
         '<div class="stats">' +
           '<div class="stat"><b>' + rows.length + "</b><span>Réponses</span></div>" +
+          '<div class="stat" style="border-color:#fecdd3"><b style="color:#e11d48">' + hotN + "</b><span>Leads chauds 🔥</span></div>" +
           '<div class="stat"><b>' + todayN + "</b><span>Aujourd'hui</span></div>" +
         "</div>";
+      var src = function (r) { return (r.source === "Autre" && r.source_autre) ? r.source_autre : r.source; };
+      var obj = function (r) { return (r.objectif === "Autre" && r.objectif_autre) ? r.objectif_autre : r.objectif; };
       html += '<div class="cols">';
-      html += '<div class="card"><h3>Qui sont-ils (profil)</h3>' + bars(tally(rows, function (r) { return r.profil; }), rows.length) + "</div>";
-      html += '<div class="card"><h3>Ce qu\'ils veulent</h3>' + bars(tally(rows, function (r) { return r.interet; }), rows.length) + "</div>";
-      html += '<div class="card"><h3>Comment ils nous ont connus</h3>' + bars(tally(rows, function (r) { return r.source; }), rows.length) + "</div>";
-      html += '<div class="card"><h3>Localisation</h3>' + bars(tally(rows, function (r) { return r.gouvernorat || r.pays || "?"; }), rows.length) + "</div>";
+      html += '<div class="card"><h3>🎯 Formation visée</h3>' + bars(tally(rows, function (r) { return r.formation_cible; }), rows.length) + "</div>";
+      html += '<div class="card"><h3>🔥 Intention (scoring)</h3>' + bars(tally(rows, function (r) { return r.intention; }), rows.length) + "</div>";
+      html += '<div class="card"><h3>💰 Budget (pricing)</h3>' + bars(tally(rows, function (r) { return r.budget; }), rows.length) + "</div>";
+      html += '<div class="card"><h3>📅 Dispo (planning session)</h3>' + bars(tally(rows, function (r) { return r.dispo; }), rows.length) + "</div>";
+      html += '<div class="card"><h3>⛔ Ce qui les bloque</h3>' + bars(tally(rows, function (r) { return r.blocage; }), rows.length) + "</div>";
+      html += '<div class="card"><h3>🚀 Objectif</h3>' + bars(tally(rows, obj), rows.length) + "</div>";
+      html += '<div class="card"><h3>📣 Comment ils nous ont connus</h3>' + bars(tally(rows, src), rows.length) + "</div>";
+      html += '<div class="card"><h3>💻 Équipement</h3>' + bars(tally(rows, function (r) { return r.equipement; }), rows.length) + "</div>";
       html += "</div>";
       html += rows.map(function (r) {
         var wa = (r.tel || "").replace(/[^0-9+]/g, "").replace(/^\+/, "");
+        var ls = leadScore(r);
         var chips = "";
-        if (r.profil) chips += '<span class="chip">' + esc(r.profil) + "</span>";
-        if (r.interet) chips += '<span class="chip">' + esc(r.interet) + "</span>";
-        if (r.source) chips += '<span class="chip">via ' + esc(r.source) + "</span>";
-        if (r.gouvernorat || r.pays) chips += '<span class="chip">📍 ' + esc(r.gouvernorat || r.pays) + "</span>";
+        var chip = function (v) { if (v) chips += '<span class="chip">' + esc(v) + "</span>"; };
+        chip(r.formation_cible); chip(r.budget); chip(obj(r));
+        if (r.blocage) chips += '<span class="chip">⛔ ' + esc(r.blocage) + "</span>";
+        chip(r.equipement); chip(r.dispo);
+        if (r.gouvernorat) chips += '<span class="chip">📍 ' + esc(r.gouvernorat) + "</span>";
+        if (src(r)) chips += '<span class="chip">via ' + esc(src(r)) + "</span>";
         return '<div class="card" style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap">' +
             '<div style="flex:1;min-width:200px">' +
-              "<b style=\"font-family:var(--serif);font-size:16px\">" + esc(r.nom || "—") + "</b>" +
-              '<div class="chips" style="display:flex;gap:6px;flex-wrap:wrap;margin:7px 0">' + chips + "</div>" +
-              (r.attente ? '<div class="muted" style="margin-top:4px">« ' + esc(r.attente) + " »</div>" : "") +
+              '<span class="chip" style="background:' + ls.c + '20;color:' + ls.c + ';font-weight:700">' + ls.e + " " + ls.t + "</span> " +
+              '<b style="font-family:var(--serif);font-size:16px">' + esc(r.nom || "—") + "</b>" +
+              '<div class="chips" style="display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 0">' + chips + "</div>" +
             "</div>" +
             '<div class="resa__links">' +
               '<span class="resa__date">' + fdate(r.ts) + "</span>" +
