@@ -108,7 +108,7 @@ const AR_DICT = {
   "Site Web — 90 DT": "Site Web — 90 DT",
   "Application Web — 350 DT": "Application Web — 350 DT",
   "Apprendre. Créer. Évoluer.": "Et3allem. A5la9. Tatawwar.",
-  "© 2026 WIJHA Academy — Tous droits réservés.": "© 2026 WIJHA Academy — Kol el 79ou9 ma7foudha.",
+  "© 2026 WIJHA Academy · une marque de": "© 2026 WIJHA Academy · marque mta3",
   "Apprendre · Créer · Évoluer": "Et3allem · A5la9 · Tatawwar",
 };
 

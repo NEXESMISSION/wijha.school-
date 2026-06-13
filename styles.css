@@ -1192,3 +1192,6 @@ html, body { overflow-x: clip; }
 @media (max-width: 540px) {
   .hero__eyebrow { font-size: 11px; letter-spacing: .12em; line-height: 1.6; text-align: center; }
 }
+
+.footer__rakiza { color: var(--pop); font-weight: 700; }
+.footer__rakiza:hover { text-decoration: underline; }

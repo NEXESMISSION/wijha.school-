@@ -284,7 +284,7 @@ function Footer() {
           <a className="footer__cta-link" href="static-web-apps.html">{tr("Réserver ma place →")}</a>
         </div>
         <div className="footer__bottom">
-          <span>{tr("© 2026 WIJHA Academy — Tous droits réservés.")}</span>
+          <span>{tr("© 2026 WIJHA Academy · une marque de")} <a href="https://rakiza.group" target="_blank" rel="noopener" className="footer__rakiza">Rakiza Group ↗</a></span>
           <span className="footer__legal">
             <a href="confidentialite.html">Confidentialité</a>
             <a href="conditions.html">Conditions</a>
