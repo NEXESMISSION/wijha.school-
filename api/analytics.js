@@ -22,7 +22,7 @@ export default async function handler(req, res) {
   }
 
   const URL = process.env.SUPABASE_URL;
-  const KEY = process.env.SUPABASE_SERVICE_KEY;
+  const KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!URL || !KEY) return res.status(500).json({ ok: false, error: "not-configured" });
 
   try {

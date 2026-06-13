@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ ok: false, error: "method" });
 
   const URL = process.env.SUPABASE_URL;
-  const KEY = process.env.SUPABASE_SERVICE_KEY;
+  const KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!URL || !KEY) {
     const missing = [!URL && "SUPABASE_URL", !KEY && "SUPABASE_SERVICE_KEY"].filter(Boolean);
     return res.status(500).json({ ok: false, error: "not-configured", missing });

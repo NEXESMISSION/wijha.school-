@@ -22,7 +22,7 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ ok: false, error: "method" });
 
   const URL = process.env.SUPABASE_URL;
-  const KEY = process.env.SUPABASE_SERVICE_KEY;
+  const KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   // Non configuré → on accepte silencieusement (mode démo local côté client).
   if (!URL || !KEY) return res.status(200).json({ ok: true, stored: false });
 

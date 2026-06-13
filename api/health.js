@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     ok: true,
     env: {
       SUPABASE_URL: !!process.env.SUPABASE_URL,
-      SUPABASE_SERVICE_KEY: !!process.env.SUPABASE_SERVICE_KEY,
+      SUPABASE_SERVICE_KEY: !!(process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY),
       ADMIN_EMAIL: !!process.env.ADMIN_EMAIL,
       ADMIN_CODE: !!process.env.ADMIN_CODE,
     },
