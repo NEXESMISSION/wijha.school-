@@ -20,7 +20,10 @@ export default async function handler(req, res) {
 
   const URL = process.env.SUPABASE_URL;
   const KEY = process.env.SUPABASE_SERVICE_KEY;
-  if (!URL || !KEY) return res.status(500).json({ ok: false, error: "not-configured" });
+  if (!URL || !KEY) {
+    const missing = [!URL && "SUPABASE_URL", !KEY && "SUPABASE_SERVICE_KEY"].filter(Boolean);
+    return res.status(500).json({ ok: false, error: "not-configured", missing });
+  }
 
   let body = req.body;
   if (typeof body === "string") { try { body = JSON.parse(body); } catch { body = {}; } }
