@@ -140,8 +140,8 @@
     <main class="wrap">
       <div class="tabs">
         <button class="tab on" data-tab="resa">📩 Réservations</button>
-        <button class="tab" data-tab="enquete">📋 Enquête clients</button>
-        <button class="tab" data-tab="survey">📊 Sondage popup</button>
+        <button class="tab" data-tab="enquete">📋 Réponses /survey</button>
+        <button class="tab" data-tab="survey">📊 Popup site (ancien)</button>
         <button class="tab" data-tab="ana">📈 Analytics</button>
       </div>
 
@@ -321,28 +321,41 @@
       html += '<div class="card"><h3>💻 Équipement</h3>' + bars(tally(rows, function (r) { return r.equipement; }), rows.length) + "</div>";
       html += '<div class="card"><h3>🗣️ Langue du sondage</h3>' + bars(tally(rows, function (r) { return r.langue === "ar" ? "Arabe (AR)" : r.langue === "fr" ? "Français" : "?"; }), rows.length) + "</div>";
       html += "</div>";
+      html += '<h3 style="margin:18px 0 10px">📇 Toutes les réponses (' + rows.length + ')</h3>';
       html += rows.map(function (r) {
         var wa = (r.tel || "").replace(/[^0-9+]/g, "").replace(/^\+/, "");
         var ls = leadScore(r);
-        var chips = "";
-        var chip = function (v) { if (v) chips += '<span class="chip">' + esc(v) + "</span>"; };
-        chip(r.formation_cible); chip(r.budget); chip(obj(r));
-        if (r.blocage) chips += '<span class="chip">⛔ ' + esc(r.blocage) + "</span>";
-        chip(r.equipement); chip(r.dispo);
-        if (r.gouvernorat) chips += '<span class="chip">📍 ' + esc(r.gouvernorat) + "</span>";
-        if (src(r)) chips += '<span class="chip">via ' + esc(src(r)) + "</span>";
-        if (r.langue) chips += '<span class="chip">' + (r.langue === "ar" ? "🇹🇳 AR" : "🇫🇷 FR") + "</span>";
-        return '<div class="card" style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap">' +
-            '<div style="flex:1;min-width:200px">' +
-              '<span class="chip" style="background:' + ls.c + '20;color:' + ls.c + ';font-weight:700">' + ls.e + " " + ls.t + "</span> " +
-              '<b style="font-family:var(--serif);font-size:16px">' + esc(r.nom || "—") + "</b>" +
-              '<div class="chips" style="display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 0">' + chips + "</div>" +
+        function kv(icon, label, val) {
+          if (!val) return "";
+          return '<div style="display:flex;gap:10px;padding:7px 0;border-top:1px solid #eef0f3">' +
+              '<span style="flex:none;min-width:135px;color:#6b7280;font-size:13px">' + icon + " " + label + "</span>" +
+              '<span style="font-weight:600;font-size:14px">' + esc(val) + "</span>" +
+            "</div>";
+        }
+        var body =
+          kv("🎯", "Formation", r.formation_cible) +
+          kv("🔥", "Intention", r.intention) +
+          kv("🚀", "Objectif", obj(r)) +
+          kv("💰", "Budget", r.budget) +
+          kv("⛔", "Blocage", r.blocage) +
+          kv("💻", "Équipement", r.equipement) +
+          kv("📅", "Dispo", r.dispo) +
+          kv("📍", "Gouvernorat", r.gouvernorat) +
+          kv("📣", "Source", src(r)) +
+          kv("🗣️", "Langue", r.langue === "ar" ? "Arabe 🇹🇳" : r.langue === "fr" ? "Français 🇫🇷" : r.langue);
+        return '<div class="card" style="margin-bottom:12px">' +
+            '<div style="display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap">' +
+              "<div>" +
+                '<span class="chip" style="background:' + ls.c + '20;color:' + ls.c + ';font-weight:700">' + ls.e + " " + ls.t + "</span> " +
+                '<b style="font-family:var(--serif);font-size:17px;margin-left:4px">' + esc(r.nom || "—") + "</b>" +
+              "</div>" +
+              '<div class="resa__links">' +
+                '<span class="resa__date">' + fdate(r.ts) + "</span>" +
+                (wa ? '<a href="https://wa.me/' + esc(wa) + '" target="_blank" rel="noopener">📱 ' + esc(r.tel) + "</a>"
+                    : (r.tel ? "<span>📱 " + esc(r.tel) + "</span>" : "")) +
+              "</div>" +
             "</div>" +
-            '<div class="resa__links">' +
-              '<span class="resa__date">' + fdate(r.ts) + "</span>" +
-              (wa ? '<a href="https://wa.me/' + esc(wa) + '" target="_blank" rel="noopener">📱 ' + esc(r.tel) + "</a>"
-                  : (r.tel ? "<span>📱 " + esc(r.tel) + "</span>" : "")) +
-            "</div>" +
+            '<div style="margin-top:6px">' + (body || '<span class="muted" style="font-size:13px">Pas de détails</span>') + "</div>" +
           "</div>";
       }).join("");
       p.innerHTML = html;
